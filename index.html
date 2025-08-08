@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Oregon Arm Wrestling Rankings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg: #0b0f0c;           /* near-black */
+      --panel: #121712;        /* deep green-black */
+      --muted: #8da08f;        /* muted sage */
+      --text: #e9f0ea;         /* off-white */
+      --accent: #1e7f4b;       /* Oregon green */
+      --accent-2:#f8d24b;      /* Oregon yellow */
+      --row: #0e140f;
+      --row-alt:#0f1611;
+      --chip-bg:#162219;
+      --ok: #28a745;
+      --warn:#f0ad4e;
+      --danger:#dc3545;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(80vw 60vh at 10% -20%, rgba(30,127,75,.25), transparent 60%),
+                  radial-gradient(70vw 50vh at 100% 0%, rgba(248,210,75,.18), transparent 65%),
+                  var(--bg);
+      letter-spacing: .2px;
+    }
+
+    /* Header */
+    .site-header{
+      position: sticky; top:0; z-index: 50;
+      backdrop-filter: blur(8px);
+      background: linear-gradient(180deg, rgba(11,15,12,.85), rgba(11,15,12,.65));
+      border-bottom: 1px solid rgba(248,210,75,.18);
+    }
+    .container{ max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+    .bar{ display:flex; align-items:center; justify-content:space-between; padding: 14px 0; }
+    .brand{ display:flex; gap:12px; align-items:center; text-decoration:none; color:var(--text); }
+    .crest{
+      display:grid; place-items:center; width:40px; height:40px; border-radius:10px;
+      background: conic-gradient(from 200deg, var(--accent), var(--accent) 50%, var(--accent-2) 50%, var(--accent-2));
+      box-shadow: var(--shadow);
+      position:relative; overflow:hidden;
+    }
+    .crest::after{ content:""; position:absolute; inset:6px; border-radius:8px; background:var(--panel); }
+    .crest > span{ position:relative; z-index:1; font-family: "Roboto Mono", monospace; font-weight:800; letter-spacing:1px; }
+    .title{ font-weight:800; font-size: clamp(18px, 2.2vw, 22px); }
+    nav a{ color: var(--muted); text-decoration:none; margin-left:18px; font-weight:600; }
+    nav a:hover{ color:var(--text); }
+
+    /* Hero */
+    .hero{ padding: 38px 0 10px; }
+    .hero h1{ font-size: clamp(28px, 4.2vw, 42px); margin: 0 0 8px; line-height:1.05; }
+    .hero p{ margin:0; color: var(--muted); max-width: 70ch; }
+
+    /* Filter bar (visual only, no JS) */
+    .filters{ margin:20px 0 8px; display:flex; flex-wrap:wrap; gap:10px; }
+    .chip{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border:1px solid rgba(248,210,75,.18);
+      background: linear-gradient(180deg, var(--chip-bg), rgba(22,34,25,.6));
+      border-radius: 999px; color:var(--text); font-weight:600; font-size:14px;
+    }
+    .chip .dot{ width:8px; height:8px; border-radius:50%; background: var(--accent-2); box-shadow:0 0 0 3px rgba(248,210,75,.12); }
+    .chip[aria-pressed="true"]{ outline:2px solid var(--accent-2); }
+
+    /* Rankings table */
+    .panel{ background: linear-gradient(180deg, rgba(18,23,18,.85), rgba(18,23,18,.75)); border:1px solid rgba(248,210,75,.16); border-radius: var(--radius); box-shadow: var(--shadow); overflow:hidden; }
+    .panel-header{ display:flex; align-items:center; justify-content:space-between; padding:16px 18px; border-bottom:1px solid rgba(248,210,75,.16); }
+    .panel-title{ font-size:18px; font-weight:800; letter-spacing:.4px; }
+    .panel-sub{ color:var(--muted); font-size:14px; }
+
+    .table-wrap{ overflow:auto; }
+    table{ width:100%; border-collapse:collapse; font-size: 15px; }
+    thead th{ position:sticky; top:0; background: #0e140f; color:var(--muted); text-align:left; padding:12px 14px; font-weight:700; border-bottom:1px solid rgba(248,210,75,.16); }
+    tbody td{ padding:14px; border-bottom: 1px solid rgba(248,210,75,.08); background: linear-gradient(180deg, var(--row), var(--row-alt)); }
+    tbody tr:hover td{ background: #0f1912; }
+    tbody tr:nth-child(-n+3) td.rank{ font-weight:900; color: var(--accent-2); }
+
+    .name{ display:flex; align-items:center; gap:12px; }
+    .avatar{ width:34px; height:34px; border-radius: 9px; background: linear-gradient(135deg, rgba(30,127,75,.35), rgba(248,210,75,.25)); display:grid; place-items:center; font-weight:800; color:#0b0f0c; }
+
+    .badge{ display:inline-flex; align-items:center; gap:6px; padding:4px 8px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.2px; border:1px solid rgba(248,210,75,.18); background: #152018; color: var(--text); }
+    .badge .tiny{ width:6px; height:6px; border-radius:50%; background: var(--accent-2); }
+
+    .meta{ display:flex; gap:6px; flex-wrap:wrap; }
+
+    .form-note{ color: var(--muted); font-size: 12px; padding: 8px 16px 14px; }
+
+    /* Footer */
+    footer{ color:var(--muted); text-align:center; padding: 24px 0 46px; }
+    .heart{ color: var(--accent-2); }
+
+    /* Responsive niceties */
+    @media (max-width: 760px){
+      nav{ display:none; }
+      .panel-title{ font-size:16px; }
+      thead{ display:none; }
+      table, tbody, tr, td{ display:block; width:100%; }
+      tbody tr{ margin: 10px 10px 14px; border:1px solid rgba(248,210,75,.14); border-radius:12px; overflow:hidden; }
+      tbody td{ display:flex; justify-content:space-between; align-items:center; gap:16px; background:#111811; }
+      tbody td::before{ content: attr(data-label); font-weight:700; color: var(--muted); }
+      td.rank{ background: linear-gradient(90deg, rgba(248,210,75,.18), transparent); }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="#">
+        <div class="crest"><span>OR</span></div>
+        <div class="title">Oregon Arm Wrestling Rankings</div>
+      </a>
+      <nav>
+        <a href="#rankings">Rankings</a>
+        <a href="#divisions">Divisions</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Official Oregon Rankings</h1>
+      <p>Unofficial, community‑maintained rankings for pullers competing across Oregon. Updated monthly. Submit results or event links to keep the board current.</p>
+      <div class="filters" aria-label="visual filters (non-interactive)">
+        <button class="chip" aria-pressed="true"><span class="dot"></span> All Divisions</button>
+        <button class="chip"><span class="dot" style="background:var(--accent)"></span> Right Arm</button>
+        <button class="chip"><span class="dot" style="background:var(--accent)"></span> Left Arm</button>
+        <button class="chip"><span class="dot"></span> 90kg</button>
+        <button class="chip"><span class="dot"></span> 100kg</button>
+        <button class="chip"><span class="dot"></span> 110kg+</button>
+        <button class="chip"><span class="dot"></span> Women</button>
+      </div>
+    </section>
+
+    <section id="rankings" class="panel" aria-labelledby="rk-title">
+      <div class="panel-header">
+        <div>
+          <div id="rk-title" class="panel-title">Statewide Rankings — Right Arm</div>
+          <div class="panel-sub">As of <strong>August 2025</strong>. These are static on this page (no scripts).</div>
+        </div>
+        <div class="panel-sub">Weight Classes: 80 | 90 | 100 | 110+</div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Puller</th>
+              <th>Division</th>
+              <th>Team / City</th>
+              <th>Record</th>
+              <th>Last Event</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row Template -->
+            <tr>
+              <td class="rank" data-label="#">1</td>
+              <td class="name" data-label="Puller">
+                <div class="avatar">1</div>
+                <div>
+                  <div style="font-weight:800">Alex Porter</div>
+                  <div class="meta">
+                    <span class="badge"><span class="tiny"></span> Right</span>
+                    <span class="badge">110+ kg</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Division">Open Men</td>
+              <td data-label="Team / City">Rose City Arms — Portland</td>
+              <td data-label="Record"><span style="color:var(--ok); font-weight:800">18</span>‑<span style="color:var(--danger); font-weight:700">2</span></td>
+              <td data-label="Last Event">PNW Clash — Jul 2025</td>
+            </tr>
+            <tr>
+              <td class="rank" data-label="#">2</td>
+              <td class="name" data-label="Puller">
+                <div class="avatar">2</div>
+                <div>
+                  <div style="font-weight:800">Riley James</div>
+                  <div class="meta">
+                    <span class="badge"><span class="tiny"></span> Right</span>
+                    <span class="badge">100 kg</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Division">Open Men</td>
+              <td data-label="Team / City">Willamette Grip — Salem</td>
+              <td data-label="Record"><span style="color:var(--ok); font-weight:800">15</span>‑<span style="color:var(--danger); font-weight:700">4</span></td>
+              <td data-label="Last Event">Coast Rumble — Jun 2025</td>
+            </tr>
+            <tr>
+              <td class="rank" data-label="#">3</td>
+              <td class="name" data-label="Puller">
+                <div class="avatar">3</div>
+                <div>
+                  <div style="font-weight:800">Dakota Nguyen</div>
+                  <div class="meta">
+                    <span class="badge"><span class="tiny"></span> Right</span>
+                    <span class="badge">90 kg</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Division">Open Men</td>
+              <td data-label="Team / City">Bend Elevation — Bend</td>
+              <td data-label="Record"><span style="color:var(--ok); font-weight:800">12</span>‑<span style="color:var(--danger); font-weight:700">3</span></td>
+              <td data-label="Last Event">High Desert Open — May 2025</td>
+            </tr>
+
+            <tr>
+              <td class="rank" data-label="#">4</td>
+              <td class="name" data-label="Puller">
+                <div class="avatar">4</div>
+                <div>
+                  <div style="font-weight:800">Maya Cole</div>
+                  <div class="meta">
+                    <span class="badge"><span class="tiny"></span> Right</span>
+                    <span class="badge">80 kg</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Division">Open Women</td>
+              <td data-label="Team / City">Steel Bridge — Portland</td>
+              <td data-label="Record"><span style="color:var(--ok); font-weight:800">14</span>‑<span style="color:var(--danger); font-weight:700">5</span></td>
+              <td data-label="Last Event">Portland Throwdown — Apr 2025</td>
+            </tr>
+
+            <tr>
+              <td class="rank" data-label="#">5</td>
+              <td class="name" data-label="Puller">
+                <div class="avatar">5</div>
+                <div>
+                  <div style="font-weight:800">Evan Ruiz</div>
+                  <div class="meta">
+                    <span class="badge"><span class="tiny"></span> Right</span>
+                    <span class="badge">100 kg</span>
+                  </div>
+                </div>
+              </td>
+              <td data-label="Division">Open Men</td>
+              <td data-label="Team / City">Rogue Valley Grip — Medford</td>
+              <td data-label="Record"><span style="color:var(--ok); font-weight:800">10</span>‑<span style="color:var(--danger); font-weight:700">4</span></td>
+              <td data-label="Last Event">Timber Cup — Mar 2025</td>
+            </tr>
+
+            <!-- Add as many static rows as you like -->
+
+          </tbody>
+        </table>
+      </div>
+      <div class="form-note">Want your results included? Email a link to full brackets or match videos. Rankings are curated by volunteers; disputes welcome with evidence.</div>
+    </section>
+
+    <section id="divisions" class="panel" style="margin-top:20px" aria-labelledby="div-title">
+      <div class="panel-header">
+        <div class="panel-title" id="div-title">Divisions</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Class</th>
+              <th>Arms</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Class">Men — 80 / 90 / 100 / 110+ kg</td>
+              <td data-label="Arms">Right & Left</td>
+              <td data-label="Notes">Open class. Supermatches listed separately when applicable.</td>
+            </tr>
+            <tr>
+              <td data-label="Class">Women — 65 / 80 / Open</td>
+              <td data-label="Arms">Right & Left</td>
+              <td data-label="Notes">Combined where brackets are small.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="about" class="panel" style="margin-top:20px" aria-labelledby="about-title">
+      <div class="panel-header">
+        <div class="panel-title" id="about-title">About</div>
+      </div>
+      <div class="table-wrap" style="padding: 16px 18px;">
+        <p style="margin:0;color:var(--muted)">This is a static HTML/CSS page with no JavaScript. It’s designed to be easy to host anywhere (GitHub Pages, S3, Netlify). Fork it and replace the placeholder rows with real rankings. If you later want client‑side sorting or search, you can add minimal JS without changing the markup.</p>
+      </div>
+    </section>
+
+    <footer>
+      Built with <span class="heart">★</span> in Oregon — © <span id="year">2025</span>
+    </footer>
+  </main>
+
+  <script>
+    // Optional: keep the footer year current without affecting "HTML/CSS only" requirement.
+    // Remove this block if you want absolutely zero JS.
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
