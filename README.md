@@ -1,5 +1,5 @@
 ## Oregon Arm Wrestling Rankings
-Website
+[Website](https://elijahmason.github.io/armrank/)
 
 ### How it works
 1. Edit rankings in Google Sheet
