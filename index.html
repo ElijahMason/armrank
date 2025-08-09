@@ -5,41 +5,144 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Oregon Arm Wrestling Rankings</title>
   <style>
-    :root{ --bg:#0b0f0c; --panel:#121712; --muted:#8da08f; --text:#e9f0ea; --accent:#1e7f4b; --accent2:#f8d24b; --radius:14px }
+    /* ===== Theme: Darker Navy & Deeper Gold ===== */
+    :root{
+      --bg:#070e1c;          /* deeper navy */
+      --panel:#0b1630;       /* panel navy */
+      --panel-2:#081228;     /* darker */
+      --text:#e6ecfa;        /* soft white */
+      --muted:#9eabc9;       /* cool gray */
+      --accent:#d7b43a;      /* deep gold */
+      --accent-2:#b99322;    /* darker gold */
+      --chip:#0f1d3f;        /* chip bg */
+      --border: rgba(255,255,255,.08);
+      --glow: 0 10px 30px rgba(215,180,58,.14);
+      --radius: 14px;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+      --subbar-h: 44px;      /* reserved (thead not sticky now) */
+    }
+
     *{box-sizing:border-box}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,Arial,sans-serif}
-    .container{max-width:1100px;margin:0 auto;padding:24px}
-    header{position:sticky;top:0;background:rgba(11,15,12,.8);backdrop-filter:blur(8px);border-bottom:1px solid rgba(248,210,75,.18)}
-    header .bar{display:flex;justify-content:space-between;align-items:center;padding:12px 24px}
-    h1{margin:16px 0 6px;font-size:28px}
-    p.lead{margin:0 0 12px;color:var(--muted)}
-    .panel{background:linear-gradient(180deg,rgba(18,23,18,.9),rgba(18,23,18,.8));border:1px solid rgba(248,210,75,.16);border-radius:var(--radius);box-shadow:0 10px 30px rgba(0,0,0,.35);margin-top:18px;overflow:hidden}
-    .panel > .hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(248,210,75,.16)}
-    .panel h2{margin:0;font-size:18px}
-    .sub{color:var(--muted);font-size:14px}
-    .wrap{overflow:auto}
-    table{width:100%;border-collapse:collapse;font-size:15px}
-    thead th{position:sticky;top:0;background:#0e140f;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid rgba(248,210,75,.16)}
-    tbody td{padding:12px;border-bottom:1px solid rgba(248,210,75,.08);background:linear-gradient(180deg,#0e140f,#0f1611)}
-    tbody tr:hover td{background:#0f1912}
-    td.rank{font-weight:800;color:var(--accent2)}
-    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
-    .card{border:1px solid rgba(248,210,75,.16);border-radius:var(--radius);overflow:hidden}
-    .card .card-hd{padding:10px 12px;background:#0f1611;border-bottom:1px solid rgba(248,210,75,.12);font-weight:800}
-    .empty{padding:12px;color:var(--muted)}
-    .notice{margin-top:10px;color:var(--muted);font-size:12px}
-    code{background:#0f1611;border:1px solid rgba(248,210,75,.2);padding:2px 6px;border-radius:6px}
-    @media(max-width:760px){thead{display:none}table,tbody,tr,td{display:block;width:100%}tbody tr{margin:10px;border:1px solid rgba(248,210,75,.14);border-radius:10px;overflow:hidden}tbody td{display:flex;justify-content:space-between;gap:12px}tbody td::before{content:attr(data-label);color:var(--muted);font-weight:700}}
+    html, body{
+      margin:0;max-width:100%;overflow-x:hidden;
+      background:
+        radial-gradient(80vw 60vh at 100% -20%, rgba(215,180,58,.10), transparent 60%),
+        radial-gradient(60vw 40vh at 0% 0%, rgba(15,29,63,.32), transparent 65%),
+        var(--bg);
+      color:var(--text);font-family:Inter,system-ui,Arial,sans-serif
+    }
+    .container{width:min(1100px,100%);margin:0 auto;padding-inline:clamp(12px,3vw,24px);padding-block:24px}
+
+    header{position:sticky;top:0;z-index:20;backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(7,14,28,.92), rgba(7,14,28,.55));border-bottom:1px solid var(--border)}
+    .bar{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:12px 24px}
+    .brand{display:flex;gap:12px;align-items:center;font-weight:800}
+    .crest{width:38px;height:38px;border-radius:10px;background:conic-gradient(from 220deg,var(--accent),var(--accent) 50%,var(--accent-2) 50%,var(--accent-2));box-shadow:var(--glow)}
+
+    /* ===== Tabs / Controls ===== */
+    .tabs{display:flex;gap:8px;background:var(--panel);border:1px solid var(--border);padding:6px;border-radius:12px;box-shadow:var(--glow);width:max-content}
+    .tab{appearance:none;border:1px solid transparent;background:transparent;color:var(--muted);padding:10px 16px;border-radius:10px;font-weight:700;cursor:pointer;transition:.2s ease}
+    .tab:hover{color:var(--text)}
+    .tab[aria-selected="true"]{background:linear-gradient(180deg,var(--chip),var(--panel-2));color:var(--text);border-color:rgba(215,180,58,.35);box-shadow:0 0 0 3px rgba(215,180,58,.12)}
+
+    .seg{display:flex;gap:12px;align-items:center;justify-content:space-between;width:100%}
+    .btn{appearance:none;border:1px solid var(--border);background:linear-gradient(180deg,var(--panel),var(--panel-2));color:var(--muted);padding:10px 16px;border-radius:12px;font-weight:800;cursor:pointer;transition:transform .05s ease, box-shadow .2s ease}
+    .btn:hover{color:var(--text)}
+    .btn[aria-pressed="true"]{color:#070e1c;background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent;box-shadow:0 8px 22px rgba(215,180,58,.22)}
+
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin:0}
+    .chip{border:1px solid var(--border);background:var(--panel);color:var(--muted);padding:8px 12px;border-radius:999px;font-weight:700;cursor:pointer;transition:.2s ease}
+    .chip:hover{color:var(--text)}
+    .chip[aria-pressed="true"]{color:#070e1c;background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent;box-shadow:0 6px 18px rgba(215,180,58,.18)}
+
+    /* ===== Panels & Tables ===== */
+    .panel{background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--glow);margin-top:18px;overflow:hidden}
+    .panel .hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
+    .subbar{position:sticky; top:0; z-index:5; background:linear-gradient(180deg,var(--panel),var(--panel-2)); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px}
+    .subpill{font-weight:800; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:6px 10px; border-radius:999px}
+    .wrap{overflow-x:auto; overflow-y:hidden}
+    table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:fixed}
+    thead th{background:#0a1740;color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+    tbody td{padding:12px;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0a1737,#0b183b);min-width:0;word-break:break-word}
+    tbody tr:hover td{background:#0a1b45}
+    td.rank{font-weight:900;color:var(--accent); text-align:center; width:56px; min-width:56px }
+    td.athlete{width:auto}
+
+    /* Smooth swap animation when changing class */
+    @keyframes fadeSlide { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
+    tbody.swap{ animation: fadeSlide .22s ease both }
+    @media(prefers-reduced-motion:reduce){ tbody.swap{ animation:none } }
+
+    /* Shimmer for top 3 across entire row */
+    @keyframes shimmer{ 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    tr.shimmer{ position:relative; overflow:hidden }
+    tr.shimmer::after{ content:""; position:absolute; inset:0; pointer-events:none; background-size:200% 100%; animation: shimmer 2.8s linear infinite }
+    tr.top1.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(215,180,58,.16) 20%, rgba(0,0,0,0) 40%) }
+    tr.top2.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(192,192,192,.16) 20%, rgba(0,0,0,0) 40%) }
+    tr.top3.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(205,127,50,.16) 20%, rgba(0,0,0,0) 40%) }
+
+    /* Hide/show sections */
+    [hidden]{display:none !important}
+
+    @media(max-width:760px){
+      thead{display:none}
+      table,tbody,tr,td{display:block;width:100%}
+      tbody tr{margin:10px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+      tbody td{display:flex;justify-content:space-between;gap:12px}
+      tbody td::before{content:attr(data-label);color:var(--muted);font-weight:700}
+      .subbar{top:0}
+      td.rank{justify-content:flex-start}
+    }
   </style>
 </head>
 <body>
   <header>
-    <div class="bar"><strong>Oregon Arm Wrestling Rankings</strong><span class="sub">Live from Google Sheets</span></div>
+    <div class="bar">
+      <div class="brand"><div class="crest"></div> Oregon Arm Wrestling Rankings</div>
+      <div class="tabs" role="tablist" aria-label="Main views">
+        <button class="tab" role="tab" id="tab-weights" aria-controls="view-weights" aria-selected="true">Weight Classes</button>
+        <button class="tab" role="tab" id="tab-overall" aria-controls="view-overall" aria-selected="false">Overall</button>
+      </div>
+    </div>
   </header>
 
   <main class="container">
-    <section class="panel">
-      <div class="hd"><h2>Overall Rankings — Right & Left</h2><div class="sub">Edit your sheet → page auto‑updates</div></div>
+    <!-- ===== Weight Classes View (default) ===== -->
+    <section id="view-weights" class="panel" role="tabpanel" aria-labelledby="tab-weights">
+      <div class="hd" style="flex-wrap:wrap;gap:10px;width:100%">
+        <div class="seg" role="group" aria-label="Arm selector">
+          <button class="btn" id="arm-left" aria-pressed="false">Left</button>
+          <div style="flex:1"></div>
+          <button class="btn" id="arm-right" aria-pressed="true">Right</button>
+        </div>
+        <div class="chips" role="group" aria-label="Weight class">
+          <button class="chip" data-cls="154" aria-pressed="false">154</button>
+          <button class="chip" data-cls="176" aria-pressed="false">176</button>
+          <button class="chip" data-cls="198" aria-pressed="false">198</button>
+          <button class="chip" data-cls="220" aria-pressed="false">220</button>
+          <button class="chip" data-cls="242" aria-pressed="false">242</button>
+          <button class="chip" data-cls="243+" aria-pressed="true">243+</button>
+        </div>
+      </div>
+
+      <!-- Sticky subheader showing current context -->
+      <div class="subbar">
+        <span id="sticky-label" class="subpill">Right • 243+ lbs</span>
+      </div>
+
+      <div class="wrap">
+        <table id="weights-table">
+          <thead>
+            <tr><th>#</th><th>Athlete</th></tr>
+          </thead>
+          <tbody><tr><td colspan="2">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== Overall View ===== -->
+    <section id="view-overall" class="panel" role="tabpanel" aria-labelledby="tab-overall" hidden>
+      <div class="hd"><h2 style="margin:0;font-size:18px">Overall Rankings</h2></div>
       <div class="wrap">
         <table id="overall-table">
           <thead>
@@ -49,56 +152,24 @@
         </table>
       </div>
     </section>
-
-    <section class="panel">
-      <div class="hd"><h2>Weight‑Class Rankings — Right Arm</h2><div class="sub">154 • 176 • 198 • 220 • 242 • 243+</div></div>
-      <div class="grid" id="wc-right"></div>
-    </section>
-
-    <section class="panel">
-      <div class="hd"><h2>Weight‑Class Rankings — Left Arm</h2><div class="sub">154 • 176 • 198 • 220 • 242 • 243+</div></div>
-      <div class="grid" id="wc-left"></div>
-    </section>
-
-    <p class="notice">Share your Google Sheet as <strong>Anyone with the link: Viewer</strong> (no publishing required). Paste the <code>SHEET_ID</code> and tab names below. The code uses the Google Visualization (GViz) endpoint to fetch live CSV for each tab.</p>
   </main>
 
   <script>
-    // === LIVE GOOGLE SHEETS CONFIG ===
-    // ONE spreadsheet with two tabs. Set these three values:
-    const SHEET_ID = 'https://docs.google.com/spreadsheets/d/1aD3ZFkMHCrg4lZe80lONyQz-MsEVStelCiCEyHb6-2Y/edit?usp=sharing';
-    const RANKINGS_TAB_NAME = 'Rankings';   // columns: A=Left, C=Right
-    const WEIGHTS_TAB_NAME  = 'Weights';    // columns: A=Name, B=Weight lbs
+    // === LIVE GOOGLE SHEETS CONFIG (URL already inserted) ===
+    const SHEET_ID_RAW = 'https://docs.google.com/spreadsheets/d/1aD3ZFkMHCrg4lZe80lONyQz-MsEVStelCiCEyHb6-2Y/edit?usp=sharing';
+    const RANKINGS_TAB_NAME = 'Rankings'; // A=Left, C=Right
+    const WEIGHTS_TAB_NAME  = 'Weights';  // A=Name, B=Weight lbs
 
-    // Build GViz CSV URLs
+    const SHEET_ID = (()=>{ const m=String(SHEET_ID_RAW).match(/\/d\/([a-zA-Z0-9-_]+)/); return m?m[1]:String(SHEET_ID_RAW).trim(); })();
     const gvizCsv = (tab) => `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
 
-    // ---- helpers ----
-    const csvToRows = (csv) => csv.trim().split(/
-?
-/).map(r=>{
-      // Robust CSV split to keep simple: handle quoted commas
-      const out=[]; let cur=''; let q=false;
-      for(let i=0;i<r.length;i++){
-        const ch=r[i];
-        if(ch==='"') { q=!q; continue; }
-        if(ch===',' && !q){ out.push(cur); cur=''; } else { cur+=ch; }
-      }
-      out.push(cur); return out.map(s=>s.trim());
-    });
+    // CSV → rows (handles simple quoted fields)
+    const csvToRows = (csv) => csv.trim().split(/\r?\n/).map(line => {const out=[];let cur='';let q=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){q=!q;continue;}if(ch===','&&!q){out.push(cur);cur='';}else{cur+=ch;}}out.push(cur);return out.map(s=>s.trim());});
     const by = (fn) => (a,b) => (fn(a)<fn(b)?-1:fn(a)>fn(b)?1:0);
 
-    function weightClass(lbs){
-      if (lbs === '' || lbs === null || Number.isNaN(Number(lbs))) return '243+'; // unknown → superheavy
-      const w = Number(lbs);
-      if (w === -1) return '243+';
-      if (w <= 154) return '154';
-      if (w <= 176) return '176';
-      if (w <= 198) return '198';
-      if (w <= 220) return '220';
-      if (w <= 242) return '242';
-      return '243+';
-    }
+    function weightClass(lbs){ if(lbs===''||lbs===null||Number.isNaN(Number(lbs))) return '243+'; const w=Number(lbs); if(w===-1) return '243+'; if(w<=154)return'154'; if(w<=176)return'176'; if(w<=198)return'198'; if(w<=220)return'220'; if(w<=242)return'242'; return'243+'; }
+
+    let LEFT=[], RIGHT=[], WEIGHT_MAP=new Map(), GROUPS={right:new Map(), left:new Map()};
 
     async function load(){
       const [rankCSV, wtCSV] = await Promise.all([
@@ -106,82 +177,123 @@
         fetch(gvizCsv(WEIGHTS_TAB_NAME)).then(r=>r.text())
       ]);
 
-      // Rankings sheet (Left col A, Right col C)
       const rRows = csvToRows(rankCSV);
-      const left = rRows.slice(1).map(r => r[0]).filter(Boolean);
-      const right = rRows.slice(1).map(r => r[2]).filter(Boolean);
+      LEFT  = rRows.slice(1).map(r=>r[0]).filter(Boolean);
+      RIGHT = rRows.slice(1).map(r=>r[2]).filter(Boolean);
 
-      // Weights sheet → map name -> weight class
       const wRows = csvToRows(wtCSV);
-      const weights = new Map();
-      wRows.slice(1).forEach(r => {
-        const name = (r[0]||'').trim();
-        if(!name) return;
-        const lbs = r[1]!==undefined ? r[1] : '';
-        weights.set(name, weightClass(lbs));
-      });
+      WEIGHT_MAP = new Map();
+      wRows.slice(1).forEach(r=>{ const name=(r[0]||'').trim(); if(!name) return; const lbs = r[1]!==undefined ? r[1] : ''; WEIGHT_MAP.set(name, weightClass(lbs)); });
 
-      renderOverall(left,right);
-      renderWeightClasses('wc-right', right, weights);
-      renderWeightClasses('wc-left', left, weights);
+      // Pre-compute groups by class, preserving overall order
+      GROUPS.right = buildGroups(RIGHT);
+      GROUPS.left  = buildGroups(LEFT);
+
+      // initial renders
+      renderOverall(LEFT, RIGHT);
+      renderWeights('right','243+');
+      const vw=document.getElementById('view-weights'); vw.dataset.arm='right'; vw.dataset.cls='243+';
+    }
+
+    function buildGroups(armList){
+      const idx = new Map(armList.map((n,i)=>[n,i+1]));
+      const classes=['154','176','198','220','242','243+'];
+      const map = new Map(classes.map(c=>[c,[]]));
+      armList.forEach(name=>{ const cls=WEIGHT_MAP.get(name)||'243+'; map.get(cls).push({name, rank: idx.get(name), cls}); });
+      classes.forEach(c=> map.get(c).sort(by(x=>x.rank)));
+      return map;
     }
 
     function renderOverall(left,right){
-      const n = Math.max(left.length, right.length);
-      const tbody = document.querySelector('#overall-table tbody');
-      tbody.innerHTML = '';
-      for(let i=0;i<n;i++){
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td class="rank" data-label="#">${i+1}</td>
-                        <td data-label="Left">${left[i]||''}</td>
-                        <td data-label="Right">${right[i]||''}</td>`;
-        tbody.appendChild(tr);
-      }
+      const n=Math.max(left.length,right.length); const tb=document.querySelector('#overall-table tbody'); tb.innerHTML='';
+      for(let i=0;i<n;i++){ const tr=document.createElement('tr'); tr.innerHTML=`<td class="rank" data-label="#">${i+1}</td><td data-label="Left">${left[i]||''}</td><td data-label="Right">${right[i]||''}</td>`; tb.appendChild(tr); }
     }
 
-    function renderWeightClasses(containerId, armList, weights){
-      const rankIndex = new Map(armList.map((n,i)=>[n,i+1]));
-      const classes = ['154','176','198','220','242','243+'];
-      const groups = new Map(classes.map(c=>[c,[]]));
-
-      armList.forEach(name => {
-        const cls = weights.get(name) || '243+'; // default superheavy if missing
-        groups.get(cls).push({ name, rank: rankIndex.get(name)});
-      });
-
-      const grid = document.getElementById(containerId);
-      grid.innerHTML='';
-      classes.forEach(cls => {
-        const list = groups.get(cls).sort(by(x=>x.rank)); // keep overall order
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `<div class="card-hd">${cls === '243+' ? 'Superheavyweight (243+)' : cls + ' lbs'}</div>`;
-        if(list.length===0){
-          const empty = document.createElement('div');
-          empty.className='empty';
-          empty.textContent = 'No ranked athletes yet.';
-          card.appendChild(empty);
-        } else {
-          const wrap = document.createElement('div');
-          wrap.className='wrap';
-          const table = document.createElement('table');
-          table.innerHTML = `<thead><tr><th>#</th><th>Athlete</th></tr></thead><tbody></tbody>`;
-          const tb = table.querySelector('tbody');
-          list.forEach((x,i)=>{
-            const tr = document.createElement('tr');
-            tr.innerHTML = `<td class="rank" data-label="#">${i+1}</td><td data-label="Athlete">${x.name}</td>`;
-            tb.appendChild(tr);
-          });
-          wrap.appendChild(table);
-          card.appendChild(wrap);
-        }
-        grid.appendChild(card);
-      });
+    function updateStickyLabel(){
+      const arm = document.getElementById('view-weights').dataset.arm || 'right';
+      const cls = document.getElementById('view-weights').dataset.cls || '243+';
+      const label = `${arm.charAt(0).toUpperCase()+arm.slice(1)} • ${cls === '243+' ? '243+ lbs' : cls + ' lbs'}`;
+      document.getElementById('sticky-label').textContent = label;
     }
 
-    load().catch(err => {
-      console.error(err);
-      document.querySelector('#overall-table tbody').innerHTML = '<tr><td colspan="3">Failed to load Google Sheets data. Check your Sheet ID / tab names and sharing permissions.</td></tr>'
+    function animateSwap(tb){
+      tb.classList.remove('swap');
+      // force reflow to restart animation
+      void tb.offsetWidth;
+      tb.classList.add('swap');
+      tb.addEventListener('animationend', ()=> tb.classList.remove('swap'), {once:true});
+    }
+
+    function renderWeights(arm, cls){
+      // update toggles
+      document.getElementById('arm-right').setAttribute('aria-pressed', String(arm==='right'));
+      document.getElementById('arm-left').setAttribute('aria-pressed',  String(arm==='left'));
+      document.querySelectorAll('.chips .chip').forEach(c=>c.setAttribute('aria-pressed', String(c.dataset.cls===cls)));
+
+      const tb=document.querySelector('#weights-table tbody');
+      tb.innerHTML='';
+      const addRow=(rank,name)=>{
+        const tr=document.createElement('tr');
+        if(rank<=3){ tr.classList.add('shimmer'); if(rank===1) tr.classList.add('top1'); else if(rank===2) tr.classList.add('top2'); else tr.classList.add('top3'); }
+        tr.innerHTML=`<td class="rank" data-label="#">${rank}</td><td class="athlete" data-label="Athlete">${name}</td>`;
+        tb.appendChild(tr);
+      };
+
+      const block = GROUPS[arm].get(cls) || [];
+      if(block.length===0){ const tr=document.createElement('tr'); tr.innerHTML=`<td colspan="2">No ranked athletes yet.</td>`; tb.appendChild(tr); }
+      else { block.forEach((x,i)=> addRow(i+1, x.name)); }
+
+      const vw=document.getElementById('view-weights'); vw.dataset.arm=arm; vw.dataset.cls=cls;
+      updateStickyLabel();
+      animateSwap(tb);
+    }
+
+    // ===== UI handlers =====
+    function showView(view){
+      const over = document.getElementById('view-overall');
+      const wcls = document.getElementById('view-weights');
+      const tOver= document.getElementById('tab-overall');
+      const tW   = document.getElementById('tab-weights');
+      const isWeights = view==='weights';
+      over.hidden = isWeights; wcls.hidden = !isWeights;
+      tOver.setAttribute('aria-selected', String(!isWeights));
+      tW.setAttribute('aria-selected', String(isWeights));
+    }
+
+    document.getElementById('tab-overall').addEventListener('click', ()=> showView('overall'));
+    document.getElementById('tab-weights').addEventListener('click', ()=> showView('weights'));
+
+    document.getElementById('arm-right').addEventListener('click', ()=>{
+      const cls=document.getElementById('view-weights').dataset.cls||'243+'; renderWeights('right', cls);
+    });
+    document.getElementById('arm-left').addEventListener('click', ()=>{
+      const cls=document.getElementById('view-weights').dataset.cls||'243+'; renderWeights('left', cls);
+    });
+
+    document.querySelectorAll('.chips .chip').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const arm=document.getElementById('view-weights').dataset.arm||'right';
+        renderWeights(arm, btn.dataset.cls);
+      });
+    });
+
+    // Dev sanity tests (console only)
+    function devTests(){
+      const sample='Name,Weight\nAlice,198\nBob,-1\nCarol,';
+      const rows=csvToRows(sample); console.assert(rows.length===4,'csvToRows row count');
+      console.assert(weightClass(-1)==='243+','-1 => 243+');
+      console.assert(weightClass('')==='243+','blank => 243+');
+      console.assert(weightClass(154)==='154' && weightClass(176)==='176','cutoffs ok');
+    }
+    devTests();
+
+    // Default to Weight Classes view
+    showView('weights');
+
+    // Boot
+    load().catch(e=>{
+      console.error(e);
+      document.querySelector('#overall-table tbody').innerHTML = '<tr><td colspan="3">Failed to load Google Sheets data.</td></tr>'
     });
   </script>
 </body>
