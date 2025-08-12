@@ -23,6 +23,7 @@
               <div class="banner_loc">
                 {{ t.location }}
                 <span v-if="t.pending_details" class="badge_pending_inline">Pending</span>
+                <span v-else class="badge_confirmed_inline">Confirmed</span>
               </div>
               <button class="banner_cta" @click="openDetails(t)">Details</button>
             </div>
@@ -48,7 +49,7 @@ export default {
           date: 'Sat, June 13, 2026',
           estimated: false,
           pending_details: false,
-          location: 'General Duffy’s Waterhole, 404 SW Forest Ave, Redmond, OR 97756',
+          location: '404 SW Forest Ave, Redmond, OR 97756',
           venue: "General Duffy's Waterhole",
           image_url: 'https://visitredmondoregon.com/wp-content/uploads/2022/01/general-duffys-redmond-or-768x512.jpg',
           link: 'https://www.longlivedono.com',
@@ -69,14 +70,14 @@ export default {
         },
         {
           name: 'WA State AERS Super 64',
-          date: 'Sat, Dec, 2025',
+          date: 'Dec, 2025',
           estimated: true,
           pending_details: true,
           location: 'Vancouver, WA',
           venue: 'Venue to be announced by AERS',
           image_url: 'https://www.clarkcountytoday.com/wp-content/uploads/2023/12/Story_Clark-County-Today-ad3839_20583079282849beb3fe99d53206ed6fmv2.jpg',
           image_position: 'top',
-          link: 'https://www.instagram.com/aers.armwrestling/',
+          link: null,
           schedule_start: '9:00 AM PST (est)',
           weigh_ins: ['Friday evening (est)', 'Saturday morning (est)'],
           men_classes: '0–154, 155–176, 177–198, 199–220, 221–242, 244–274, 275+',
@@ -89,13 +90,13 @@ export default {
         },
         {
           name: 'Joe Woody Armwrestling Invitational',
-          date: 'Sun, Jul 26, 2026',
+          date: 'Jul 26, 2026',
           estimated: true,
           pending_details: true,
           location: 'Myrtle Creek, OR',
           venue: 'Millsite Park',
           image_url: 'https://styles.redditmedia.com/t5_4o68b9/styles/image_widget_jyqqf7le8g871.jpg?format=pjpg&s=29626b475b80ee1ce69838b0638d6e2a88f53b81',
-          link: 'https://www.facebook.com',
+          link: null,
           weigh_ins: ['9:00–11:00 (est)'],
           schedule_start: '11:30 AM – 5:00 PM (est)',
           entry_fees: 'Open $25/arm, Women $15/arm, Novice $10/arm, Kids free (est)',
@@ -107,13 +108,13 @@ export default {
         },
         {
           name: 'Willamina 4th of July Tournament',
-          date: 'Sat, Jul 4, 2026',
+          date: 'Jul, 2026',
           estimated: true,
           pending_details: true,
           location: 'Willamina, OR',
           venue: 'Garden Spot Park',
           image_url: 'https://storage.googleapis.com/proudcity/willaminaor/uploads/2023/07/community_.jpeg',
-          link: 'https://www.willaminaoregon.gov',
+          link: null,
           weigh_ins: ['Jul 3 4:00–7:00 PM (est)', 'Jul 4 8:00–10:30 AM (est)'],
           schedule_start: '12:00 PM (est)',
           entry_fees: 'Amateur $25/arm, Open $35/arm, Women $15/arm, Kids free (est)',
@@ -157,6 +158,7 @@ export default {
 .banner_date{color:var(--muted);font-weight:700}
 .banner_meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
 .badge_pending_inline{margin-left:8px; font-weight:900; font-size:11px; padding:2px 6px; border-radius:999px; border:2px solid var(--accent); color:var(--text)}
+.badge_confirmed_inline{margin-left:8px; font-weight:900; font-size:11px; padding:2px 6px; border-radius:999px; border:2px solid #2ecc71; color:var(--text)}
 .banner_cta{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}
 .banner_cta:hover{filter:brightness(1.06)}
 </style> 

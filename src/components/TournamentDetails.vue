@@ -5,6 +5,7 @@
         <h2 class="modal_title">{{ tournament.name }}</h2>
         <div class="spacer"></div>
         <span v-if="tournament.pending_details" class="badge_outline">Pending</span>
+        <span v-else class="badge_confirmed">Confirmed</span>
         <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
       </div>
 
@@ -81,11 +82,12 @@
       </div>
 
       <div class="actions">
-        <a class="primary_btn" :href="tournament.link" target="_blank" rel="noopener">View Event Website</a>
+        <a v-if="tournament.link" class="primary_btn" :href="tournament.link" target="_blank" rel="noopener">View Event Website</a>
+        <span v-else class="primary_btn disabled" aria-disabled="true">Event website pending</span>
         <button class="ghost_btn" @click="$emit('close')">Close</button>
       </div>
 
-      <div v-if="tournament.pending_details" class="disclaimer">Tournament pending. Details are tentative and subject to change. Check back later for confirmed info.</div>
+      <div v-if="tournament.pending_details" class="disclaimer">Tournament pending. Details are tentative and subject to change. Check back later for confirmation.</div>
     </div>
   </div>
 </template>
@@ -113,6 +115,7 @@ export default {
 .modal_title{margin:0}
 .spacer{flex:1}
 .badge_outline{font-weight:900; font-size:12px; padding:4px 8px; border-radius:999px; border:2px solid var(--accent); color:var(--text); background:transparent}
+.badge_confirmed{font-weight:900; font-size:12px; padding:4px 8px; border-radius:999px; border:2px solid #2ecc71; color:var(--text); background:transparent}
 .close_btn{background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:8px; padding:4px 10px; cursor:pointer; font-size:22px; line-height:1}
 .close_btn:hover{color:var(--text)}
 .hero{display:grid; grid-template-columns:220px 1fr; gap:14px; padding:14px 16px; align-items:stretch}
@@ -133,6 +136,7 @@ export default {
 .list{margin:0; padding-left:18px}
 .actions{display:flex; gap:10px; padding:12px 16px; border-top:1px solid var(--border); justify-content:flex-end}
 .primary_btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; text-decoration:none}
+.primary_btn.disabled{background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08); color:var(--muted); cursor:not-allowed}
 .ghost_btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; border:1px solid var(--border); color:var(--muted); background:transparent}
 .disclaimer{padding:8px 16px 14px; font-size:12px; color:var(--accent); font-weight:800; border-top:1px dashed rgba(215,180,58,.35)}
 @media(max-width:720px){
