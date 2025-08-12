@@ -36,13 +36,47 @@
           <tbody ref="tbody_ref">
             <tr v-if="!loaded"><td colspan="3">Loading…</td></tr>
             <tr v-else-if="load_error"><td colspan="3">Failed to load Google Sheets data.</td></tr>
-            <tr v-else v-for="(row, i) in rows" :key="i" :class="row.row_class">
+
+            <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class">
               <td class="athlete">{{ row.left_name }}</td>
               <td class="rank">{{ i + 1 }}</td>
               <td class="athlete">{{ row.right_name }}</td>
             </tr>
+
+            <tr v-if="is_collapsible" class="show_more_row" :class="{ is_open: show_all }" key="toggle-row">
+              <td class="show_more_cell" colspan="3">
+                <button class="show_more_button" @click="toggleShowAll" :aria-expanded="String(show_all)" :class="{ is_open: show_all }" aria-label="Toggle full list">
+                  <svg class="toggle_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="is_collapsible" class="collapse_row" key="collapse-row">
+              <td class="collapse_cell" colspan="3">
+                <div class="collapse_wrap" :class="{ open: show_all }" ref="collapse_wrap_ref">
+                  <div class="rows_grid">
+                    <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
+                      <div class="cell athlete">{{ row.left_name }}</div>
+                      <div class="cell rank">{{ first_rows_count + j + 1 }}</div>
+                      <div class="cell athlete">{{ row.right_name }}</div>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
           </tbody>
         </table>
+
+        <!-- sticky bottom toggle when expanded -->
+        <div v-if="show_all && rows.length > max_initial_rows" class="bottom_sticky">
+          <button class="show_more_button" @click="toggleShowAll" :aria-expanded="String(show_all)" :class="{ is_open: show_all }" aria-label="Toggle full list">
+            <svg class="toggle_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
   </main>
@@ -68,6 +102,8 @@ export default {
       combine_lower: true,
       loaded: false,
       load_error: false,
+      show_all: false,
+      max_initial_rows: 10,
 
       // data
       classes: ['154', '176', '198', '220', '242', '243+'],
@@ -137,10 +173,27 @@ export default {
       }
       return out
     },
+    first_rows(){
+      const limit = this.max_initial_rows
+      return this.rows.slice(0, Math.min(limit, this.rows.length))
+    },
+    extra_rows(){
+      const limit = this.max_initial_rows
+      return this.rows.slice(limit)
+    },
+    is_collapsible(){
+      return this.rows.length > this.max_initial_rows
+    },
+    first_rows_count(){
+      return this.first_rows.length
+    },
   },
   methods: {
     selectClass(cls) {
       this.selected_class = cls
+    },
+    toggleShowAll(){
+      this.show_all = !this.show_all
     },
     gvizCsv(tab) {
       return `https://docs.google.com/spreadsheets/d/${this.sheet_id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`
@@ -224,14 +277,16 @@ export default {
   },
   watch: {
     selected_class() {
+      this.show_all = false
       this.$nextTick(() => this.triggerSwapAnimation())
     },
     combine_lower() {
+      this.show_all = false
       this.$nextTick(() => this.triggerSwapAnimation())
     },
     rows() {
       this.$nextTick(() => this.triggerSwapAnimation())
-    },
+    }
   },
 }
 </script>
@@ -273,10 +328,19 @@ td.rank::before, td.rank::after, th.rank::before, th.rank::after{ content:none !
 
 .athlete{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 
-/* Smooth swap animation */
+/* Smooth swap animation (disabled for show/hide) */
 @keyframes fadeSlide { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
 tbody.swap{ animation: fadeSlide .22s ease both }
 @media(prefers-reduced-motion:reduce){ tbody.swap{ animation:none } }
+
+/* Collapsing area for extra rows */
+.collapse_cell{ padding:0 !important; background:transparent !important; border-bottom:none !important }
+.collapse_wrap{ max-height:0; overflow:hidden; transition:max-height .28s ease; will-change:max-height }
+.collapse_wrap.open{ max-height:2000px }
+.rows_grid{ display:block; width:100% }
+.row_grid{ display:grid; grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr); align-items:center }
+.row_grid .cell{ padding:10px 12px; border-bottom:1px solid var(--border) }
+.row_grid .cell.rank{ display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--accent); background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important; border-left:none !important; border-right:none !important; border-bottom:1px solid var(--border) !important; border-radius:6px; padding:10px 0 !important }
 
 /* Shimmer for top 3 across entire row */
 @keyframes shimmer{ 0%{background-position:-200% 0} 100%{background-position:200% 0} }
@@ -285,6 +349,18 @@ tr.shimmer::after{ content:""; position:absolute; inset:0; pointer-events:none; 
 tr.top1.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(215,180,58,.16) 20%, rgba(0,0,0,0) 40%) }
 tr.top2.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(192,192,192,.16) 20%, rgba(0,0,0,0) 40%) }
 tr.top3.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(205,127,50,.16) 20%, rgba(0,0,0,0) 40%) }
+
+/* Show more row (compact + tinted) */
+.show_more_row td{ background:linear-gradient(180deg, rgba(20,130,150,.10), rgba(12,100,120,.08)) !important; border-top:1px solid var(--border); border-bottom:none }
+.show_more_row.is_open td{ border-bottom:1px solid var(--border) }
+.show_more_cell{ text-align:center; padding:4px 6px }
+.show_more_button{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:24px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; border-radius:999px; cursor:pointer; transition:.18s ease }
+.show_more_button:hover{ filter:brightness(1.06) }
+.toggle_icon{ transition: transform .18s ease }
+.show_more_button.is_open .toggle_icon{ transform: rotate(180deg) }
+
+/* Sticky bottom toggle when expanded */
+.bottom_sticky{ position:sticky; bottom:0; display:flex; justify-content:center; padding:4px 0; background:linear-gradient(180deg, rgba(11,22,48,0), rgba(11,22,48,.78)); border-top:1px solid var(--border) }
 
 /* Mobile */
 @media(max-width:760px){
@@ -300,5 +376,7 @@ tr.top3.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0
   #weights_table tbody tr{display:grid; grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr); align-items:center}
   #weights_table td{display:block; padding:10px 8px}
   #weights_table td.rank{padding:10px 0 !important; justify-content:center; border-radius:6px; background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important}
+  .show_more_cell{ grid-column: 1 / -1 }
+  .collapse_cell{ padding:0 }
 }
 </style> 
