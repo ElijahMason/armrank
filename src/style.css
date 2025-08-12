@@ -1,0 +1,26 @@
+:root{
+  --bg:#070e1c;
+  --panel:#0b1630;
+  --panel-2:#081228;
+  --text:#e6ecfa;
+  --muted:#9eabc9;
+  --accent:#d7b43a;
+  --accent-2:#b99322;
+  --chip:#0f1d3f;
+  --border: rgba(255,255,255,.08);
+  --glow: 0 10px 30px rgba(215,180,58,.14);
+  --radius: 14px;
+  --silver: #c0c0c0;
+  --bronze: #cd7f32;
+  --header-bg: #0a2a40; /* dark turquoise-blue */
+}
+
+*{box-sizing:border-box}
+html, body{
+  margin:0;max-width:100%;overflow-x:hidden;
+  background:
+    radial-gradient(80vw 60vh at 100% -20%, rgba(215,180,58,.10), transparent 60%),
+    radial-gradient(60vw 40vh at 0% 0%, rgba(15,29,63,.32), transparent 65%),
+    var(--bg);
+  color:var(--text);font-family:Inter,system-ui,Arial,sans-serif
+}
