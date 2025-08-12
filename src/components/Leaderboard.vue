@@ -39,7 +39,15 @@
 
             <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class">
               <td class="athlete">{{ row.left_name }}</td>
-              <td class="rank">{{ i + 1 }}</td>
+              <td class="rank">
+                <span v-if="i < 3" class="trophy" :class="'trophy_' + (i+1)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
+                  </svg>
+                  <span class="trophy_num" aria-hidden="true">{{ i + 1 }}</span>
+                </span>
+                <span v-else>{{ i + 1 }}</span>
+              </td>
               <td class="athlete">{{ row.right_name }}</td>
             </tr>
           </tbody>
@@ -66,7 +74,15 @@
           <div class="rows_grid">
             <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
               <div class="cell athlete">{{ row.left_name }}</div>
-              <div class="cell rank">{{ first_rows_count + j + 1 }}</div>
+              <div class="cell rank">
+                <span v-if="first_rows_count + j + 1 <= 3" class="trophy" :class="'trophy_' + (first_rows_count + j + 1)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
+                  </svg>
+                  <span class="trophy_num" aria-hidden="true">{{ first_rows_count + j + 1 }}</span>
+                </span>
+                <span v-else>{{ first_rows_count + j + 1 }}</span>
+              </div>
               <div class="cell athlete">{{ row.right_name }}</div>
             </div>
           </div>
@@ -166,7 +182,7 @@ export default {
         const right_name = this.right_list[i]?.name || ''
         let row_class = ''
         if (rank <= 3) {
-          row_class = 'shimmer ' + (rank === 1 ? 'top1' : rank === 2 ? 'top2' : 'top3')
+          row_class = (rank === 1 ? 'top1' : rank === 2 ? 'top2' : 'top3')
         }
         out.push({ left_name, right_name, row_class })
       }
@@ -347,6 +363,13 @@ tbody.swap{ animation: fadeSlide .22s ease both }
 .row_grid .cell{ padding:10px 12px; border-bottom:1px solid var(--border) }
 .row_grid .cell.rank{ display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--accent); background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important; border-left:none !important; border-right:none !important; border-bottom:1px solid var(--border) !important; border-radius:6px; padding:10px 0 !important }
 
+/* Trophy SVG (bigger) with number overlay */
+.trophy{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; transform: translateY(4px) }
+.trophy svg{ width:34px; height:34px; display:block }
+.trophy_1 svg{ fill: var(--accent) }
+.trophy_2 svg{ fill: var(--silver) }
+.trophy_3 svg{ fill: var(--bronze) }
+
 /* Show more row replacement (outside table) */
 .toggle_wrap{ display:flex; align-items:center; justify-content:center; padding:8px 0; background:linear-gradient(180deg, rgba(20,130,150,.10), rgba(12,100,120,.08)); border-top:1px solid var(--border); border-bottom:1px solid var(--border); cursor:pointer; -webkit-tap-highlight-color: transparent }
 .show_more_button{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; border-radius:999px; transition:.18s ease; pointer-events:none }
@@ -363,8 +386,34 @@ tbody.swap{ animation: fadeSlide .22s ease both }
 .wrap{ position:relative }
 .wrap::after{ content:""; position:absolute; left:0; right:0; bottom:-2px; height:6px; background:linear-gradient(180deg, rgba(11,22,48,0), rgba(11,22,48,1)); pointer-events:none }
 
+/* Static tints for top 3 rows */
+tbody tr.top1 td{ background:linear-gradient(180deg, rgba(215,180,58,.14), rgba(185,147,34,.12)) !important }
+tbody tr.top2 td{ background:linear-gradient(180deg, rgba(192,192,192,.16), rgba(170,170,170,.12)) !important }
+tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(175,107,40,.12)) !important }
+.row_grid.top1 .cell{ background:linear-gradient(180deg, rgba(215,180,58,.14), rgba(185,147,34,.12)) }
+.row_grid.top2 .cell{ background:linear-gradient(180deg, rgba(192,192,192,.16), rgba(170,170,170,.12)) }
+.row_grid.top3 .cell{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(175,107,40,.12)) }
+
 /* Mobile */
 @media(max-width:760px){
   /* No table-row hacks required now; collapsed UI already outside table */
 }
+
+/* Nudge trophy number slightly downward and center */
+.trophy_num{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:14px;
+  color:#0b1630;
+  text-shadow:0 1px 0 rgba(255,255,255,.45);
+  transform: translateY(-7px);
+  pointer-events:none;
+}
+/* Slight horizontal tweak for 2 and 3 */
+.trophy_2 .trophy_num,
+.trophy_3 .trophy_num{ transform: translate(1px, -7px) }
 </style> 
