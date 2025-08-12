@@ -1,6 +1,6 @@
 <template>
   <main class="main_container">
-    <section id="view_weights" class="panel" role="region" aria-label="Weight classes">
+    <section class="panel" role="region" aria-label="Weight classes">
       <div class="panel_header">
         <div class="chips" role="group" aria-label="Weight class">
           <button
@@ -21,11 +21,11 @@
       </div>
 
       <div class="sub_bar">
-        <span id="sticky_label" class="sub_pill">{{ sticky_label }}</span>
+        <span class="sub_pill">{{ sticky_prefix }}{{ sticky_label }}</span>
       </div>
 
       <div class="wrap">
-        <table id="weights_table" class="table">
+        <table class="table">
           <thead>
             <tr>
               <th>Left</th>
@@ -42,41 +42,36 @@
               <td class="rank">{{ i + 1 }}</td>
               <td class="athlete">{{ row.right_name }}</td>
             </tr>
-
-            <tr v-if="is_collapsible" class="show_more_row" :class="{ is_open: show_all }" key="toggle-row">
-              <td class="show_more_cell" colspan="3">
-                <button class="show_more_button" @click="toggleShowAll" :aria-expanded="String(show_all)" :class="{ is_open: show_all }" aria-label="Toggle full list">
-                  <svg class="toggle_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </button>
-              </td>
-            </tr>
-
-            <tr v-if="is_collapsible" class="collapse_row" key="collapse-row">
-              <td class="collapse_cell" colspan="3">
-                <div class="collapse_wrap" :class="{ open: show_all }" ref="collapse_wrap_ref">
-                  <div class="rows_grid">
-                    <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
-                      <div class="cell athlete">{{ row.left_name }}</div>
-                      <div class="cell rank">{{ first_rows_count + j + 1 }}</div>
-                      <div class="cell athlete">{{ row.right_name }}</div>
-                    </div>
-                  </div>
-                </div>
-              </td>
-            </tr>
           </tbody>
         </table>
 
-        <!-- sticky bottom toggle when expanded -->
-        <div v-if="show_all && rows.length > max_initial_rows" class="bottom_sticky">
-          <button class="show_more_button" @click="toggleShowAll" :aria-expanded="String(show_all)" :class="{ is_open: show_all }" aria-label="Toggle full list">
-            <svg class="toggle_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- toggle OUTSIDE the table to avoid mobile grid constraints -->
+        <div
+          v-if="is_collapsible"
+          class="toggle_wrap"
+          role="button"
+          :aria-expanded="String(show_all)"
+          aria-label="Toggle full list"
+          @click="toggleShowAll"
+        >
+          <div class="show_more_button" :class="{ is_open: show_all }" aria-hidden="true">
+            <svg class="toggle_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-          </button>
+          </div>
         </div>
+
+        <!-- collapsed items OUTSIDE the table -->
+        <div v-if="is_collapsible" class="collapse_wrap" :class="{ open: show_all }" ref="collapse_wrap_ref">
+          <div class="rows_grid">
+            <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
+              <div class="cell athlete">{{ row.left_name }}</div>
+              <div class="cell rank">{{ first_rows_count + j + 1 }}</div>
+              <div class="cell athlete">{{ row.right_name }}</div>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </section>
   </main>
@@ -84,29 +79,30 @@
 
 <script>
 export default {
-  name: 'MainContent',
+  name: 'Leaderboard',
+  props: {
+    rankings_tab_name: { type: String, required: true },
+    weights_tab_name: { type: String, required: true },
+    classes: { type: Array, required: true },
+    default_selected_class: { type: String, required: true },
+    sticky_prefix: { type: String, default: '' },
+    max_initial_rows: { type: Number, default: 10 },
+  },
   data() {
     const sheet_id_raw = 'https://docs.google.com/spreadsheets/d/1aD3ZFkMHCrg4lZe80lONyQz-MsEVStelCiCEyHb6-2Y/edit?usp=sharing'
     const sheet_id_match = String(sheet_id_raw).match(/\/d\/([a-zA-Z0-9-_]+)/)
     const sheet_id = sheet_id_match ? sheet_id_match[1] : String(sheet_id_raw).trim()
 
     return {
-      // config
       sheet_id_raw,
       sheet_id,
-      rankings_tab_name: 'Rankings',
-      weights_tab_name: 'Weights',
 
-      // ui state
-      selected_class: '243+',
+      selected_class: null,
       combine_lower: true,
       loaded: false,
       load_error: false,
       show_all: false,
-      max_initial_rows: 10,
 
-      // data
-      classes: ['154', '176', '198', '220', '242', '243+'],
       left_list_raw: [],
       right_list_raw: [],
       weight_map: new Map(),
@@ -114,9 +110,12 @@ export default {
   },
   computed: {
     sticky_label() {
-      const cls = this.selected_class || '243+'
-      const extra = this.combine_lower && cls !== '154' ? ' + lower' : ''
-      return `${cls === '243+' ? '243+ lbs' : cls + ' lbs'}${extra}`
+      const cls = this.selected_class || this.default_selected_class
+      const base_top = this.classes[this.classes.length - 1]
+      const plus_label = base_top && base_top.includes('+') ? `${base_top} lbs` : `${cls} lbs`
+      const text = cls === base_top ? plus_label : `${cls} lbs`
+      const extra = this.combine_lower && cls !== this.classes[0] ? ' + lower' : ''
+      return `${text}${extra}`
     },
     classes_to_combine() {
       const i = this.classes.indexOf(this.selected_class)
@@ -126,7 +125,7 @@ export default {
       const index = new Map(this.left_list_raw.map((name, i) => [name, i + 1]))
       const map = new Map(this.classes.map(c => [c, []]))
       this.left_list_raw.forEach(name => {
-        const cls = this.weight_map.get(name) || '243+'
+        const cls = this.weight_map.get(name) || this.classes[this.classes.length - 1]
         map.get(cls).push({ name, rank: index.get(name), cls })
       })
       this.classes.forEach(c => map.get(c).sort((a, b) => a.rank - b.rank))
@@ -136,7 +135,7 @@ export default {
       const index = new Map(this.right_list_raw.map((name, i) => [name, i + 1]))
       const map = new Map(this.classes.map(c => [c, []]))
       this.right_list_raw.forEach(name => {
-        const cls = this.weight_map.get(name) || '243+'
+        const cls = this.weight_map.get(name) || this.classes[this.classes.length - 1]
         map.get(cls).push({ name, rank: index.get(name), cls })
       })
       this.classes.forEach(c => map.get(c).sort((a, b) => a.rank - b.rank))
@@ -224,15 +223,18 @@ export default {
         })
     },
     weightClass(lbs) {
-      if (lbs === '' || lbs === null || Number.isNaN(Number(lbs))) return '243+'
+      const top = this.classes[this.classes.length - 1]
+      if (lbs === '' || lbs === null || Number.isNaN(Number(lbs))) return top
       const w = Number(lbs)
-      if (w === -1) return '243+'
-      if (w <= 154) return '154'
-      if (w <= 176) return '176'
-      if (w <= 198) return '198'
-      if (w <= 220) return '220'
-      if (w <= 242) return '242'
-      return '243+'
+      if (w === -1) return top
+      const thresholds = this.classes
+        .filter(c => !c.includes('+'))
+        .map(c => Number(c))
+        .sort((a,b)=>a-b)
+      for (const t of thresholds) {
+        if (w <= t) return String(t)
+      }
+      return top
     },
     triggerSwapAnimation() {
       const el = this.$refs.tbody_ref
@@ -272,6 +274,9 @@ export default {
       }
     },
   },
+  created(){
+    this.selected_class = this.default_selected_class
+  },
   mounted() {
     this.load()
   },
@@ -306,7 +311,7 @@ export default {
 .panel_header{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border)}
 .sub_bar{position:sticky; top:0; z-index:5; background:var(--header-bg); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px}
 .sub_pill{font-weight:800; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:6px 10px; border-radius:999px}
-.wrap{overflow-x:hidden; overflow-y:auto}
+.wrap{overflow: visible !important; height: auto; max-height: none; margin-bottom:0; padding-bottom:0; -webkit-overflow-scrolling: auto; overscroll-behavior: auto; touch-action: auto}
 
 .table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:auto}
 .table thead th{background:var(--header-bg);color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
@@ -342,19 +347,9 @@ tbody.swap{ animation: fadeSlide .22s ease both }
 .row_grid .cell{ padding:10px 12px; border-bottom:1px solid var(--border) }
 .row_grid .cell.rank{ display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--accent); background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important; border-left:none !important; border-right:none !important; border-bottom:1px solid var(--border) !important; border-radius:6px; padding:10px 0 !important }
 
-/* Shimmer for top 3 across entire row */
-@keyframes shimmer{ 0%{background-position:-200% 0} 100%{background-position:200% 0} }
-tr.shimmer{ position:relative; overflow:hidden }
-tr.shimmer::after{ content:""; position:absolute; inset:0; pointer-events:none; background-size:200% 100%; animation: shimmer 2.8s linear infinite }
-tr.top1.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(215,180,58,.16) 20%, rgba(0,0,0,0) 40%) }
-tr.top2.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(192,192,192,.16) 20%, rgba(0,0,0,0) 40%) }
-tr.top3.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(205,127,50,.16) 20%, rgba(0,0,0,0) 40%) }
-
-/* Show more row (compact + tinted) */
-.show_more_row td{ background:linear-gradient(180deg, rgba(20,130,150,.10), rgba(12,100,120,.08)) !important; border-top:1px solid var(--border); border-bottom:none }
-.show_more_row.is_open td{ border-bottom:1px solid var(--border) }
-.show_more_cell{ text-align:center; padding:4px 6px }
-.show_more_button{ display:inline-flex; align-items:center; justify-content:center; width:28px; height:24px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; border-radius:999px; cursor:pointer; transition:.18s ease }
+/* Show more row replacement (outside table) */
+.toggle_wrap{ display:flex; align-items:center; justify-content:center; padding:8px 0; background:linear-gradient(180deg, rgba(20,130,150,.10), rgba(12,100,120,.08)); border-top:1px solid var(--border); border-bottom:1px solid var(--border); cursor:pointer; -webkit-tap-highlight-color: transparent }
+.show_more_button{ display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; border-radius:999px; transition:.18s ease; pointer-events:none }
 .show_more_button:hover{ filter:brightness(1.06) }
 .toggle_icon{ transition: transform .18s ease }
 .show_more_button.is_open .toggle_icon{ transform: rotate(180deg) }
@@ -362,21 +357,14 @@ tr.top3.shimmer::after{ background-image: linear-gradient(90deg, rgba(0,0,0,0) 0
 /* Sticky bottom toggle when expanded */
 .bottom_sticky{ position:sticky; bottom:0; display:flex; justify-content:center; padding:4px 0; background:linear-gradient(180deg, rgba(11,22,48,0), rgba(11,22,48,.78)); border-top:1px solid var(--border) }
 
+/* Prevent bottom border from peeking at the end of the list */
+.table tbody tr:last-child td{ border-bottom:none !important }
+.rows_grid .row_grid:last-child .cell{ border-bottom:none !important }
+.wrap{ position:relative }
+.wrap::after{ content:""; position:absolute; left:0; right:0; bottom:-2px; height:6px; background:linear-gradient(180deg, rgba(11,22,48,0), rgba(11,22,48,1)); pointer-events:none }
+
 /* Mobile */
 @media(max-width:760px){
-  .chips{gap:4px}
-  .chip{padding:6px 8px; font-size:0.92rem}
-  thead{display:none}
-  .table, .table tbody, .table tr, .table td{display:block;width:100%}
-  .table tbody tr{margin:8px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
-  .table tbody td{display:flex;justify-content:space-between;gap:10px}
-  .table tbody td::before{display:none}
-  .sub_bar{top:0}
-  /* three-column grid: Left | # | Right */
-  #weights_table tbody tr{display:grid; grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr); align-items:center}
-  #weights_table td{display:block; padding:10px 8px}
-  #weights_table td.rank{padding:10px 0 !important; justify-content:center; border-radius:6px; background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important}
-  .show_more_cell{ grid-column: 1 / -1 }
-  .collapse_cell{ padding:0 }
+  /* No table-row hacks required now; collapsed UI already outside table */
 }
 </style> 
