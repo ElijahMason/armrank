@@ -1,21 +1,13 @@
 <template>
   <header>
     <div class="top_bar">
-      <div class="brand"><img class="brand_logo" :src="logo_src" alt="ArmRank crest" width="38" height="38" /> Oregon Arm Wrestling Rankings</div>
+      <div class="brand"><div class="crest"></div> Oregon Arm Wrestling Rankings</div>
     </div>
   </header>
 </template>
 
 <script>
-import logoUrl from '../assets/armrank-logo.svg'
-export default {
-  name: 'TopBar',
-  computed: {
-    logo_src(){
-      return logoUrl
-    }
-  }
-}
+export default { name: 'TopBar' }
 </script>
 
 <style scoped>
