@@ -128,6 +128,9 @@ export default {
     sticky_label() {
       const cls = this.selected_class || this.default_selected_class
       const base_top = this.classes[this.classes.length - 1]
+      if (this.combine_lower && cls === base_top) {
+        return 'Combined overall'
+      }
       const plus_label = base_top && base_top.includes('+') ? `${base_top} lbs` : `${cls} lbs`
       const text = cls === base_top ? plus_label : `${cls} lbs`
       const extra = this.combine_lower && cls !== this.classes[0] ? ' + lower' : ''

@@ -4,7 +4,7 @@
     :weights_tab_name="'Weights'"
     :classes="['154','176','198','220','242','243+']"
     :default_selected_class="'243+'"
-    sticky_prefix=""
+    sticky_prefix="Men • "
   />
   <Leaderboard
     :rankings_tab_name="'Rankings_F'"
