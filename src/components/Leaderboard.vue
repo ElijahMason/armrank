@@ -38,7 +38,19 @@
             <tr v-else-if="load_error"><td colspan="3">Failed to load Google Sheets data.</td></tr>
 
             <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class">
-              <td class="athlete">{{ row.left_name }}</td>
+              <td class="athlete"><span class="name_text">{{ row.left_name }}</span>
+                <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
+                  <div class="fist_icon fist_left">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                  <div class="ring ring_one"></div>
+                  <div class="ring ring_two"></div>
+                  <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
+                  <div class="fist_icon fist_right">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                </div>
+              </td>
               <td class="rank">
                 <span v-if="i < 3" class="trophy" :class="'trophy_' + (i+1)">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -48,7 +60,19 @@
                 </span>
                 <span v-else>{{ i + 1 }}</span>
               </td>
-              <td class="athlete">{{ row.right_name }}</td>
+              <td class="athlete"><span class="name_text">{{ row.right_name }}</span>
+                <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
+                  <div class="fist_icon fist_left">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                  <div class="ring ring_one"></div>
+                  <div class="ring ring_two"></div>
+                  <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
+                  <div class="fist_icon fist_right">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -73,7 +97,19 @@
         <div v-if="is_collapsible" class="collapse_wrap" :class="{ open: show_all }" ref="collapse_wrap_ref">
           <div class="rows_grid">
             <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
-              <div class="cell athlete">{{ row.left_name }}</div>
+              <div class="cell athlete"><span class="name_text">{{ row.left_name }}</span>
+                <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
+                  <div class="fist_icon fist_left">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                  <div class="ring ring_one"></div>
+                  <div class="ring ring_two"></div>
+                  <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
+                  <div class="fist_icon fist_right">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
               <div class="cell rank">
                 <span v-if="first_rows_count + j + 1 <= 3" class="trophy" :class="'trophy_' + (first_rows_count + j + 1)">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -83,7 +119,19 @@
                 </span>
                 <span v-else>{{ first_rows_count + j + 1 }}</span>
               </div>
-              <div class="cell athlete">{{ row.right_name }}</div>
+              <div class="cell athlete"><span class="name_text">{{ row.right_name }}</span>
+                <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
+                  <div class="fist_icon fist_left">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                  <div class="ring ring_one"></div>
+                  <div class="ring ring_two"></div>
+                  <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
+                  <div class="fist_icon fist_right">
+                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -122,6 +170,8 @@ export default {
       left_list_raw: [],
       right_list_raw: [],
       weight_map: new Map(),
+      left_challenge_map: new Map(),
+      right_challenge_map: new Map(),
     }
   },
   computed: {
@@ -187,7 +237,9 @@ export default {
         if (rank <= 3) {
           row_class = (rank === 1 ? 'top1' : rank === 2 ? 'top2' : 'top3')
         }
-        out.push({ left_name, right_name, row_class })
+        const fight_left = i > 0 && this.left_challenge_map.get(left_name) === true
+        const fight_right = i > 0 && this.right_challenge_map.get(right_name) === true
+        out.push({ left_name, right_name, row_class, fight_left, fight_right })
       }
       return out
     },
@@ -274,6 +326,19 @@ export default {
         this.left_list_raw = r_rows.slice(1).map(r => r[0]).filter(Boolean)
         this.right_list_raw = r_rows.slice(1).map(r => r[2]).filter(Boolean)
 
+        const leftChal = new Map()
+        const rightChal = new Map()
+        r_rows.slice(1).forEach(r => {
+          const left_name = (r[0] || '').trim()
+          const left_flag = (r[1] || '').trim().toLowerCase()
+          const right_name = (r[2] || '').trim()
+          const right_flag = (r[3] || '').trim().toLowerCase()
+          if (left_name) leftChal.set(left_name, left_flag === 'challenging')
+          if (right_name) rightChal.set(right_name, right_flag === 'challenging')
+        })
+        this.left_challenge_map = leftChal
+        this.right_challenge_map = rightChal
+
         const w_rows = this.csvToRows(wt_csv)
         const map = new Map()
         w_rows.slice(1).forEach(r => {
@@ -339,6 +404,10 @@ export default {
 
 /* perfectly centered # column with turquoise tint; remove any underlines */
 th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:middle}
+/* ensure overlays in athlete cells can sit between rows */
+.athlete{min-width:0; overflow:visible; position:relative; z-index:1}
+.name_text{display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+
 td.rank{
   display:flex; align-items:center; justify-content:center;
   font-weight:900; color:var(--accent);
@@ -350,7 +419,41 @@ td.rank{
 }
 td.rank::before, td.rank::after, th.rank::before, th.rank::after{ content:none !important; display:none !important }
 
-.athlete{min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+/* fight overlay - centered between current row and the one above; nudged up 30px */
+.fight_anim{ position:absolute; left:0; right:0; top:-50%; height:200%; transform: translateY(-22px); display:flex; align-items:center; justify-content:center; pointer-events:none; z-index:400 }
+.fight_anim.left{ justify-content:center }
+.fight_anim.right{ justify-content:center }
+
+.fist_icon{ width:32px; height:32px }
+.fist_img{ width:100%; height:100%; display:block; filter:drop-shadow(0 0 12px rgba(231,76,60,.45)); transform-origin:50% 50% }
+.fist_left .fist_img{ transform: rotate(200deg) }
+.fist_right .fist_img{ transform: rotate(20deg) }
+
+/* one fist comes down from above, the other rises from below */
+.fist_left{ animation:challengeFromTop 1.4s cubic-bezier(.25,.8,.2,1) infinite }
+.fist_right{ animation:challengeFromBottom 1.4s cubic-bezier(.25,.8,.2,1) infinite }
+
+.bang{ width:32px; height:32px; margin:0 10px; fill:#ff4d4d; filter:drop-shadow(0 0 10px rgba(255,77,77,.65)); animation:bangPop 1.4s ease-in-out infinite }
+.ring{ position:absolute; width:34px; height:34px; border:2px solid rgba(255,77,77,.7); border-radius:50%; }
+.ring_one{ animation:ringPulse 1.4s ease-out infinite }
+.ring_two{ animation:ringPulse 1.4s ease-out infinite; animation-delay:.25s }
+
+@keyframes challengeFromTop{
+  0%{ transform:translate(-18px, -34px) rotate(-12deg) scale(.96); opacity:.85 }
+  40%{ transform:translate(-8px, -10px) rotate(-6deg) scale(1.06); opacity:1 }
+  50%{ transform:translate(-4px, -4px) rotate(-2deg) scale(1.1); opacity:1 }
+  60%{ transform:translate(-8px, -8px) rotate(-5deg) scale(1.04); opacity:.98 }
+  100%{ transform:translate(-18px, -34px) rotate(-12deg) scale(.96); opacity:.85 }
+}
+@keyframes challengeFromBottom{
+  0%{ transform:translate(18px, 34px) rotate(12deg) scale(.96); opacity:.85 }
+  40%{ transform:translate(8px, 10px) rotate(6deg) scale(1.06); opacity:1 }
+  50%{ transform:translate(4px, 4px) rotate(2deg) scale(1.1); opacity:1 }
+  60%{ transform:translate(8px, 8px) rotate(5deg) scale(1.04); opacity:.98 }
+  100%{ transform:translate(18px, 34px) rotate(12deg) scale(.96); opacity:.85 }
+}
+@keyframes bangPop{ 0%,100%{ transform:translateY(6px) scale(.85) rotate(0deg); opacity:.75 } 45%{ transform:translateY(-2px) scale(1.28) rotate(8deg); opacity:1 } 55%{ transform:translateY(-2px) scale(1.18) rotate(-8deg); opacity:1 } }
+@keyframes ringPulse{ 0%{ transform:scale(.6); opacity:.9 } 70%{ transform:scale(1.7); opacity:.25 } 100%{ transform:scale(1.9); opacity:0 } }
 
 /* Smooth swap animation (disabled for show/hide) */
 @keyframes fadeSlide { from{opacity:0; transform:translateY(6px)} to{opacity:1; transform:none} }
@@ -364,6 +467,7 @@ tbody.swap{ animation: fadeSlide .22s ease both }
 .rows_grid{ display:block; width:100% }
 .row_grid{ display:grid; grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr); align-items:center }
 .row_grid .cell{ padding:10px 12px; border-bottom:1px solid var(--border) }
+.row_grid .cell.athlete{ position:relative; overflow:visible; z-index:1 }
 .row_grid .cell.rank{ display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--accent); background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important; border-left:none !important; border-right:none !important; border-bottom:1px solid var(--border) !important; border-radius:6px; padding:10px 0 !important }
 
 /* Trophy SVG (bigger) with number overlay */
