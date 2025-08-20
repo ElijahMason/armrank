@@ -494,6 +494,13 @@ export default {
     },
   },
   methods:{
+    resolveImage(path){
+      const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/'
+      const p = String(path || '').trim()
+      if(!p) return base + 'default_club.png'
+      if(/^https?:\/\//i.test(p)) return p
+      return base + p.replace(/^\//,'')
+    },
     toggleShowAll(){ this.show_all = !this.show_all },
     toggleTip(key){
       this.open_tip_key = this.open_tip_key === key ? '' : key
@@ -501,7 +508,7 @@ export default {
       if(this.open_tip_key){ this.tip_timer = setTimeout(()=>{ this.open_tip_key = '' }, 2200) }
     },
     heroBg(url){
-      const u = url || '/default_club.png'
+      const u = this.resolveImage(url || 'default_club.png')
       return `linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)), url('${u}')`
     },
     gvizCsv(tab){

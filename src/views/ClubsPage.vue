@@ -26,7 +26,7 @@
 			<div v-else class="clubs_grid" :class="{ is_ready: !is_loading }">
 				<div v-for="(c, i) in clubs_sorted" :key="i" class="club_card" @click="openClub(c)" role="button" :aria-label="`Open ${c.name}`" tabindex="0" @keyup.enter="openClub(c)">
 					<div class="club_hero" aria-hidden="true">
-						<img class="club_img" :src="c.image_url || '/default_club.png'" loading="lazy" alt="" v-img-loaded />
+						<img class="club_img" :src="resolveImage(c.image_url || 'default_club.png')" loading="lazy" alt="" v-img-loaded />
 						<div class="hero_overlay"></div>
 					</div>
 					<div class="club_body">
@@ -141,6 +141,13 @@ export default {
 	},
 	methods:{
 		clearFilters(){ this.only_oregon = false },
+		resolveImage(path){
+			const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/'
+			const p = String(path || '').trim()
+			if(!p) return base + 'default_club.png'
+			if(/^https?:\/\//i.test(p)) return p
+			return base + p.replace(/^\//,'')
+		},
 		gvizCsv(tab){
 			return `https://docs.google.com/spreadsheets/d/${this.sheet_id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`
 		},
