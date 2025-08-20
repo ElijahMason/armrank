@@ -120,7 +120,7 @@ export default {
 				{ name: 'Brute Squad', city: 'Portland', region: 'Portland Metro', leaders: ['Mark Owen'], verified: true, image_url: 'https://m.media-amazon.com/images/M/MV5BODUzZThmOGQtYjJlZS00NTRhLTllOWEtNjU4NWQ4OTQxODE1XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg', training:['Weekly practice'], avg_practice_size:17, desc:'Meets Sundays at 4:00pm.', members_count:80, leader_footer: { num:'4x', tail:' World Champion' }, city_medal_rank:1, medals_this_year:159, supermatches_hosted:13 },
 				{ name: 'Strong Arms', city: 'Salem', region: 'Willamette Valley', leaders: ['Jacob Abbot'], verified: true, image_url: null, training:['Weekly practice'] },
 				{ name: 'Grip Titans', city: 'Roseburg', region: 'Southern Oregon', leaders: ['Peter Lalande'], verified: true, image_url: null, members_count:65, training:['Friday nights'], avg_practice_size:15, medals_this_year:40 },
-				{ name: 'Wrist Crackers', city: 'Tri-Cities', region: 'Washington', leaders: ['Beaumont Zunker'], verified: true, image_url: null, members_count:40, out_of_state:true },
+				{ name: 'Wrist Krackers', city: 'Tri-Cities', region: 'Washington', leaders: ['Beaumont Zunker'], verified: true, image_url: null, members_count:40, out_of_state:true },
 				{ name: 'Capital City Grippers', city: 'Salem', region: 'Willamette Valley', leaders: [], verified: true, image_url: null, members_count:12, training:['Fridays 5:30pm'], desc:'Meets Fridays at 5:30pm.' },
 				{ name: 'Amity Wrist Breakers', city: 'Amity', region: 'Willamette Valley', leaders: ['Nicolas Mode'], verified: true, image_url: null, members_count:49 },
 			],
