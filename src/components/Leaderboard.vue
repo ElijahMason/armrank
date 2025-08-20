@@ -28,14 +28,14 @@
         <table class="table">
           <thead>
             <tr>
-              <th>Left</th>
+              <th class="left_hdr">Left</th>
               <th class="rank">#</th>
-              <th>Right</th>
+              <th class="right_hdr">Right</th>
             </tr>
           </thead>
           <tbody ref="tbody_ref">
             <tr v-if="!loaded"><td colspan="3">Loading…</td></tr>
-            <tr v-else-if="load_error"><td colspan="3">Failed to load Google Sheets data.</td></tr>
+            <tr v-else-if="load_error"><td colspan="3">Failed to load rankings data. Refresh the page and try again.</td></tr>
 
             <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class">
               <td class="athlete"><span class="name_text">{{ row.left_name }}</span>
@@ -186,6 +186,7 @@ export default {
       const extra = this.combine_lower && cls !== this.classes[0] ? ' + lower' : ''
       return `${text}${extra}`
     },
+
     classes_to_combine() {
       const i = this.classes.indexOf(this.selected_class)
       return this.classes.slice(0, i + 1)
@@ -523,4 +524,14 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 /* Slight horizontal tweak for 2 and 3 */
 .trophy_2 .trophy_num,
 .trophy_3 .trophy_num{ transform: translate(1px, -7px) }
+
+.left_hdr{text-align:right !important}
+.right_hdr{text-align:left}
+.table thead th.rank{ text-align:center }
+
+.table tbody td.athlete:first-child{ text-align:right }
+.table tbody td.athlete:last-child{ text-align:left }
+
+.row_grid .cell.athlete:first-child{ text-align:right }
+.row_grid .cell.athlete:last-child{ text-align:left }
 </style> 

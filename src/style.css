@@ -25,6 +25,19 @@ html, body{
   color:var(--text);font-family:Inter,system-ui,Arial,sans-serif
 }
 
+/* Hide scrollbars (keep scroll functionality) */
+html, body, .modal, .panel, .wrap, .rows_grid, .member_list{
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.modal::-webkit-scrollbar,
+.panel::-webkit-scrollbar,
+.wrap::-webkit-scrollbar,
+.rows_grid::-webkit-scrollbar,
+.member_list::-webkit-scrollbar{ display:none }
+
 header{position:sticky;top:0;z-index:20;backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(7,14,28,.92), rgba(7,14,28,.55));border-bottom:1px solid var(--border)}
 .top_bar{display:flex;gap:14px;align-items:center;justify-content:space-between;padding:12px 24px}
 .brand{display:flex;gap:12px;align-items:center;font-weight:800}

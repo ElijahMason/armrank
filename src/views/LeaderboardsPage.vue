@@ -14,40 +14,42 @@
     sticky_prefix="Women • "
   />
 
-  <section class="panel feedback_panel" role="region" aria-label="Feedback">
-    <div class="panel_header">
-      <h2 class="title">Feedback</h2>
-    </div>
-    <form class="feedback_form" @submit.prevent="submitFeedback" novalidate>
-      <label class="field">
-        <span class="label">Name</span>
-        <input
-          v-model="feedback_name"
-          type="text"
-          inputmode="text"
-          autocomplete="name"
-          placeholder="Your name (optional)"
-          class="input"
-        />
-      </label>
-      <label class="field">
-        <span class="label">Suggest features / rank changes</span>
-        <textarea
-          v-model="feedback_text"
-          rows="5"
-          placeholder="Share ideas, feature requests, or rank change requests"
-          class="textarea"
-          required
-        ></textarea>
-      </label>
-      <div class="actions">
-        <button type="submit" class="primary_btn" :disabled="is_sending || !feedback_text.trim()">
-          {{ is_sending ? 'Sending…' : 'Send feedback' }}
-        </button>
+  <main class="main_container">
+    <section id="feedback" class="panel feedback_panel" role="region" aria-label="Feedback">
+      <div class="panel_header">
+        <h2 class="title">Feedback</h2>
       </div>
-    </form>
-    <p class="footer_note">A work in progress by Elijah Mason.</p>
-  </section>
+      <form class="feedback_form" @submit.prevent="submitFeedback" novalidate>
+        <label class="field">
+          <span class="label">Name</span>
+          <input
+            v-model="feedback_name"
+            type="text"
+            inputmode="text"
+            autocomplete="name"
+            placeholder="Your name (optional)"
+            class="input"
+          />
+        </label>
+        <label class="field">
+          <span class="label">Suggest features / rank changes</span>
+          <textarea
+            v-model="feedback_text"
+            rows="5"
+            placeholder="Suggest features / rank changes / club updates / etc."
+            class="textarea"
+            required
+          ></textarea>
+        </label> 
+        <div class="actions">
+          <button type="submit" class="primary_btn" :disabled="is_sending || !feedback_text.trim()">
+            {{ is_sending ? 'Sending…' : 'Send feedback' }}
+          </button>
+        </div>
+      </form>
+      <p class="footer_note">Or contact Peter Lalande or Elijah Mason directly.</p>
+    </section>
+  </main>
 
   <div v-if="toast_show" class="toast" :class="toast_type" role="status" aria-live="polite">{{ toast_msg }}</div>
 </template>
@@ -65,6 +67,19 @@ export default {
       toast_msg: '',
       toast_type: 'success',
       webhook_url: 'https://discord.com/api/webhooks/1404936162040217630/_29ERb9EONoLzbQxK4pabApD5M5K8sUi6ViHk3PDSmmejJIB5MKmT8UUkzZph6NNnDds',
+    }
+  },
+  mounted(){
+    if(this.$route?.query?.goto === 'feedback'){
+      const scrollNow = ()=>{ document.getElementById('feedback')?.scrollIntoView({ behavior:'smooth', block:'start' }) }
+      this.$nextTick(scrollNow)
+      // Re-scroll a few times to compensate for late content height changes
+      let attempts = 0
+      const id = setInterval(()=>{
+        scrollNow()
+        attempts++
+        if(attempts > 12) clearInterval(id)
+      }, 150)
     }
   },
   methods:{

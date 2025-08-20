@@ -4,8 +4,11 @@
       <div class="panel_header">
         <h2 class="title">Upcoming Tournaments</h2>
       </div>
+      <div class="notice_bar" role="note" aria-label="Tournaments notice">
+        We’re actively adding and updating tournaments. Check back regularly for the most current information.
+      </div>
       <div class="banners">
-        <div v-for="(t, i) in tournaments" :key="i" class="banner">
+        <div v-for="(t, i) in tournaments" :key="i" class="banner" @click="openDetails(t)" role="button" :aria-label="`Open ${t.name}`" tabindex="0" @keyup.enter="openDetails(t)">
           <div
             class="banner_img"
             :style="{
@@ -20,12 +23,11 @@
               <div class="banner_date">{{ displayDate(t) }}</div>
             </div>
             <div class="banner_meta">
-              <div class="banner_loc">
-                {{ t.location }}
+              <div class="banner_loc">{{ t.location }}</div>
+              <div class="badge_wrap">
                 <span v-if="t.pending_details" class="badge_pending_inline">Pending</span>
                 <span v-else class="badge_confirmed_inline">Confirmed</span>
               </div>
-              <button class="banner_cta" @click="openDetails(t)">Details</button>
             </div>
           </div>
         </div>
@@ -149,16 +151,17 @@ export default {
 .panel{background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--glow);margin-top:18px;overflow:hidden}
 .panel_header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
 .title{margin:0;font-size:20px}
+.notice_bar{padding:10px 16px; border-bottom:1px solid var(--border); background:var(--header-bg); color:var(--muted); font-weight:800}
 .banners{display:grid;grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));gap:16px;padding:16px}
-.banner{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.banner{display:flex;flex-direction:column;background:var(--panel);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform .18s ease, box-shadow .18s ease}
+.banner:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(0,0,0,.25)}
 .banner_img{height:160px;background-size:cover;background-position:center}
-.banner_body{padding:14px;display:flex;flex-direction:column;gap:10px}
+.banner_body{padding:14px;display:flex;flex-direction:column;gap:10px;position:relative; padding-right:96px}
 .banner_head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .banner_title{margin:0;font-size:18px}
 .banner_date{color:var(--muted);font-weight:700}
 .banner_meta{display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+.badge_wrap{position:absolute; right:14px; bottom:14px}
 .badge_pending_inline{margin-left:8px; font-weight:900; font-size:11px; padding:2px 6px; border-radius:999px; border:2px solid var(--accent); color:var(--text)}
 .badge_confirmed_inline{margin-left:8px; font-weight:900; font-size:11px; padding:2px 6px; border-radius:999px; border:2px solid #2ecc71; color:var(--text)}
-.banner_cta{display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}
-.banner_cta:hover{filter:brightness(1.06)}
 </style> 
