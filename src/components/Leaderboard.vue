@@ -56,7 +56,7 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
                   </svg>
-                  <span class="trophy_num" aria-hidden="true">{{ i + 1 }}</span>
+                  <span class="trophy_num" aria-hidden="true" :style="trophyNumStyle(i+1)">{{ i + 1 }}</span>
                 </span>
                 <span v-else>{{ i + 1 }}</span>
               </td>
@@ -115,7 +115,7 @@
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
                   </svg>
-                  <span class="trophy_num" aria-hidden="true">{{ first_rows_count + j + 1 }}</span>
+                  <span class="trophy_num" aria-hidden="true" :style="trophyNumStyle(first_rows_count + j + 1)">{{ first_rows_count + j + 1 }}</span>
                 </span>
                 <span v-else>{{ first_rows_count + j + 1 }}</span>
               </div>
@@ -260,6 +260,13 @@ export default {
     },
   },
   methods: {
+    trophyNumStyle(rank){
+      if(rank === 2 || rank === 3){
+        // strong inline override to ensure tournaments view reflects change
+        return { transform: 'translate(4px, -7px)', pointerEvents: 'none' }
+      }
+      return {}
+    },
     selectClass(cls) {
       this.selected_class = cls
     },
