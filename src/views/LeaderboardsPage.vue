@@ -46,7 +46,7 @@
           </fieldset>
           <label class="field">
             <span class="label">Score ({{ scoreHint }})</span>
-            <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input score_input" @input="onScoreInput" />
+            <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input score_input" :class="{ error: scoreError }" @input="onScoreInput" />
             <div class="error_hint" v-show="scoreError">(format: 3-0)</div>
           </label>
         </div>
@@ -407,7 +407,7 @@ export default {
 .close_btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-weight:800;cursor:pointer}
 /* Hand slider */
 .hand_slider{display:flex;justify-content:center;padding:2px 0}
-.hand_slider .track{position:relative;width:100%;max-width:520px;height:44px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.hand_slider .track{position:relative;width:100%;max-width:520px;height:44px;background:transparent;border:none;border-radius:999px;overflow:hidden}
 .hand_slider .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 6px);height:38px;border-radius:999px;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 10px 24px rgba(215,180,58,.18);transition:transform .22s ease}
 .hand_slider .thumb.right{transform:translateX(100%)}
 .hand_slider .hand_label{position:absolute;top:50%;transform:translateY(-50%);width:50%;text-align:center;color:var(--muted);font-weight:900;letter-spacing:.3px}
