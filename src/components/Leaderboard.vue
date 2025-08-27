@@ -525,6 +525,11 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .trophy_2 .trophy_num,
 .trophy_3 .trophy_num{ transform: translate(-2px, -7px) }
 
+@media(max-width:760px){
+  .trophy_2 .trophy_num,
+  .trophy_3 .trophy_num{ transform: translate(-3px, -7px) }
+}
+
 .left_hdr{text-align:right !important}
 .right_hdr{text-align:left}
 .table thead th.rank{ text-align:center }
