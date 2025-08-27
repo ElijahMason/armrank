@@ -44,10 +44,10 @@
               <label class="radio_opt"><input type="radio" name="sm_winner" value="B" v-model="sm_winner" /> <span>{{ sm_b || 'Competitor B' }}</span></label>
             </div>
           </fieldset>
-          <label class="field">
+          <label class="field" :class="{ error: scoreError }">
             <span class="label">Score ({{ scoreHint }})</span>
             <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input score_input" :class="{ error: scoreError }" @input="onScoreInput" @blur="onScoreInput" />
-            <div class="error_hint" v-show="scoreError">(format: 3-0)</div>
+            <div class="error_hint" v-show="scoreError">(format: 3-1)</div>
           </label>
         </div>
 
@@ -197,20 +197,16 @@ export default {
       const winner = (this.sm_winner || '').trim()
       const ok = !!(a && b && hand && winner)
       return this.is_sending_sm || !(ok && this.scoreIsValid())
+    },
+    todayStr(){
+      const d = new Date()
+      const pad = n => String(n).padStart(2,'0')
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
     }
   },
   mounted(){
     try{ this.submitter_name = localStorage.getItem('armrank_submitter_name') || '' }catch{}
     this.fetchClientIp()
-  },
-  computed:{
-    todayStr(){
-      const d = new Date()
-      const pad = n => String(n).padStart(2,'0')
-      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
-    },
-    
-    
   },
   methods:{
     onScoreInput(){
@@ -390,6 +386,8 @@ export default {
 .input,.textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:10px 12px;font-family:inherit;font-size:14px}
 .input:focus,.textarea:focus{outline:none;border-color:rgba(215,180,58,.35)}
 .input.error{border-color:#e74c3c}
+.field.error .input{border-color:#e74c3c}
+.field.error .label{color:#ff9b91}
 .error_hint{color:#e74c3c;font-weight:800;font-size:12px}
 .actions{display:flex;justify-content:flex-end}
 .primary_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}
@@ -415,7 +413,7 @@ export default {
 .hand_slider .hand_label.left{left:0}
 .hand_slider .hand_label.right{right:0}
 /* Less glowy, squarer submit button */
-.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid rgba(185,147,34,.55);background:rgba(215,180,58,1);color:#061626;font-weight:900}
-.submit_btn.gold{background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent}
-.submit_btn[disabled]{opacity:1;cursor:not-allowed;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:var(--muted)}
+.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid rgba(185,147,34,.55);background:transparent;color:#061626;font-weight:900}
+.submit_btn.gold{background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent;color:#061626}
+.submit_btn[disabled]{opacity:1;cursor:not-allowed;background:transparent;border-color:rgba(255,255,255,.12);color:var(--muted)}
 </style>
