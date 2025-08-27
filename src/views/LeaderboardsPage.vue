@@ -45,7 +45,7 @@
             </div>
           </fieldset>
           <label class="field">
-            <span class="label">Score (A-B)</span>
+            <span class="label">Score ({{ scoreHint }})</span>
             <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input" @input="onScoreInput" />
           </label>
         </div>
@@ -53,24 +53,7 @@
         <div class="row two_cols">
           <fieldset class="field" role="group" aria-label="Hand">
             <span class="label">Hand<span class="req">*</span></span>
-            <div
-              class="hand_slider"
-              role="slider"
-              tabindex="0"
-              :aria-valuemin="0"
-              :aria-valuemax="1"
-              :aria-valuenow="sm_hand==='RH'?1:0"
-              :aria-valuetext="sm_hand==='RH' ? 'Right' : (sm_hand==='LH' ? 'Left' : 'Not selected')"
-              @click="toggleHand"
-              @keydown.enter.prevent="toggleHand"
-              @keydown.space.prevent="toggleHand"
-            >
-              <div class="track">
-                <div class="hand_label left">Left</div>
-                <div class="hand_label right">Right</div>
-                <div class="thumb" :class="{ right: sm_hand==='RH' }"></div>
-              </div>
-            </div>
+            <HandSlider v-model="sm_hand" />
           </fieldset>
           <div class="spacer"></div>
         </div>
@@ -100,7 +83,7 @@
             </label>
             <label class="field">
               <span class="label">Location</span>
-              <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue (optional)" class="input" />
+              <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue" class="input" />
             </label>
           </div>
           <label class="field">
@@ -109,8 +92,8 @@
           </label>
         </div>
         <div class="actions">
-          <button type="submit" class="submit_btn" :disabled="is_sending_sm || !canSubmitSupermatch">
-            {{ is_sending_sm ? 'Submitting…' : 'Submit supermatch' }}
+          <button type="submit" class="submit_btn gold" :disabled="is_sending_sm || !canSubmitSupermatch">
+            {{ is_sending_sm ? 'Submitting…' : 'Submit' }}
           </button>
         </div>
       </form>
@@ -159,9 +142,10 @@
 </template>
 <script>
 import Leaderboard from '../components/Leaderboard.vue'
+import HandSlider from '../components/HandSlider.vue'
 export default {
   name: 'LeaderboardsPage',
-  components: { Leaderboard },
+  components: { Leaderboard, HandSlider },
   data(){
     return {
       feedback_name: '',
@@ -187,6 +171,18 @@ export default {
       toast_msg: '',
       toast_type: 'success',
       webhook_url: 'https://discord.com/api/webhooks/1404936162040217630/_29ERb9EONoLzbQxK4pabApD5M5K8sUi6ViHk3PDSmmejJIB5MKmT8UUkzZph6NNnDds',
+    }
+  },
+  computed:{
+    scoreHint(){
+      const a = (this.sm_a || '').trim()
+      const b = (this.sm_b || '').trim()
+      const w = (this.sm_winner || '').trim()
+      if(!a || !b || !w) return 'W - L'
+      const first = s => s.split(/\s+/)[0] || s
+      const winName = w === 'A' ? first(a) : first(b)
+      const loseName = w === 'A' ? first(b) : first(a)
+      return `${winName} - ${loseName}`
     }
   },
   mounted(){
@@ -387,6 +383,7 @@ export default {
 .hand_slider .hand_label.left{left:0}
 .hand_slider .hand_label.right{right:0}
 /* Less glowy, squarer submit button */
-.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);font-weight:900}
+.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid rgba(185,147,34,.55);background:rgba(215,180,58,1);color:#061626;font-weight:900}
+.submit_btn.gold{background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent}
 .submit_btn[disabled]{opacity:.6;cursor:not-allowed}
 </style>
