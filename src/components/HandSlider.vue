@@ -42,8 +42,7 @@ export default {
 .hand_slider_wrap{display:flex;justify-content:center}
 .hand_slider{display:flex;justify-content:center;padding:2px 0;width:100%}
 .track{position:relative;width:100%;max-width:100%;height:44px;border-radius:999px;overflow:hidden}
-/* No gray box around selector */
-.track::before{content:'';position:absolute;inset:0;border-radius:999px}
+.track::before{content:'';position:absolute;inset:0;border-radius:999px;background:transparent;border:none}
 .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 6px);height:38px;border-radius:999px;background:var(--accent);transition:transform .22s ease}
 .thumb.right{transform:translateX(100%)}
 .hand_label{position:absolute;z-index:2;top:50%;transform:translateY(-50%);width:50%;text-align:center;font-weight:900;letter-spacing:.3px;color:var(--muted);pointer-events:none;mix-blend-mode:normal}

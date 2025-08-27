@@ -46,7 +46,8 @@
           </fieldset>
           <label class="field">
             <span class="label">Score ({{ scoreHint }})</span>
-            <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input" @input="onScoreInput" />
+            <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input score_input" @input="onScoreInput" />
+            <div class="error_hint" v-show="scoreError">(format: 3-0)</div>
           </label>
         </div>
 
@@ -183,6 +184,11 @@ export default {
       const winName = w === 'A' ? first(a) : first(b)
       const loseName = w === 'A' ? first(b) : first(a)
       return `${winName} - ${loseName}`
+    },
+    scoreError(){
+      const s = (this.sm_score || '').trim()
+      if(!s) return false
+      return !/^\d+-\d+$/.test(s)
     }
   },
   mounted(){
@@ -216,12 +222,18 @@ export default {
       const clean = parts.map(p => p.replace(/[^0-9]/g,'').replace(/^0+(\d)/,'$1'))
       this.sm_score = clean.join(parts.length > 1 ? '-' : '')
     },
+    scoreIsValid(){
+      const s = (this.sm_score || '').trim()
+      if(!s) return true
+      return /^\d+-\d+$/.test(s)
+    },
     canSubmitSupermatch(){
       const a = (this.sm_a || '').trim()
       const b = (this.sm_b || '').trim()
       const hand = (this.sm_hand || '').trim()
       const winner = (this.sm_winner || '').trim()
-      return !!(a && b && hand && winner)
+      const ok = !!(a && b && hand && winner)
+      return ok && this.scoreIsValid()
     },
     toggleHand(){
       if(this.sm_hand === 'RH') this.sm_hand = 'LH';
@@ -376,6 +388,8 @@ export default {
 .label{color:var(--muted);font-weight:700}
 .input,.textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:10px 12px;font-family:inherit;font-size:14px}
 .input:focus,.textarea:focus{outline:none;border-color:rgba(215,180,58,.35)}
+.input.error{border-color:#e74c3c}
+.error_hint{color:#e74c3c;font-weight:800;font-size:12px}
 .actions{display:flex;justify-content:flex-end}
 .primary_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}
 .primary_btn[disabled]{opacity:.6; cursor:not-allowed}
@@ -402,5 +416,5 @@ export default {
 /* Less glowy, squarer submit button */
 .submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid rgba(185,147,34,.55);background:rgba(215,180,58,1);color:#061626;font-weight:900}
 .submit_btn.gold{background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent}
-.submit_btn[disabled]{opacity:.6;cursor:not-allowed}
+.submit_btn[disabled]{opacity:1;cursor:not-allowed;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:var(--muted)}
 </style>
