@@ -1,5 +1,5 @@
 <template>
-  <main class="main_container">
+  <main class="main_container tournaments_main">
     <section class="panel">
       <div class="panel_header">
         <h2 class="title">Upcoming Tournaments</h2>
@@ -148,6 +148,7 @@ export default {
 </script>
 <style scoped>
 .main_container{width:min(1100px,100%);margin:0 auto;padding-inline:clamp(12px,3vw,24px);padding-block:24px}
+.tournaments_main{padding-bottom:64px}
 .panel{background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--glow);margin-top:18px;overflow:hidden}
 .panel_header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
 .title{margin:0;font-size:20px}

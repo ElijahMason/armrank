@@ -45,17 +45,31 @@
             </div>
           </fieldset>
           <label class="field">
-            <span class="label">Score</span>
-            <input v-model="sm_score" type="text" inputmode="text" placeholder="e.g. 3-1" class="input" />
+            <span class="label">Score (A-B)</span>
+            <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input" @input="onScoreInput" />
           </label>
         </div>
 
         <div class="row two_cols">
           <fieldset class="field" role="group" aria-label="Hand">
             <span class="label">Hand<span class="req">*</span></span>
-            <div class="segmented" role="tablist" aria-label="Hand selection">
-              <button type="button" class="seg_btn" :aria-pressed="sm_hand==='RH' ? 'true' : 'false'" @click="sm_hand='RH'">Right</button>
-              <button type="button" class="seg_btn" :aria-pressed="sm_hand==='LH' ? 'true' : 'false'" @click="sm_hand='LH'">Left</button>
+            <div
+              class="hand_slider"
+              role="slider"
+              tabindex="0"
+              :aria-valuemin="0"
+              :aria-valuemax="1"
+              :aria-valuenow="sm_hand==='RH'?1:0"
+              :aria-valuetext="sm_hand==='RH' ? 'Right' : (sm_hand==='LH' ? 'Left' : 'Not selected')"
+              @click="toggleHand"
+              @keydown.enter.prevent="toggleHand"
+              @keydown.space.prevent="toggleHand"
+            >
+              <div class="track">
+                <div class="hand_label left">Left</div>
+                <div class="hand_label right">Right</div>
+                <div class="thumb" :class="{ right: sm_hand==='RH' }"></div>
+              </div>
             </div>
           </fieldset>
           <div class="spacer"></div>
@@ -64,19 +78,19 @@
         <div class="adv_toggle_row">
           <button type="button" class="ghost_btn" @click="advanced_open = !advanced_open" :aria-expanded="String(advanced_open)">
             {{ advanced_open ? 'Hide' : 'Show' }} advanced fields
-            <svg class="chev" viewBox="0 0 24 24" :class="{up: advanced_open}"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="chev" viewBox="0 0 24 24" :class="{up: advanced_open}"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
 
         <div class="advanced_drawer" :class="{ open: advanced_open }" aria-hidden="false">
           <div class="row two_cols">
             <label class="field">
-              <span class="label">{{ sm_a || 'Competitor 1' }} weight</span>
-              <input v-model="sm_weight1" type="text" inputmode="text" placeholder="e.g. 198 lbs" class="input" />
+              <span class="label">{{ sm_a || 'Competitor 1' }} weight (lbs)</span>
+              <input v-model="sm_weight1" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" />
             </label>
             <label class="field">
-              <span class="label">{{ sm_b || 'Competitor 2' }} weight</span>
-              <input v-model="sm_weight2" type="text" inputmode="text" placeholder="e.g. 176 lbs" class="input" />
+              <span class="label">{{ sm_b || 'Competitor 2' }} weight (lbs)</span>
+              <input v-model="sm_weight2" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" />
             </label>
           </div>
           <div class="row two_cols">
@@ -95,7 +109,7 @@
           </label>
         </div>
         <div class="actions">
-          <button type="submit" class="primary_btn" :disabled="is_sending_sm || !canSubmitSupermatch">
+          <button type="submit" class="submit_btn" :disabled="is_sending_sm || !canSubmitSupermatch">
             {{ is_sending_sm ? 'Submitting…' : 'Submit supermatch' }}
           </button>
         </div>
@@ -180,12 +194,25 @@ export default {
     this.fetchClientIp()
   },
   methods:{
+    onScoreInput(){
+      // Enforce score pattern: int-int
+      let v = String(this.sm_score || '')
+      v = v.replace(/[^0-9-]/g,'')
+      // Only keep one dash and split into two integer segments
+      const parts = v.split('-').slice(0,2)
+      const clean = parts.map(p => p.replace(/[^0-9]/g,'').replace(/^0+(\d)/,'$1'))
+      this.sm_score = clean.join(parts.length > 1 ? '-' : '')
+    },
     canSubmitSupermatch(){
       const a = (this.sm_a || '').trim()
       const b = (this.sm_b || '').trim()
       const hand = (this.sm_hand || '').trim()
       const winner = (this.sm_winner || '').trim()
       return !!(a && b && hand && winner)
+    },
+    toggleHand(){
+      if(this.sm_hand === 'RH') this.sm_hand = 'LH';
+      else this.sm_hand = 'RH'
     },
     persistSubmitterName(){
       try{ localStorage.setItem('armrank_submitter_name', this.submitter_name || '') }catch{}
@@ -346,9 +373,20 @@ export default {
 @keyframes toastPop{ from{ opacity:0; transform:translateX(-50%) translateY(6px) scale(.98)} to{ opacity:1; transform:translateX(-50%) translateY(0) scale(1)} }
 
 /* Feedback bottom sheet */
-.feedback_tab{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:40;padding:8px 14px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;cursor:pointer}
+.feedback_tab{position:fixed;left:12px;bottom:0;z-index:40;padding:8px 14px 6px 14px;border-radius:8px 8px 0 0;border:1px solid rgba(30,144,255,.35);background:linear-gradient(180deg, rgba(30,144,255,.85), rgba(30,144,255,.8));color:#061626;font-weight:900;cursor:pointer}
 .feedback_sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:min(720px,100%);background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));border:1px solid var(--border);border-radius:14px 14px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.35);z-index:45;transition:transform .28s ease}
 .feedback_sheet.open{transform:translateX(-50%) translateY(0)}
 .sheet_header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
 .close_btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-weight:800;cursor:pointer}
+/* Hand slider */
+.hand_slider{display:flex;justify-content:center;padding:2px 0}
+.hand_slider .track{position:relative;width:100%;max-width:520px;height:44px;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:999px;overflow:hidden}
+.hand_slider .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 6px);height:38px;border-radius:999px;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 10px 24px rgba(215,180,58,.18);transition:transform .22s ease}
+.hand_slider .thumb.right{transform:translateX(100%)}
+.hand_slider .hand_label{position:absolute;top:50%;transform:translateY(-50%);width:50%;text-align:center;color:var(--muted);font-weight:900;letter-spacing:.3px}
+.hand_slider .hand_label.left{left:0}
+.hand_slider .hand_label.right{right:0}
+/* Less glowy, squarer submit button */
+.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:var(--text);font-weight:900}
+.submit_btn[disabled]{opacity:.6;cursor:not-allowed}
 </style>
