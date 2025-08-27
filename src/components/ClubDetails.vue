@@ -759,7 +759,7 @@ export default {
 .trophy_3 svg{ fill: var(--bronze) }
 .trophy_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px); pointer-events:none }
 .trophy_2 .trophy_num,
-.trophy_3 .trophy_num{ transform: translate(1px, -7px) }
+.trophy_3 .trophy_num{ transform: translate(-2px, -7px) }
 
 /* Buttons styling to match app */
 .primary_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:10px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}
