@@ -79,7 +79,7 @@
           <div class="row two_cols">
             <label class="field">
               <span class="label">Date</span>
-              <input v-model="sm_date" type="date" class="input" />
+              <input v-model="sm_date" type="date" class="input" :max="todayStr" />
             </label>
             <label class="field">
               <span class="label">Location</span>
@@ -188,6 +188,23 @@ export default {
   mounted(){
     try{ this.submitter_name = localStorage.getItem('armrank_submitter_name') || '' }catch{}
     this.fetchClientIp()
+  },
+  computed:{
+    todayStr(){
+      const d = new Date()
+      const pad = n => String(n).padStart(2,'0')
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
+    },
+    scoreHint(){
+      const a = (this.sm_a || '').trim()
+      const b = (this.sm_b || '').trim()
+      const w = (this.sm_winner || '').trim()
+      if(!a || !b || !w) return 'W - L'
+      const first = s => s.split(/\s+/)[0] || s
+      const winName = w === 'A' ? first(a) : first(b)
+      const loseName = w === 'A' ? first(b) : first(a)
+      return `${winName} - ${loseName}`
+    }
   },
   methods:{
     onScoreInput(){
