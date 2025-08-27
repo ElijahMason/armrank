@@ -53,7 +53,7 @@
 
         <div class="row two_cols">
           <fieldset class="field" role="group" aria-label="Hand">
-            <span class="label">Hand<span class="req">*</span></span>
+            <span class="label">Hand</span>
             <HandSlider v-model="sm_hand" />
           </fieldset>
           <div class="spacer"></div>
@@ -416,5 +416,5 @@ export default {
 /* Less glowy, squarer submit button */
 .submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid rgba(185,147,34,.55);background:rgba(215,180,58,1);color:#061626;font-weight:900}
 .submit_btn.gold{background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent}
-.submit_btn[disabled]{opacity:1;cursor:not-allowed;background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:var(--muted)}
+.submit_btn[disabled]{opacity:1;cursor:not-allowed;background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12);color:var(--muted)}
 </style>
