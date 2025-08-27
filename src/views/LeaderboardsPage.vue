@@ -71,11 +71,12 @@
         </div>
 
         <div class="adv_toggle_row">
-          <button type="button" class="ghost_btn" @click="advanced_open = !advanced_open" :aria-expanded="String(advanced_open)">
+          <button type="button" class="ghost_btn dividerless" @click="advanced_open = !advanced_open" :aria-expanded="String(advanced_open)">
             {{ advanced_open ? 'Hide' : 'Show' }} advanced fields
             <svg class="chev" viewBox="0 0 24 24" :class="{up: advanced_open}"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
         </div>
+        <div class="divider"></div>
 
         <div class="advanced_drawer" :class="{ open: advanced_open }" aria-hidden="false">
           <div class="row two_cols">
@@ -102,8 +103,10 @@
             <span class="label">Notes</span>
             <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea" @blur="sm_notes_blurred = true" :class="{ valid: sm_notes_blurred && !!(sm_notes || '').trim() }"></textarea>
           </label>
+          <div class="divider"></div>
         </div>
-        <div class="actions">
+        <div class="actions with_summary">
+          <div class="summary" aria-live="polite">{{ summaryText }}</div>
           <button type="submit" class="submit_btn" :class="{ gold: !submitDisabled }" :disabled="submitDisabled">
             {{ is_sending_sm ? 'Submitting…' : 'Submit' }}
           </button>
@@ -228,6 +231,25 @@ export default {
       // Teal border on blur if filled and valid
       const hasValue = !!(this.sm_score || '').trim()
       return this.sm_score_blurred && hasValue && !this.scoreInvalid
+    },
+    summaryText(){
+      const a = (this.sm_a || '').trim()
+      const b = (this.sm_b || '').trim()
+      const w = (this.sm_winner || '').trim()
+      if(!a || !b || !w) return ''
+      const winnerName = w === 'A' ? a : b
+      const loserName = w === 'A' ? b : a
+      const scored = (this.sm_score || '').trim()
+      let score = '3-0'
+      if(/^\d+-\d+$/.test(scored)){
+        const [l,r] = scored.split('-').map(n=>Number(n))
+        if(Number.isFinite(l) && Number.isFinite(r)){
+          const hi = Math.max(l,r)
+          const lo = Math.min(l,r)
+          score = `${hi}-${lo}`
+        }
+      }
+      return `${winnerName} beat ${loserName} ${score}`
     },
     submitDisabled(){
       const a = (this.sm_a || '').trim()
@@ -453,6 +475,8 @@ export default {
 .seg_btn[aria-pressed="true"]{color:#070e1c;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(215,180,58,.18)}
 .adv_toggle_row{display:flex;justify-content:flex-end;padding-top:4px}
 .ghost_btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);color:var(--muted);background:transparent;cursor:pointer}
+.ghost_btn.dividerless{border-color:transparent;padding-left:0;padding-right:0}
+.divider{height:1px;background:rgba(255,255,255,.08);width:100%}
 .chev{width:16px;height:16px;transition:transform .2s ease}
 .chev.up{transform:rotate(180deg)}
 .advanced_drawer{max-height:0;overflow:hidden;transition:max-height .28s ease}
@@ -462,8 +486,8 @@ export default {
 .field.no_border{border:0}
 .label{color:var(--muted);font-weight:700}
 .input,.textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:10px 12px;font-family:inherit;font-size:14px}
-.input:focus,.textarea:focus{outline:none;border-color:rgba(215,180,58,.35)}
-.input.valid{border-color:#20c997}
+.input:focus,.textarea:focus{outline:none;border-color:rgba(23,162,184,.35)}
+.input.valid{border-color:transparent;background-origin:border-box;background-clip:padding-box,border-box;background-image:linear-gradient(rgba(255,255,255,.02), rgba(255,255,255,.02)),linear-gradient(180deg,#20c997,#17a2b8)}
 .input.error{border-color:#e74c3c}
 .field.error .input{border-color:#e74c3c}
 .field.error .label{color:#ff9b91}
@@ -486,13 +510,15 @@ export default {
 /* Hand slider */
 .hand_slider{display:flex;justify-content:center;padding:2px 0}
 .hand_slider .track{position:relative;width:100%;max-width:520px;height:44px;background:transparent;border:0;border-radius:999px;overflow:hidden}
-.hand_slider .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 6px);height:38px;border-radius:999px;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 10px 24px rgba(215,180,58,.18);transition:transform .22s ease}
+.hand_slider .thumb{position:absolute;top:3px;left:3px;width:calc(50% - 6px);height:38px;border-radius:999px;background:linear-gradient(180deg,#20c997,#17a2b8);box-shadow:0 10px 24px rgba(23,162,184,.18);transition:transform .22s ease}
 .hand_slider .thumb.right{transform:translateX(100%)}
 .hand_slider .hand_label{position:absolute;top:50%;transform:translateY(-50%);width:50%;text-align:center;color:var(--muted);font-weight:900;letter-spacing:.3px}
 .hand_slider .hand_label.left{left:0}
 .hand_slider .hand_label.right{right:0}
 /* Less glowy, squarer submit button */
-.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 16px;border-radius:10px;border:1px solid rgba(185,147,34,.55);background:transparent;color:#061626;font-weight:900}
-.submit_btn.gold{background:linear-gradient(180deg,var(--accent),var(--accent-2));border-color:transparent;color:#061626}
+.actions.with_summary{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.summary{color:var(--muted);font-weight:700}
+.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;border-radius:12px;border:1px solid rgba(23,162,184,.55);background:transparent;color:#061626;font-weight:900}
+.submit_btn.gold{background:linear-gradient(180deg,#20c997,#17a2b8);border-color:transparent;color:#061626}
 .submit_btn[disabled]{opacity:1;cursor:not-allowed;background:transparent;border-color:rgba(255,255,255,.12);color:var(--muted)}
 </style>
