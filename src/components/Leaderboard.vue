@@ -263,7 +263,7 @@ export default {
     trophyNumStyle(rank){
       if(rank === 2 || rank === 3){
         // strong inline override to ensure tournaments view reflects change
-        return { transform: 'translate(-2px, -7px)', pointerEvents: 'none' }
+        return { transform: 'translate(4px, -7px)', pointerEvents: 'none' }
       }
       return {}
     },
