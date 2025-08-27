@@ -20,6 +20,11 @@
         <h2 class="title">Submit Supermatch Result</h2>
       </div>
       <form class="sm_form" @submit.prevent="submitSupermatch" novalidate>
+        <label class="field">
+          <span class="label">Your name</span>
+          <input v-model="submitter_name" @change="persistSubmitterName" @blur="persistSubmitterName" type="text" inputmode="text" placeholder="Who are you?" class="input" />
+        </label>
+
         <div class="row two_cols">
           <label class="field">
             <span class="label">Competitor A</span>
@@ -28,33 +33,6 @@
           <label class="field">
             <span class="label">Competitor B</span>
             <input v-model="sm_b" type="text" inputmode="text" placeholder="Full name" class="input" required />
-          </label>
-        </div>
-
-        <div class="row two_cols">
-          <label class="field">
-            <span class="label">Hand</span>
-            <select v-model="sm_hand" class="input" required>
-              <option disabled value="">Select hand</option>
-              <option value="RH">Right hand</option>
-              <option value="LH">Left hand</option>
-              <option value="Both">Both</option>
-            </select>
-          </label>
-          <label class="field">
-            <span class="label">Weight class</span>
-            <input v-model="sm_weight" type="text" inputmode="text" placeholder="e.g. 198 lbs" class="input" />
-          </label>
-        </div>
-
-        <div class="row two_cols">
-          <label class="field">
-            <span class="label">Date</span>
-            <input v-model="sm_date" type="date" class="input" />
-          </label>
-          <label class="field">
-            <span class="label">Location</span>
-            <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue (optional)" class="input" />
           </label>
         </div>
 
@@ -72,10 +50,50 @@
           </label>
         </div>
 
-        <label class="field">
-          <span class="label">Notes</span>
-          <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea"></textarea>
-        </label>
+        <div class="row two_cols">
+          <fieldset class="field" role="group" aria-label="Hand">
+            <span class="label">Hand<span class="req">*</span></span>
+            <div class="segmented" role="tablist" aria-label="Hand selection">
+              <button type="button" class="seg_btn" :aria-pressed="sm_hand==='RH' ? 'true' : 'false'" @click="sm_hand='RH'">Right</button>
+              <button type="button" class="seg_btn" :aria-pressed="sm_hand==='LH' ? 'true' : 'false'" @click="sm_hand='LH'">Left</button>
+            </div>
+          </fieldset>
+          <div class="spacer"></div>
+        </div>
+
+        <div class="adv_toggle_row">
+          <button type="button" class="ghost_btn" @click="advanced_open = !advanced_open" :aria-expanded="String(advanced_open)">
+            {{ advanced_open ? 'Hide' : 'Show' }} advanced fields
+            <svg class="chev" viewBox="0 0 24 24" :class="{up: advanced_open}"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+
+        <div class="advanced_drawer" :class="{ open: advanced_open }" aria-hidden="false">
+          <div class="row two_cols">
+            <label class="field">
+              <span class="label">{{ sm_a || 'Competitor 1' }} weight</span>
+              <input v-model="sm_weight1" type="text" inputmode="text" placeholder="e.g. 198 lbs" class="input" />
+            </label>
+            <label class="field">
+              <span class="label">{{ sm_b || 'Competitor 2' }} weight</span>
+              <input v-model="sm_weight2" type="text" inputmode="text" placeholder="e.g. 176 lbs" class="input" />
+            </label>
+          </div>
+          <div class="row two_cols">
+            <label class="field">
+              <span class="label">Date</span>
+              <input v-model="sm_date" type="date" class="input" />
+            </label>
+            <label class="field">
+              <span class="label">Location</span>
+              <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue (optional)" class="input" />
+            </label>
+          </div>
+          <label class="field">
+            <span class="label">Notes</span>
+            <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea"></textarea>
+          </label>
+        </div>
         <div class="actions">
           <button type="submit" class="primary_btn" :disabled="is_sending_sm || !canSubmitSupermatch">
             {{ is_sending_sm ? 'Submitting…' : 'Submit supermatch' }}
@@ -83,41 +101,45 @@
         </div>
       </form>
     </section>
-    <section id="feedback" class="panel feedback_panel" role="region" aria-label="Feedback">
-      <div class="panel_header">
-        <h2 class="title">Feedback</h2>
-      </div>
-      <form class="feedback_form" @submit.prevent="submitFeedback" novalidate>
-        <label class="field">
-          <span class="label">Name</span>
-          <input
-            v-model="feedback_name"
-            type="text"
-            inputmode="text"
-            autocomplete="name"
-            placeholder="Your name (optional)"
-            class="input"
-          />
-        </label>
-        <label class="field">
-          <span class="label">Suggest features / rank changes</span>
-          <textarea
-            v-model="feedback_text"
-            rows="5"
-            placeholder="Suggest features / rank changes / club updates / etc."
-            class="textarea"
-            required
-          ></textarea>
-        </label> 
-        <div class="actions">
-          <button type="submit" class="primary_btn" :disabled="is_sending || !feedback_text.trim()">
-            {{ is_sending ? 'Sending…' : 'Send feedback' }}
-          </button>
-        </div>
-      </form>
-      <p class="footer_note">Or contact Peter Lalande or Elijah Mason directly.</p>
-    </section>
   </main>
+
+  <button class="feedback_tab" @click="feedback_open = true" aria-controls="feedback_sheet" :aria-expanded="String(feedback_open)">Feedback</button>
+
+  <section id="feedback_sheet" class="feedback_sheet" :class="{ open: feedback_open }" role="dialog" aria-modal="true" aria-label="Feedback">
+    <div class="sheet_header">
+      <h2 class="title">Feedback</h2>
+      <button class="close_btn" @click="feedback_open = false" aria-label="Close">×</button>
+    </div>
+    <form class="feedback_form" @submit.prevent="submitFeedback" novalidate>
+      <label class="field">
+        <span class="label">Name</span>
+        <input
+          v-model="feedback_name"
+          type="text"
+          inputmode="text"
+          autocomplete="name"
+          placeholder="Your name (optional)"
+          class="input"
+        />
+      </label>
+      <label class="field">
+        <span class="label">Suggest features / rank changes</span>
+        <textarea
+          v-model="feedback_text"
+          rows="5"
+          placeholder="Suggest features / rank changes / club updates / etc."
+          class="textarea"
+          required
+        ></textarea>
+      </label>
+      <div class="actions">
+        <button type="submit" class="primary_btn" :disabled="is_sending || !feedback_text.trim()">
+          {{ is_sending ? 'Sending…' : 'Send feedback' }}
+        </button>
+      </div>
+      <p class="footer_note">Or contact Peter Lalande or Elijah Mason directly.</p>
+    </form>
+  </section>
 
   <div v-if="toast_show" class="toast" :class="toast_type" role="status" aria-live="polite">{{ toast_msg }}</div>
 </template>
@@ -135,13 +157,18 @@ export default {
       sm_a: '',
       sm_b: '',
       sm_hand: '',
-      sm_weight: '',
+      sm_weight1: '',
+      sm_weight2: '',
       sm_winner: '',
       sm_score: '',
       sm_date: '',
       sm_location: '',
       sm_notes: '',
       is_sending_sm: false,
+      advanced_open: false,
+      submitter_name: '',
+      client_ip: '',
+      feedback_open: false,
       toast_show: false,
       toast_msg: '',
       toast_type: 'success',
@@ -149,17 +176,8 @@ export default {
     }
   },
   mounted(){
-    if(this.$route?.query?.goto === 'feedback'){
-      const scrollNow = ()=>{ document.getElementById('feedback')?.scrollIntoView({ behavior:'smooth', block:'start' }) }
-      this.$nextTick(scrollNow)
-      // Re-scroll a few times to compensate for late content height changes
-      let attempts = 0
-      const id = setInterval(()=>{
-        scrollNow()
-        attempts++
-        if(attempts > 12) clearInterval(id)
-      }, 150)
-    }
+    try{ this.submitter_name = localStorage.getItem('armrank_submitter_name') || '' }catch{}
+    this.fetchClientIp()
   },
   methods:{
     canSubmitSupermatch(){
@@ -169,6 +187,18 @@ export default {
       const winner = (this.sm_winner || '').trim()
       return !!(a && b && hand && winner)
     },
+    persistSubmitterName(){
+      try{ localStorage.setItem('armrank_submitter_name', this.submitter_name || '') }catch{}
+    },
+    async fetchClientIp(){
+      try{
+        const res = await fetch('https://api.ipify.org?format=json')
+        if(res.ok){
+          const j = await res.json()
+          this.client_ip = String(j?.ip || '')
+        }
+      }catch(e){ /* noop */ }
+    },
     async submitSupermatch(){
       if(this.is_sending_sm || !this.canSubmitSupermatch()) return
       this.is_sending_sm = true
@@ -176,7 +206,8 @@ export default {
         const a = (this.sm_a || '').trim()
         const b = (this.sm_b || '').trim()
         const hand = (this.sm_hand || '').trim()
-        const weight = (this.sm_weight || '').trim()
+        const weight1 = (this.sm_weight1 || '').trim()
+        const weight2 = (this.sm_weight2 || '').trim()
         const winner = (this.sm_winner || '').trim()
         const score = (this.sm_score || '').trim()
         const date = (this.sm_date || '').trim()
@@ -185,24 +216,28 @@ export default {
 
         const winnerName = winner === 'A' ? a : b
         const loserName = winner === 'A' ? b : a
-        const handLabel = hand === 'Both' ? 'Both hands' : (hand === 'RH' ? 'Right hand' : 'Left hand')
-        const weightLabel = weight ? ` ${weight}` : ''
+        const handLabel = hand === 'RH' ? 'Right hand' : 'Left hand'
         const scoreLabel = score ? ` — Score: ${score}` : ''
 
         const title = `Supermatch Result`
-        const description = `🏆 ${winnerName} over ${loserName} • ${handLabel}${weightLabel}${scoreLabel}`
+        const description = `🏆 ${winnerName} over ${loserName} • ${handLabel}${scoreLabel}`
         const fields = []
         if(date) fields.push({ name: 'Date', value: date, inline: true })
         if(location) fields.push({ name: 'Location', value: location, inline: true })
+        if(weight1) fields.push({ name: `${a || 'Competitor 1'} weight`, value: weight1, inline: true })
+        if(weight2) fields.push({ name: `${b || 'Competitor 2'} weight`, value: weight2, inline: true })
         if(notes) fields.push({ name: 'Notes', value: notes, inline: false })
-
+        const footerBits = []
+        footerBits.push(`Submitter: ${ (this.submitter_name || 'Anonymous').trim() || 'Anonymous' }`)
+        if(this.client_ip) footerBits.push(`IP: ${this.client_ip}`)
+        const footerText = `Submitted via ArmRank • Supermatch • ${footerBits.join(' • ')}`
         const payload = {
           embeds: [{
             title,
             description,
             color: 10181046,
             fields,
-            footer: { text: 'Submitted via ArmRank • Supermatch' }
+            footer: { text: footerText }
           }]
         }
 
@@ -215,11 +250,13 @@ export default {
         this.toast_type = 'success'
         this.toast_msg = 'Supermatch submitted successfully!'
         this.toast_show = true
-        // reset form
+        // persist name, reset form
+        this.persistSubmitterName()
         this.sm_a = ''
         this.sm_b = ''
         this.sm_hand = ''
-        this.sm_weight = ''
+        this.sm_weight1 = ''
+        this.sm_weight2 = ''
         this.sm_winner = ''
         this.sm_score = ''
         this.sm_date = ''
@@ -241,7 +278,11 @@ export default {
       this.is_sending = true
       try{
         const title = this.feedback_name?.trim() || 'Anonymous'
-        const payload = { embeds: [{ title, description: message, color: 3066993 }] }
+        const footerBits = []
+        footerBits.push(`Submitter: ${title}`)
+        if(this.client_ip) footerBits.push(`IP: ${this.client_ip}`)
+        const footerText = `Submitted via ArmRank • Feedback • ${footerBits.join(' • ')}`
+        const payload = { embeds: [{ title, description: message, color: 3066993, footer: { text: footerText } }] }
         const res = await fetch(this.webhook_url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -254,6 +295,7 @@ export default {
         this.toast_show = true
         this.feedback_name = ''
         this.feedback_text = ''
+        this.feedback_open = false
         setTimeout(()=>{ this.toast_show = false }, 4600)
       }catch(e){
         this.toast_type = 'error'
@@ -268,9 +310,11 @@ export default {
 }
 </script>
 <style scoped>
+.main_container{width:min(1100px,100%);margin:0 auto;padding-inline:clamp(12px,3vw,24px);padding-block:24px}
 .panel{background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--glow);margin-top:18px;overflow:hidden}
 .panel_header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
 .title{margin:0;font-size:18px}
+.req{color:#e67e22;margin-left:6px}
 .sm_form{display:grid;gap:12px;padding:14px 16px}
 .row{display:grid;gap:12px}
 .two_cols{grid-template-columns:1fr;}
@@ -278,6 +322,15 @@ export default {
 .radios{border:0;padding:0;margin:0}
 .radio_row{display:flex;gap:12px;align-items:center}
 .radio_opt{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.02);border:1px solid var(--border);padding:8px 10px;border-radius:999px}
+.segmented{display:inline-flex;gap:0;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:999px;padding:4px}
+.seg_btn{border:0;background:transparent;color:var(--muted);font-weight:800;padding:8px 12px;border-radius:999px;cursor:pointer}
+.seg_btn[aria-pressed="true"]{color:#070e1c;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(215,180,58,.18)}
+.adv_toggle_row{display:flex;justify-content:flex-end;padding-top:4px}
+.ghost_btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);color:var(--muted);background:transparent;cursor:pointer}
+.chev{width:16px;height:16px;transition:transform .2s ease}
+.chev.up{transform:rotate(180deg)}
+.advanced_drawer{max-height:0;overflow:hidden;transition:max-height .28s ease}
+.advanced_drawer.open{max-height:520px}
 .feedback_form{display:grid;gap:12px;padding:14px 16px}
 .field{display:grid;gap:6px}
 .label{color:var(--muted);font-weight:700}
@@ -291,4 +344,11 @@ export default {
 .toast.success{background:linear-gradient(180deg, rgba(46,204,113,.15), rgba(46,204,113,.12)); color:#dfffe9; border-color:#2ecc71}
 .toast.error{background:linear-gradient(180deg, rgba(231,76,60,.18), rgba(231,76,60,.14)); color:#ffe6e3; border-color:#e74c3c}
 @keyframes toastPop{ from{ opacity:0; transform:translateX(-50%) translateY(6px) scale(.98)} to{ opacity:1; transform:translateX(-50%) translateY(0) scale(1)} }
-</style> 
+
+/* Feedback bottom sheet */
+.feedback_tab{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);z-index:40;padding:8px 14px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;cursor:pointer}
+.feedback_sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:min(720px,100%);background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));border:1px solid var(--border);border-radius:14px 14px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.35);z-index:45;transition:transform .28s ease}
+.feedback_sheet.open{transform:translateX(-50%) translateY(0)}
+.sheet_header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+.close_btn{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);font-weight:800;cursor:pointer}
+</style>
