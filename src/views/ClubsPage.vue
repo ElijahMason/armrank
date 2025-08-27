@@ -142,11 +142,11 @@ export default {
 	methods:{
 		clearFilters(){ this.only_oregon = false },
 		resolveImage(path){
-			const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/'
 			const p = String(path || '').trim()
-			if(!p) return base + 'default_club.png'
+			if(!p) return '/default_club.png'
 			if(/^https?:\/\//i.test(p)) return p
-			return base + p.replace(/^\//,'')
+			if(p.startsWith('/')) return p
+			return '/' + p.replace(/^\//,'')
 		},
 		gvizCsv(tab){
 			return `https://docs.google.com/spreadsheets/d/${this.sheet_id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`
@@ -353,7 +353,8 @@ export default {
 		async loadClubs(){
 			try{
 				this.is_loading = true
-				let res = await fetch('docs/clubs.json', { cache:'no-cache' })
+				let res = await fetch('/clubs.json', { cache:'no-cache' })
+				if(!res.ok) res = await fetch('/docs/clubs.json', { cache:'no-cache' })
 				if(!res.ok) res = await fetch('clubs.json', { cache:'no-cache' })
 				if(!res.ok) throw new Error('Failed')
 				const json = await res.json()
