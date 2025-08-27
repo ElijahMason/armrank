@@ -103,8 +103,8 @@
             <span class="label">Notes</span>
             <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea" @blur="sm_notes_blurred = true" :class="{ valid: sm_notes_blurred && !!(sm_notes || '').trim() }"></textarea>
           </label>
-          <div class="divider"></div>
         </div>
+        <div class="divider"></div>
         <div class="actions with_summary">
           <div class="summary" aria-live="polite">{{ summaryText }}</div>
           <button type="submit" class="submit_btn" :class="{ gold: !submitDisabled }" :disabled="submitDisabled">
@@ -486,8 +486,9 @@ export default {
 .field.no_border{border:0}
 .label{color:var(--muted);font-weight:700}
 .input,.textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:10px 12px;font-family:inherit;font-size:14px}
-.input:focus,.textarea:focus{outline:none;border-color:rgba(23,162,184,.35)}
-.input.valid{border-color:transparent;background-origin:border-box;background-clip:padding-box,border-box;background-image:linear-gradient(rgba(255,255,255,.02), rgba(255,255,255,.02)),linear-gradient(180deg,#20c997,#17a2b8)}
+.input:focus,.textarea:focus{outline:none;border-color:rgba(215,180,58,.55)}
+.input.valid{border-color:rgba(23,162,184,.55);background-image:none;background-color:inherit}
+.textarea.valid{border-color:rgba(23,162,184,.55);background-image:none;background-color:inherit}
 .input.error{border-color:#e74c3c}
 .field.error .input{border-color:#e74c3c}
 .field.error .label{color:#ff9b91}
