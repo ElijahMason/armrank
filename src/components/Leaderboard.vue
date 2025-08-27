@@ -523,11 +523,11 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 }
 /* Slight horizontal tweak for 2 and 3 */
 .trophy_2 .trophy_num,
-.trophy_3 .trophy_num{ transform: translate(-2px, -7px) }
+.trophy_3 .trophy_num{ transform: translate(-4px, -7px) !important }
 
 @media(max-width:760px){
   .trophy_2 .trophy_num,
-  .trophy_3 .trophy_num{ transform: translate(-3px, -7px) }
+  .trophy_3 .trophy_num{ transform: translate(-6px, -7px) !important }
 }
 
 .left_hdr{text-align:right !important}
