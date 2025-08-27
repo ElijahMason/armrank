@@ -22,17 +22,17 @@
       <form class="sm_form" @submit.prevent="submitSupermatch" novalidate>
         <label class="field">
           <span class="label">Your name</span>
-          <input v-model="submitter_name" @change="persistSubmitterName" @blur="persistSubmitterName" type="text" inputmode="text" placeholder="Who are you?" class="input" />
+          <input v-model="submitter_name" @change="persistSubmitterName" @blur="persistSubmitterName; submitter_blurred = true" type="text" inputmode="text" placeholder="Who are you?" class="input" :class="{ valid: submitter_blurred && !!(submitter_name || '').trim() }" />
         </label>
 
         <div class="row two_cols">
           <label class="field">
             <span class="label">Competitor A</span>
-            <input v-model="sm_a" type="text" inputmode="text" placeholder="Full name" class="input" required />
+            <input v-model="sm_a" type="text" inputmode="text" placeholder="Full name" class="input" required @blur="sm_a_blurred = true" :class="{ valid: sm_a_blurred && !!(sm_a || '').trim() }" />
           </label>
           <label class="field">
             <span class="label">Competitor B</span>
-            <input v-model="sm_b" type="text" inputmode="text" placeholder="Full name" class="input" required />
+            <input v-model="sm_b" type="text" inputmode="text" placeholder="Full name" class="input" required @blur="sm_b_blurred = true" :class="{ valid: sm_b_blurred && !!(sm_b || '').trim() }" />
           </label>
         </div>
 
@@ -40,14 +40,25 @@
           <fieldset class="field radios" role="radiogroup" aria-label="Winner">
             <span class="label">Winner</span>
             <div class="radio_row">
-              <label class="radio_opt"><input type="radio" name="sm_winner" value="A" v-model="sm_winner" /> <span>{{ sm_a || 'Competitor A' }}</span></label>
-              <label class="radio_opt"><input type="radio" name="sm_winner" value="B" v-model="sm_winner" /> <span>{{ sm_b || 'Competitor B' }}</span></label>
+              <label class="radio_opt" :class="{ selected: sm_winner === 'A' }"><input type="radio" name="sm_winner" value="A" v-model="sm_winner" /> <span>{{ sm_a || 'Competitor A' }}</span></label>
+              <label class="radio_opt" :class="{ selected: sm_winner === 'B' }"><input type="radio" name="sm_winner" value="B" v-model="sm_winner" /> <span>{{ sm_b || 'Competitor B' }}</span></label>
             </div>
           </fieldset>
-          <label class="field" :class="{ error: scoreError }">
+          <label class="field" :class="{ error: scoreShowErrorBorder, valid: scoreValidAfterBlur }">
             <span class="label">Score ({{ scoreHint }})</span>
-            <input v-model="sm_score" type="text" inputmode="numeric" placeholder="e.g. 3-1" class="input score_input" :class="{ error: scoreError }" @input="onScoreInput" @blur="onScoreInput" />
-            <div class="error_hint" v-show="scoreError">(format: 3-1)</div>
+            <input
+              v-model="sm_score"
+              type="text"
+              inputmode="numeric"
+              placeholder="e.g. 3-1"
+              class="input score_input"
+              :class="{ error: scoreShowErrorBorder, valid: scoreValidAfterBlur }"
+              @input="onScoreInput"
+              @focus="onScoreFocus"
+              @blur="onScoreBlur"
+              :aria-invalid="String(scoreInvalid)"
+            />
+            <div class="error_hint" v-show="scoreShowErrorText">Enter number-number eg. 3-2</div>
           </label>
         </div>
 
@@ -70,26 +81,26 @@
           <div class="row two_cols">
             <label class="field">
               <span class="label">{{ sm_a || 'Competitor 1' }} weight (lbs)</span>
-              <input v-model="sm_weight1" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" />
+              <input v-model="sm_weight1" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" @blur="sm_weight1_blurred = true" :class="{ valid: sm_weight1_blurred && !!String(sm_weight1).trim() }" />
             </label>
             <label class="field">
               <span class="label">{{ sm_b || 'Competitor 2' }} weight (lbs)</span>
-              <input v-model="sm_weight2" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" />
+              <input v-model="sm_weight2" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" @blur="sm_weight2_blurred = true" :class="{ valid: sm_weight2_blurred && !!String(sm_weight2).trim() }" />
             </label>
           </div>
           <div class="row two_cols">
             <label class="field">
               <span class="label">Date</span>
-              <input v-model="sm_date" type="date" class="input" :max="todayStr" />
+              <input v-model="sm_date" type="date" class="input" :max="todayStr" @blur="sm_date_blurred = true" :class="{ valid: sm_date_blurred && !!(sm_date || '').trim() }" />
             </label>
             <label class="field">
               <span class="label">Location</span>
-              <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue" class="input" />
+              <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue" class="input" @blur="sm_location_blurred = true" :class="{ valid: sm_location_blurred && !!(sm_location || '').trim() }" />
             </label>
           </div>
           <label class="field">
             <span class="label">Notes</span>
-            <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea"></textarea>
+            <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea" @blur="sm_notes_blurred = true" :class="{ valid: sm_notes_blurred && !!(sm_notes || '').trim() }"></textarea>
           </label>
         </div>
         <div class="actions">
@@ -172,6 +183,18 @@ export default {
       toast_msg: '',
       toast_type: 'success',
       webhook_url: 'https://discord.com/api/webhooks/1404936162040217630/_29ERb9EONoLzbQxK4pabApD5M5K8sUi6ViHk3PDSmmejJIB5MKmT8UUkzZph6NNnDds',
+      // ui state
+      sm_a_blurred: false,
+      sm_b_blurred: false,
+      sm_score_blurred: false,
+      scoreFocused: false,
+      scoreHasInvalidBlur: false,
+      submitter_blurred: false,
+      sm_weight1_blurred: false,
+      sm_weight2_blurred: false,
+      sm_date_blurred: false,
+      sm_location_blurred: false,
+      sm_notes_blurred: false,
     }
   },
   computed:{
@@ -185,10 +208,26 @@ export default {
       const loseName = w === 'A' ? first(b) : first(a)
       return `${winName} - ${loseName}`
     },
-    scoreError(){
+    scoreInvalid(){
       const s = (this.sm_score || '').trim()
       if(!s) return false
-      return !/^\d+-\d+$/.test(s)
+      if(!/^\d+-\d+$/.test(s)) return true
+      const [l,r] = s.split('-').map(n => Number(n))
+      if(!Number.isFinite(l) || !Number.isFinite(r)) return true
+      return l === r
+    },
+    scoreShowErrorText(){
+      // Only show error text after an invalid blur; keep it visible until valid
+      return this.scoreHasInvalidBlur && this.scoreInvalid
+    },
+    scoreShowErrorBorder(){
+      // Red border only when not focused and invalid and we have blurred invalid at least once
+      return !this.scoreFocused && this.scoreHasInvalidBlur && this.scoreInvalid
+    },
+    scoreValidAfterBlur(){
+      // Teal border on blur if filled and valid
+      const hasValue = !!(this.sm_score || '').trim()
+      return this.sm_score_blurred && hasValue && !this.scoreInvalid
     },
     submitDisabled(){
       const a = (this.sm_a || '').trim()
@@ -217,11 +256,25 @@ export default {
       const parts = v.split('-').slice(0,2)
       const clean = parts.map(p => p.replace(/[^0-9]/g,'').replace(/^0+(\d)/,'$1'))
       this.sm_score = clean.join(parts.length > 1 ? '-' : '')
+      // If value becomes valid while editing, clear prior error text
+      if(!this.scoreInvalid) this.scoreHasInvalidBlur = false
+    },
+    onScoreFocus(){
+      this.scoreFocused = true
+    },
+    onScoreBlur(){
+      this.scoreFocused = false
+      this.sm_score_blurred = true
+      // If invalid after blur, enable persistent error text
+      this.scoreHasInvalidBlur = this.scoreInvalid
     },
     scoreIsValid(){
       const s = (this.sm_score || '').trim()
       if(!s) return true
-      return /^\d+-\d+$/.test(s)
+      if(!/^\d+-\d+$/.test(s)) return false
+      const [l,r] = s.split('-').map(n => Number(n))
+      if(!Number.isFinite(l) || !Number.isFinite(r)) return false
+      return l !== r
     },
     canSubmitSupermatch(){
       const a = (this.sm_a || '').trim()
@@ -257,7 +310,7 @@ export default {
         const weight1 = (this.sm_weight1 || '').trim()
         const weight2 = (this.sm_weight2 || '').trim()
         const winner = (this.sm_winner || '').trim()
-        const score = (this.sm_score || '').trim()
+        const scoreRaw = (this.sm_score || '').trim()
         const date = (this.sm_date || '').trim()
         const location = (this.sm_location || '').trim()
         const notes = (this.sm_notes || '').trim()
@@ -265,7 +318,19 @@ export default {
         const winnerName = winner === 'A' ? a : b
         const loserName = winner === 'A' ? b : a
         const handLabel = hand === 'RH' ? 'Right hand' : 'Left hand'
-        const scoreLabel = score ? ` — Score: ${score}` : ''
+        // Normalize score to winner-loser high-low if provided
+        let scoreLabel = ''
+        if(scoreRaw){
+          const m = scoreRaw.match(/^(\d+)-(\d+)$/)
+          if(m){
+            let left = Number(m[1])
+            let right = Number(m[2])
+            if(Number.isFinite(left) && Number.isFinite(right)){
+              if(left < right){ const tmp = left; left = right; right = tmp }
+              scoreLabel = ` — Score: ${left}-${right}`
+            }
+          }
+        }
 
         const title = `Supermatch Result`
         const description = `🏆 ${winnerName} over ${loserName} • ${handLabel}${scoreLabel}`
@@ -370,6 +435,8 @@ export default {
 .radios{border:0;padding:0;margin:0}
 .radio_row{display:flex;gap:12px;align-items:center}
 .radio_opt{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.02);border:1px solid var(--border);padding:8px 10px;border-radius:999px}
+.radio_opt > input[type="radio"]{appearance:none;-webkit-appearance:none;width:0;height:0;margin:0;padding:0;border:0}
+.radio_opt.selected{color:#061626;background:linear-gradient(180deg,#20c997,#17a2b8);box-shadow:0 6px 18px rgba(32,201,151,.18);border-color:transparent}
 .segmented{display:inline-flex;gap:0;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:999px;padding:4px}
 .seg_btn{border:0;background:transparent;color:var(--muted);font-weight:800;padding:8px 12px;border-radius:999px;cursor:pointer}
 .seg_btn[aria-pressed="true"]{color:#070e1c;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(215,180,58,.18)}
@@ -385,10 +452,11 @@ export default {
 .label{color:var(--muted);font-weight:700}
 .input,.textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:10px 12px;font-family:inherit;font-size:14px}
 .input:focus,.textarea:focus{outline:none;border-color:rgba(215,180,58,.35)}
+.input.valid{border-color:#20c997}
 .input.error{border-color:#e74c3c}
 .field.error .input{border-color:#e74c3c}
 .field.error .label{color:#ff9b91}
-.error_hint{color:#e74c3c;font-weight:800;font-size:12px}
+.error_hint{color:#e74c3c;font-weight:600;font-size:12px}
 .actions{display:flex;justify-content:flex-end}
 .primary_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(215,180,58,.22);background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16));color:var(--text);font-weight:800;text-decoration:none;cursor:pointer}
 .primary_btn[disabled]{opacity:.6; cursor:not-allowed}
