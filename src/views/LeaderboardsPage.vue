@@ -28,11 +28,11 @@
         <div class="row two_cols">
           <label class="field">
             <span class="label">Competitor A</span>
-            <input v-model="sm_a" type="text" inputmode="text" placeholder="Full name" class="input" required @blur="sm_a_blurred = true" :class="{ valid: sm_a_blurred && !!(sm_a || '').trim() }" />
+            <AthleteSelect v-model="sm_a" :options="known_names" placeholder="Full name" :blurred="sm_a_blurred" idBase="sm-a" @blur="sm_a_blurred = true" />
           </label>
           <label class="field">
             <span class="label">Competitor B</span>
-            <input v-model="sm_b" type="text" inputmode="text" placeholder="Full name" class="input" required @blur="sm_b_blurred = true" :class="{ valid: sm_b_blurred && !!(sm_b || '').trim() }" />
+            <AthleteSelect v-model="sm_b" :options="known_names" placeholder="Full name" :blurred="sm_b_blurred" idBase="sm-b" @blur="sm_b_blurred = true" />
           </label>
         </div>
 
@@ -158,10 +158,14 @@
 <script>
 import Leaderboard from '../components/Leaderboard.vue'
 import HandSlider from '../components/HandSlider.vue'
+import AthleteSelect from '../components/AthleteSelect.vue'
 export default {
   name: 'LeaderboardsPage',
-  components: { Leaderboard, HandSlider },
+  components: { Leaderboard, HandSlider, AthleteSelect },
   data(){
+    const sheet_id_raw = 'https://docs.google.com/spreadsheets/d/1aD3ZFkMHCrg4lZe80lONyQz-MsEVStelCiCEyHb6-2Y/edit?usp=sharing'
+    const sheet_id_match = String(sheet_id_raw).match(/\/d\/([a-zA-Z0-9-_]+)/)
+    const sheet_id = sheet_id_match ? sheet_id_match[1] : String(sheet_id_raw).trim()
     return {
       feedback_name: '',
       feedback_text: '',
@@ -169,6 +173,7 @@ export default {
       // supermatch form
       sm_a: '',
       sm_b: '',
+      known_names: [],
       sm_hand: '',
       sm_weight1: '',
       sm_weight2: '',
@@ -186,6 +191,8 @@ export default {
       toast_msg: '',
       toast_type: 'success',
       webhook_url: 'https://discord.com/api/webhooks/1404936162040217630/_29ERb9EONoLzbQxK4pabApD5M5K8sUi6ViHk3PDSmmejJIB5MKmT8UUkzZph6NNnDds',
+      sheet_id_raw,
+      sheet_id,
       // ui state
       sm_a_blurred: false,
       sm_b_blurred: false,
@@ -271,8 +278,62 @@ export default {
       if((this.submitter_name || '').trim()) this.submitter_blurred = true
     }catch{}
     this.fetchClientIp()
+    this.loadKnownNames()
   },
   methods:{
+    gvizCsv(tab){
+      return `https://docs.google.com/spreadsheets/d/${this.sheet_id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`
+    },
+    csvToRows(csv) {
+      return String(csv || '')
+        .trim()
+        .split(/\r?\n/)
+        .map(line => {
+          const out = []
+          let cur = ''
+          let q = false
+          for (let i = 0; i < line.length; i++) {
+            const ch = line[i]
+            if (ch === '"') { q = !q; continue }
+            if (ch === ',' && !q) { out.push(cur); cur = '' } else { cur += ch }
+          }
+          out.push(cur)
+          return out.map(s => s.trim())
+        })
+    },
+    async loadKnownNames(){
+      try{
+        const [rankM, rankW, wtM, wtW, clubs] = await Promise.all([
+          fetch(this.gvizCsv('Rankings')).then(r=>r.text()).catch(()=>''),
+          fetch(this.gvizCsv('Rankings_F')).then(r=>r.text()).catch(()=>''),
+          fetch(this.gvizCsv('Weights')).then(r=>r.text()).catch(()=>''),
+          fetch(this.gvizCsv('Weights_F')).then(r=>r.text()).catch(()=>''),
+          fetch(this.gvizCsv('Clubs')).then(r=>r.text()).catch(()=>''),
+        ])
+        const seen = new Set()
+        const acc = []
+        const add = (s)=>{
+          const t = String(s || '').trim()
+          if(!t) return
+          const k = t.toLowerCase()
+          if(seen.has(k)) return
+          seen.add(k)
+          acc.push(t)
+        }
+        const rM = this.csvToRows(rankM)
+        const rW = this.csvToRows(rankW)
+        rM.slice(1).forEach(r=>{ add(r[0]); add(r[2]) })
+        rW.slice(1).forEach(r=>{ add(r[0]); add(r[2]) })
+        const wM = this.csvToRows(wtM)
+        const wW = this.csvToRows(wtW)
+        wM.slice(1).forEach(r=>add(r[0]))
+        wW.slice(1).forEach(r=>add(r[0]))
+        const cR = this.csvToRows(clubs)
+        cR.slice(1).forEach(row=>{ row.forEach(cell=>add(cell)) })
+        acc.sort((a,b)=>a.localeCompare(b))
+        this.known_names = acc
+      }catch(e){ this.known_names = [] }
+    },
     onWeightInput(which, evt){
       const raw = String(evt?.target?.value ?? '')
       const digits = raw.replace(/[^0-9]/g, '')
