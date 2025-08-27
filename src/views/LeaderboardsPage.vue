@@ -52,7 +52,7 @@
         </div>
 
         <div class="row two_cols">
-          <fieldset class="field" role="group" aria-label="Hand">
+          <fieldset class="field no_border" role="group" aria-label="Hand">
             <span class="label">Hand</span>
             <HandSlider v-model="sm_hand" />
           </fieldset>
@@ -189,6 +189,14 @@ export default {
       const s = (this.sm_score || '').trim()
       if(!s) return false
       return !/^\d+-\d+$/.test(s)
+    },
+    submitDisabled(){
+      const a = (this.sm_a || '').trim()
+      const b = (this.sm_b || '').trim()
+      const hand = (this.sm_hand || '').trim()
+      const winner = (this.sm_winner || '').trim()
+      const ok = !!(a && b && hand && winner)
+      return this.is_sending_sm || !(ok && this.scoreIsValid())
     }
   },
   mounted(){
@@ -201,16 +209,8 @@ export default {
       const pad = n => String(n).padStart(2,'0')
       return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`
     },
-    scoreHint(){
-      const a = (this.sm_a || '').trim()
-      const b = (this.sm_b || '').trim()
-      const w = (this.sm_winner || '').trim()
-      if(!a || !b || !w) return 'W - L'
-      const first = s => s.split(/\s+/)[0] || s
-      const winName = w === 'A' ? first(a) : first(b)
-      const loseName = w === 'A' ? first(b) : first(a)
-      return `${winName} - ${loseName}`
-    }
+    
+    
   },
   methods:{
     onScoreInput(){
@@ -234,9 +234,6 @@ export default {
       const winner = (this.sm_winner || '').trim()
       const ok = !!(a && b && hand && winner)
       return ok && this.scoreIsValid()
-    },
-    submitDisabled(){
-      return this.is_sending_sm || !this.canSubmitSupermatch()
     },
     toggleHand(){
       if(this.sm_hand === 'RH') this.sm_hand = 'LH';
@@ -388,6 +385,7 @@ export default {
 .advanced_drawer.open{max-height:520px}
 .feedback_form{display:grid;gap:12px;padding:14px 16px}
 .field{display:grid;gap:6px}
+.field.no_border{border:0}
 .label{color:var(--muted);font-weight:700}
 .input,.textarea{width:100%;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:10px 12px;font-family:inherit;font-size:14px}
 .input:focus,.textarea:focus{outline:none;border-color:rgba(215,180,58,.35)}
