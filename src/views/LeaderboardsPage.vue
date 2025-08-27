@@ -104,7 +104,7 @@
             <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea" @blur="sm_notes_blurred = true" :class="{ valid: sm_notes_blurred && !!(sm_notes || '').trim() }"></textarea>
           </label>
         </div>
-        <div class="divider"></div>
+        <div class="divider" v-show="advanced_open"></div>
         <div class="actions with_summary">
           <div class="summary" aria-live="polite">{{ summaryText }}</div>
           <button type="submit" class="submit_btn" :class="{ gold: !submitDisabled }" :disabled="submitDisabled">
@@ -477,6 +477,7 @@ export default {
 .ghost_btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);color:var(--muted);background:transparent;cursor:pointer}
 .ghost_btn.dividerless{border-color:transparent;padding-left:0;padding-right:0}
 .divider{height:1px;background:rgba(255,255,255,.08);width:100%}
+.sm_form > .divider{margin-left:-16px;margin-right:-16px;width:auto}
 .chev{width:16px;height:16px;transition:transform .2s ease}
 .chev.up{transform:rotate(180deg)}
 .advanced_drawer{max-height:0;overflow:hidden;transition:max-height .28s ease}
@@ -519,7 +520,7 @@ export default {
 /* Less glowy, squarer submit button */
 .actions.with_summary{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .summary{color:var(--muted);font-weight:700}
-.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;border-radius:12px;border:1px solid rgba(23,162,184,.55);background:transparent;color:#061626;font-weight:900}
+.submit_btn{display:inline-flex;align-items:center;justify-content:center;padding:14px 22px;border-radius:12px;border:1px solid rgba(23,162,184,.55);background:transparent;color:#061626;font-weight:900;font-size:16px}
 .submit_btn.gold{background:linear-gradient(180deg,#20c997,#17a2b8);border-color:transparent;color:#061626}
 .submit_btn[disabled]{opacity:1;cursor:not-allowed;background:transparent;border-color:rgba(255,255,255,.12);color:var(--muted)}
 </style>
