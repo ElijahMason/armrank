@@ -81,11 +81,11 @@
           <div class="row two_cols">
             <label class="field">
               <span class="label">{{ sm_a || 'Competitor 1' }} weight (lbs)</span>
-              <input v-model="sm_weight1" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" @blur="sm_weight1_blurred = true" :class="{ valid: sm_weight1_blurred && !!String(sm_weight1).trim() }" />
+              <input v-model="sm_weight1" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" @input="onWeightInput(1, $event)" @blur="sm_weight1_blurred = true" :class="{ valid: sm_weight1_blurred && !!String(sm_weight1).trim() }" />
             </label>
             <label class="field">
               <span class="label">{{ sm_b || 'Competitor 2' }} weight (lbs)</span>
-              <input v-model="sm_weight2" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" @blur="sm_weight2_blurred = true" :class="{ valid: sm_weight2_blurred && !!String(sm_weight2).trim() }" />
+              <input v-model="sm_weight2" type="number" inputmode="numeric" step="1" min="0" placeholder="Enter weight in lbs" class="input" @input="onWeightInput(2, $event)" @blur="sm_weight2_blurred = true" :class="{ valid: sm_weight2_blurred && !!String(sm_weight2).trim() }" />
             </label>
           </div>
           <div class="row two_cols">
@@ -244,10 +244,19 @@ export default {
     }
   },
   mounted(){
-    try{ this.submitter_name = localStorage.getItem('armrank_submitter_name') || '' }catch{}
+    try{
+      this.submitter_name = localStorage.getItem('armrank_submitter_name') || ''
+      if((this.submitter_name || '').trim()) this.submitter_blurred = true
+    }catch{}
     this.fetchClientIp()
   },
   methods:{
+    onWeightInput(which, evt){
+      const raw = String(evt?.target?.value ?? '')
+      const digits = raw.replace(/[^0-9]/g, '')
+      if(which === 1) this.sm_weight1 = digits
+      else if(which === 2) this.sm_weight2 = digits
+    },
     onScoreInput(){
       // Enforce score pattern: int-int
       let v = String(this.sm_score || '')
@@ -434,9 +443,11 @@ export default {
 @media (min-width:720px){ .two_cols{ grid-template-columns:1fr 1fr } }
 .radios{border:0;padding:0;margin:0}
 .radio_row{display:flex;gap:12px;align-items:center}
-.radio_opt{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.02);border:1px solid var(--border);padding:8px 10px;border-radius:999px}
+.radio_opt{display:inline-flex;gap:8px;align-items:center;justify-content:center;min-height:36px;min-width:0;background:transparent;border:2px solid var(--border);padding:8px 14px;border-radius:999px}
 .radio_opt > input[type="radio"]{appearance:none;-webkit-appearance:none;width:0;height:0;margin:0;padding:0;border:0}
-.radio_opt.selected{color:#061626;background:linear-gradient(180deg,#20c997,#17a2b8);box-shadow:0 6px 18px rgba(32,201,151,.18);border-color:transparent}
+.radio_opt span{display:inline-block;width:100%;text-align:center}
+.radio_opt.selected{background:transparent;color:#dfffe9;border-color:transparent;position:relative}
+.radio_opt.selected::before{content:"";position:absolute;inset:0;border-radius:999px;padding:2px;background:linear-gradient(180deg,#20c997,#17a2b8);-webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
 .segmented{display:inline-flex;gap:0;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:999px;padding:4px}
 .seg_btn{border:0;background:transparent;color:var(--muted);font-weight:800;padding:8px 12px;border-radius:999px;cursor:pointer}
 .seg_btn[aria-pressed="true"]{color:#070e1c;background:linear-gradient(180deg,var(--accent),var(--accent-2));box-shadow:0 6px 18px rgba(215,180,58,.18)}
