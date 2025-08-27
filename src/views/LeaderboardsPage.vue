@@ -443,7 +443,7 @@ export default {
 @media (min-width:720px){ .two_cols{ grid-template-columns:1fr 1fr } }
 .radios{border:0;padding:0;margin:0}
 .radio_row{display:flex;gap:12px;align-items:center}
-.radio_opt{display:inline-flex;gap:8px;align-items:center;justify-content:center;min-height:36px;min-width:0;background:transparent;border:2px solid var(--border);padding:8px 14px;border-radius:999px}
+.radio_opt{display:inline-flex;gap:0;align-items:center;justify-content:center;min-height:36px;min-width:0;background:transparent;border:2px solid var(--border);padding:8px 14px;border-radius:999px}
 .radio_opt > input[type="radio"]{appearance:none;-webkit-appearance:none;width:0;height:0;margin:0;padding:0;border:0}
 .radio_opt span{display:inline-block;width:100%;text-align:center}
 .radio_opt.selected{background:transparent;color:#dfffe9;border-color:transparent;position:relative}
