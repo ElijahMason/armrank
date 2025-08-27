@@ -15,6 +15,74 @@
   />
 
   <main class="main_container">
+    <section id="supermatch" class="panel supermatch_panel" role="region" aria-label="Supermatch Result">
+      <div class="panel_header">
+        <h2 class="title">Submit Supermatch Result</h2>
+      </div>
+      <form class="sm_form" @submit.prevent="submitSupermatch" novalidate>
+        <div class="row two_cols">
+          <label class="field">
+            <span class="label">Competitor A</span>
+            <input v-model="sm_a" type="text" inputmode="text" placeholder="Full name" class="input" required />
+          </label>
+          <label class="field">
+            <span class="label">Competitor B</span>
+            <input v-model="sm_b" type="text" inputmode="text" placeholder="Full name" class="input" required />
+          </label>
+        </div>
+
+        <div class="row two_cols">
+          <label class="field">
+            <span class="label">Hand</span>
+            <select v-model="sm_hand" class="input" required>
+              <option disabled value="">Select hand</option>
+              <option value="RH">Right hand</option>
+              <option value="LH">Left hand</option>
+              <option value="Both">Both</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="label">Weight class</span>
+            <input v-model="sm_weight" type="text" inputmode="text" placeholder="e.g. 198 lbs" class="input" />
+          </label>
+        </div>
+
+        <div class="row two_cols">
+          <label class="field">
+            <span class="label">Date</span>
+            <input v-model="sm_date" type="date" class="input" />
+          </label>
+          <label class="field">
+            <span class="label">Location</span>
+            <input v-model="sm_location" type="text" inputmode="text" placeholder="City / venue (optional)" class="input" />
+          </label>
+        </div>
+
+        <div class="row two_cols">
+          <fieldset class="field radios" role="radiogroup" aria-label="Winner">
+            <span class="label">Winner</span>
+            <div class="radio_row">
+              <label class="radio_opt"><input type="radio" name="sm_winner" value="A" v-model="sm_winner" /> <span>{{ sm_a || 'Competitor A' }}</span></label>
+              <label class="radio_opt"><input type="radio" name="sm_winner" value="B" v-model="sm_winner" /> <span>{{ sm_b || 'Competitor B' }}</span></label>
+            </div>
+          </fieldset>
+          <label class="field">
+            <span class="label">Score</span>
+            <input v-model="sm_score" type="text" inputmode="text" placeholder="e.g. 3-1" class="input" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span class="label">Notes</span>
+          <textarea v-model="sm_notes" rows="4" placeholder="Event name, refs, match notes, link to video, etc." class="textarea"></textarea>
+        </label>
+        <div class="actions">
+          <button type="submit" class="primary_btn" :disabled="is_sending_sm || !canSubmitSupermatch">
+            {{ is_sending_sm ? 'Submitting…' : 'Submit supermatch' }}
+          </button>
+        </div>
+      </form>
+    </section>
     <section id="feedback" class="panel feedback_panel" role="region" aria-label="Feedback">
       <div class="panel_header">
         <h2 class="title">Feedback</h2>
@@ -63,6 +131,17 @@ export default {
       feedback_name: '',
       feedback_text: '',
       is_sending: false,
+      // supermatch form
+      sm_a: '',
+      sm_b: '',
+      sm_hand: '',
+      sm_weight: '',
+      sm_winner: '',
+      sm_score: '',
+      sm_date: '',
+      sm_location: '',
+      sm_notes: '',
+      is_sending_sm: false,
       toast_show: false,
       toast_msg: '',
       toast_type: 'success',
@@ -83,6 +162,79 @@ export default {
     }
   },
   methods:{
+    canSubmitSupermatch(){
+      const a = (this.sm_a || '').trim()
+      const b = (this.sm_b || '').trim()
+      const hand = (this.sm_hand || '').trim()
+      const winner = (this.sm_winner || '').trim()
+      return !!(a && b && hand && winner)
+    },
+    async submitSupermatch(){
+      if(this.is_sending_sm || !this.canSubmitSupermatch()) return
+      this.is_sending_sm = true
+      try{
+        const a = (this.sm_a || '').trim()
+        const b = (this.sm_b || '').trim()
+        const hand = (this.sm_hand || '').trim()
+        const weight = (this.sm_weight || '').trim()
+        const winner = (this.sm_winner || '').trim()
+        const score = (this.sm_score || '').trim()
+        const date = (this.sm_date || '').trim()
+        const location = (this.sm_location || '').trim()
+        const notes = (this.sm_notes || '').trim()
+
+        const winnerName = winner === 'A' ? a : b
+        const loserName = winner === 'A' ? b : a
+        const handLabel = hand === 'Both' ? 'Both hands' : (hand === 'RH' ? 'Right hand' : 'Left hand')
+        const weightLabel = weight ? ` ${weight}` : ''
+        const scoreLabel = score ? ` — Score: ${score}` : ''
+
+        const title = `Supermatch Result`
+        const description = `🏆 ${winnerName} over ${loserName} • ${handLabel}${weightLabel}${scoreLabel}`
+        const fields = []
+        if(date) fields.push({ name: 'Date', value: date, inline: true })
+        if(location) fields.push({ name: 'Location', value: location, inline: true })
+        if(notes) fields.push({ name: 'Notes', value: notes, inline: false })
+
+        const payload = {
+          embeds: [{
+            title,
+            description,
+            color: 10181046,
+            fields,
+            footer: { text: 'Submitted via ArmRank • Supermatch' }
+          }]
+        }
+
+        const res = await fetch(this.webhook_url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        if(res.status < 200 || res.status >= 300) throw new Error('Non-2xx response')
+        this.toast_type = 'success'
+        this.toast_msg = 'Supermatch submitted successfully!'
+        this.toast_show = true
+        // reset form
+        this.sm_a = ''
+        this.sm_b = ''
+        this.sm_hand = ''
+        this.sm_weight = ''
+        this.sm_winner = ''
+        this.sm_score = ''
+        this.sm_date = ''
+        this.sm_location = ''
+        this.sm_notes = ''
+        setTimeout(()=>{ this.toast_show = false }, 4600)
+      }catch(e){
+        this.toast_type = 'error'
+        this.toast_msg = 'Failed to submit supermatch. Please try again later.'
+        this.toast_show = true
+        setTimeout(()=>{ this.toast_show = false }, 4600)
+      }finally{
+        this.is_sending_sm = false
+      }
+    },
     async submitFeedback(){
       const message = this.feedback_text.trim()
       if(!message || this.is_sending) return
@@ -119,6 +271,13 @@ export default {
 .panel{background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--glow);margin-top:18px;overflow:hidden}
 .panel_header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)}
 .title{margin:0;font-size:18px}
+.sm_form{display:grid;gap:12px;padding:14px 16px}
+.row{display:grid;gap:12px}
+.two_cols{grid-template-columns:1fr;}
+@media (min-width:720px){ .two_cols{ grid-template-columns:1fr 1fr } }
+.radios{border:0;padding:0;margin:0}
+.radio_row{display:flex;gap:12px;align-items:center}
+.radio_opt{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.02);border:1px solid var(--border);padding:8px 10px;border-radius:999px}
 .feedback_form{display:grid;gap:12px;padding:14px 16px}
 .field{display:grid;gap:6px}
 .label{color:var(--muted);font-weight:700}
