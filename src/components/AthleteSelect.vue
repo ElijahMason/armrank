@@ -165,8 +165,14 @@ export default {
 </script>
 
 <style scoped>
-.athlete_select{ position:relative }
-.input_wrap{ position:relative }
+.athlete_select{ position:relative; width:100% }
+.input_wrap{ position:relative; width:100% }
+
+/* Match .input styling used in LeaderboardsPage */
+.input{ width:100%; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.02); color:var(--text); padding:10px 12px; padding-right:38px; font-family:inherit; font-size:14px; box-sizing:border-box }
+.input:focus{ outline:none; border-color:rgba(215,180,58,.55) }
+.input.valid{ border-color:rgba(23,162,184,.55); background-image:none; background-color:inherit }
+
 .add_btn{ position:absolute; right:6px; top:50%; transform:translateY(-50%); display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:8px; border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer }
 .add_btn svg{ width:18px; height:18px }
 
