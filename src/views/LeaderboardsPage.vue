@@ -342,12 +342,18 @@ export default {
     },
     onScoreInput(){
       // Enforce score pattern: int-int
-      let v = String(this.sm_score || '')
+      const prev = String(this.sm_score || '')
+      let v = prev
       v = v.replace(/[^0-9-]/g,'')
       // Only keep one dash and split into two integer segments
       const parts = v.split('-').slice(0,2)
       const clean = parts.map(p => p.replace(/[^0-9]/g,'').replace(/^0+(\d)/,'$1'))
-      this.sm_score = clean.join(parts.length > 1 ? '-' : '')
+      let next = clean.join(parts.length > 1 ? '-' : '')
+      // If first char just got added (length changed 0 -> 1), append a dash
+      if(prev.length === 0 && next.length === 1){
+        next = `${next}-`
+      }
+      this.sm_score = next
       // If value becomes valid while editing, clear prior error text
       if(!this.scoreInvalid) this.scoreHasInvalidBlur = false
     },
