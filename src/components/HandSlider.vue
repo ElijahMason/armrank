@@ -8,11 +8,10 @@
       :aria-valuemax="1"
       :aria-valuenow="isRight ? 1 : 0"
       :aria-valuetext="isRight ? 'Right' : 'Left'"
-      @click="toggle"
       @keydown.enter.prevent="toggle"
       @keydown.space.prevent="toggle"
     >
-      <div class="track">
+      <div class="track" ref="track" @click="onClick">
         <div class="hand_label left" :class="{ active: !isRight }">Left</div>
         <div class="hand_label right" :class="{ active: isRight }">Right</div>
         <div class="thumb" :class="{ right: isRight }"></div>
@@ -24,13 +23,29 @@
 export default {
   name: 'HandSlider',
   props: {
-    modelValue: { type: String, default: '' }
+    modelValue: { type: String, default: 'RH' }
   },
   emits: ['update:modelValue'],
   computed:{
     isRight(){ return (this.modelValue || '') === 'RH' }
   },
   methods:{
+    onClick(evt){
+      try{
+        const el = this.$refs.track
+        const rect = (el && el.getBoundingClientRect) ? el.getBoundingClientRect() : evt.currentTarget.getBoundingClientRect()
+        const clickX = evt.clientX - rect.left
+        const isRightClick = clickX >= rect.width / 2
+        const next = isRightClick ? 'RH' : 'LH'
+        const cur = this.isRight ? 'RH' : 'LH'
+        if(next !== cur){
+          this.$emit('update:modelValue', next)
+        }
+      }catch{
+        // fallback: toggle
+        this.toggle()
+      }
+    },
     toggle(){
       const next = this.isRight ? 'LH' : 'RH'
       this.$emit('update:modelValue', next)
@@ -47,6 +62,6 @@ export default {
 .thumb.right{transform:translateX(100%)}
 .hand_label{position:absolute;z-index:2;top:50%;transform:translateY(-50%);width:50%;text-align:center;font-weight:900;letter-spacing:.3px;color:var(--muted);pointer-events:none;mix-blend-mode:normal}
 .hand_label.left{left:0}
-.hand_label.right{right:0}
+.hand_label.right{left:50%}
 .hand_label.active{color:#061626}
 </style>
