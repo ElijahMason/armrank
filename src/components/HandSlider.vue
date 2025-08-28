@@ -24,7 +24,7 @@
 export default {
   name: 'HandSlider',
   props: {
-    modelValue: { type: String, default: '' }
+    modelValue: { type: String, default: 'RH' }
   },
   emits: ['update:modelValue'],
   computed:{

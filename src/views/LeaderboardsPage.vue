@@ -174,7 +174,7 @@ export default {
       sm_a: '',
       sm_b: '',
       known_names: [],
-      sm_hand: '',
+      sm_hand: 'RH',
       sm_weight1: '',
       sm_weight2: '',
       sm_winner: '',
@@ -459,7 +459,7 @@ export default {
         this.persistSubmitterName()
         this.sm_a = ''
         this.sm_b = ''
-        this.sm_hand = ''
+        this.sm_hand = 'RH'
         this.sm_weight1 = ''
         this.sm_weight2 = ''
         this.sm_winner = ''
