@@ -3,12 +3,14 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import LeaderboardsPage from './views/LeaderboardsPage.vue'
 import TournamentsPage from './views/TournamentsPage.vue'
 import ClubsPage from './views/ClubsPage.vue'
+import AdminSupermatches from './views/AdminSupermatches.vue'
 
 const routes = [
   { path: '/', redirect: '/leaderboards' },
   { path: '/leaderboards', name: 'leaderboards', component: LeaderboardsPage },
   { path: '/tournaments', name: 'tournaments', component: TournamentsPage },
   { path: '/clubs', name: 'clubs', component: ClubsPage },
+  { path: '/admin', name: 'admin', component: AdminSupermatches },
 ]
 
 export const router = createRouter({
