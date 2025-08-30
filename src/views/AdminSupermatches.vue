@@ -19,19 +19,32 @@
         <table class="data_table" role="table">
           <thead>
             <tr>
-              <th>Date</th>
-              <th title="Submitter">👤</th>
+              <th class="th_date">Date</th>
               <th>Match</th>
-              <th>Score</th>
+              <th class="th_icon col_submitter_icon" title="Submitter">👤</th>
+              <th class="th_submitter col_submitter_name">Submitter</th>
+              <th class="th_score">Score</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="m in filteredSortedMatches" :key="m.id" class="row" @click="openModal(m)" tabindex="0" @keydown.enter="openModal(m)">
               <td class="date_cell">{{ formatDate(m.date) }}</td>
-              <td class="submitter_icon_cell" :title="submitterIconLabel(m)" :aria-label="submitterIconLabel(m)">{{ submitterIcon(m) }}</td>
               <td class="match_cell">
                 <div class="names"><span class="winner">{{ m.winner }}</span> <span class="vs">vs</span> <span class="loser">{{ m.loser }}</span></div>
                 <div class="meta"><span class="hand_chip" :class="m.hand">{{ m.hand === 'RH' ? 'Right' : 'Left' }} hand</span></div>
+              </td>
+              <td class="submitter_icon_cell col_submitter_icon">
+                <span class="tooltip_host" :aria-label="submitterShortLabel(m)">
+                  <span class="icon_cell">{{ submitterIcon(m) }}</span>
+                  <span class="tooltip">{{ submitterShortLabel(m) }}</span>
+                </span>
+              </td>
+              <td class="submitter_name_cell col_submitter_name">
+                <span class="tooltip_host" :aria-label="submitterShortLabel(m)">
+                  <span class="icon_cell small">{{ submitterIcon(m) }}</span>
+                  <span class="tooltip">{{ submitterShortLabel(m) }}</span>
+                </span>
+                <span class="submitter_name">{{ m.submitter || 'Anonymous' }}</span>
               </td>
               <td class="score_cell">{{ m.score }}</td>
             </tr>
@@ -66,9 +79,9 @@
             <div class="section_title">Competitors</div>
             <div class="grid">
               <div><span class="muted">Competitor A</span><div>{{ activeMatch.a }}</div></div>
-              <div><span class="muted">A Weight</span><div>{{ activeMatch.weightA || '—' }}</div></div>
+              <div><span class="muted">A Weight</span><div>{{ activeMatch.weightA ? activeMatch.weightA + ' lbs' : '—' }}</div></div>
               <div><span class="muted">Competitor B</span><div>{{ activeMatch.b }}</div></div>
-              <div><span class="muted">B Weight</span><div>{{ activeMatch.weightB || '—' }}</div></div>
+              <div><span class="muted">B Weight</span><div>{{ activeMatch.weightB ? activeMatch.weightB + ' lbs' : '—' }}</div></div>
             </div>
           </div>
           <div class="section">
@@ -76,7 +89,13 @@
             <div class="grid">
               <div>
                 <span class="muted">Submitter</span>
-                <div class="submitter_line"><span class="submitter_icon" :title="submitterIconLabel(activeMatch)">{{ submitterIcon(activeMatch) }}</span><span>{{ activeMatch.submitter || 'Anonymous' }}</span></div>
+                <div class="submitter_line">
+                  <span class="tooltip_host clickable" @click.stop="modalTipOpen = !modalTipOpen">
+                    <span class="icon_cell">{{ submitterIcon(activeMatch) }}</span>
+                    <span class="tooltip" :class="{ open: modalTipOpen }">{{ submitterShortLabel(activeMatch) }}</span>
+                  </span>
+                  <span>{{ activeMatch.submitter || 'Anonymous' }}</span>
+                </div>
               </div>
               <div>
                 <span class="muted">IP</span>
@@ -85,16 +104,6 @@
                 </div>
               </div>
               <div class="full"><span class="muted">Notes</span><div class="notes_pre">{{ activeMatch.notes || '—' }}</div></div>
-              <div class="full legend">
-                <div class="legend_title">Submitter legend</div>
-                <ul class="legend_list">
-                  <li><span class="legend_icon">🕵️‍♂️</span> Admin</li>
-                  <li><span class="legend_icon">👥</span> Logged in, trusted (trust ≥ 1)</li>
-                  <li><span class="legend_icon">👤</span> Logged in</li>
-                  <li><span class="legend_icon">🌚</span> Anonymous (not logged in)</li>
-                  <li><span class="legend_icon">🚩</span> Flagged (trust < 0)</li>
-                </ul>
-              </div>
             </div>
           </div>
           <div class="section" v-if="activeMatch.status !== 'pending'">
@@ -124,6 +133,7 @@ export default {
       modalOpen: false,
       activeMatch: null,
       activeIpRevealed: false,
+      modalTipOpen: false,
       matches: [
         // Dummy data; includes all fields + submitter metadata
         { id:'1', date: addDays(now,-1), a:'John Doe', b:'Mark Owen', winner:'John Doe', loser:'Mark Owen', hand:'RH', score:'3-1', weightA:'220', weightB:'198', location:'Portland, OR', notes:'Ref: A. Smith. Video: https://example.com/v1', submitter:'Peter', ip:'203.0.113.5', status:'pending', loggedIn:true, trust:0, isAdmin:false, _ip_revealed:false },
@@ -154,6 +164,7 @@ export default {
     formatDateTime(ts){ try{ const d=new Date(ts); return d.toLocaleString('en-US',{ dateStyle:'short', timeStyle:'short' }) }catch(e){ return '—' } },
     submitterIcon(m){ if(m?.isAdmin) return '🕵️‍♂️'; if((m?.trust ?? 0) < 0) return '🚩'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return '👥'; if(m?.loggedIn) return '👤'; return '🌚' },
     submitterIconLabel(m){ if(m?.isAdmin) return 'Admin'; if((m?.trust ?? 0) < 0) return 'Flagged (trust < 0)'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return 'Logged in, trusted (trust ≥ 1)'; if(m?.loggedIn) return 'Logged in'; return 'Anonymous (not logged in)' },
+    submitterShortLabel(m){ if(m?.isAdmin) return 'Admin'; if((m?.trust ?? 0) < 0) return 'Flagged'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return 'Trusted'; if(m?.loggedIn) return 'Logged in'; return 'Anon' },
     openModal(m){ this.activeMatch = { ...m }; this.modalOpen = true; this.activeIpRevealed = false },
     closeModal(){ this.modalOpen = false; this.activeMatch = null; this.activeIpRevealed = false },
     toggleIp(m){ m._ip_revealed = !m._ip_revealed },
@@ -183,9 +194,9 @@ export default {
 .table_wrap{overflow:auto}
 .data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
 .data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
-.data_table thead th:nth-child(1){width:92px}
-.data_table thead th:nth-child(2){width:56px;text-align:center}
-.data_table thead th:nth-child(4){width:86px}
+.data_table thead th.th_date{width:92px}
+.data_table thead th.th_icon{width:56px;text-align:center}
+.data_table thead th.th_score{width:86px}
 .data_table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .data_table tbody tr{cursor:pointer}
 .data_table tbody tr:hover{background:rgba(255,255,255,.03)}
@@ -203,6 +214,13 @@ export default {
 .submitter_icon_cell{text-align:center}
 .submitter_line{display:flex;align-items:center;gap:8px}
 .submitter_icon{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
+.icon_cell{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
+.icon_cell.small{width:20px;height:20px;margin-right:6px}
+.tooltip_host{position:relative;display:inline-flex;align-items:center;justify-content:center}
+.tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 8px;border-radius:8px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));color:var(--text);font-weight:800;font-size:12px;opacity:0;pointer-events:none;transition:opacity .15s ease}
+.tooltip_host:hover .tooltip{opacity:1}
+.tooltip.open{opacity:1}
+.tooltip_host.clickable{cursor:pointer}
 .status_chip{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);font-weight:900;text-transform:capitalize}
 .status_chip.pending{background:rgba(255,255,255,.04)}
 .status_chip.approved{background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;border-color:transparent}
@@ -237,6 +255,7 @@ export default {
   .data_table tbody td{ padding:8px 10px }
   .names{ gap:4px }
   .hand_chip{ padding:3px 8px }
+  .col_submitter_name{ display:none }
 }
 </style>
 
