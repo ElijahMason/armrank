@@ -20,37 +20,18 @@
           <thead>
             <tr>
               <th>Date</th>
-              <th>Winner</th>
-              <th>Loser</th>
-              <th>Hand</th>
+              <th>Match</th>
               <th>Score</th>
-              <th>A Weight</th>
-              <th>B Weight</th>
-              <th>Location</th>
-              <th>Notes</th>
-              <th>Submitter</th>
-              <th>IP</th>
-              <th>Status</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="m in filteredSortedMatches" :key="m.id" class="row" @click="openModal(m)" tabindex="0" @keydown.enter="openModal(m)">
-              <td>{{ formatDate(m.date) }}</td>
-              <td>{{ m.winner }}</td>
-              <td>{{ m.loser }}</td>
-              <td>{{ m.hand }}</td>
-              <td>{{ m.score }}</td>
-              <td>{{ m.weightA || '—' }}</td>
-              <td>{{ m.weightB || '—' }}</td>
-              <td>{{ m.location || '—' }}</td>
-              <td class="notes_cell">{{ m.notes || '—' }}</td>
-              <td>{{ m.submitter || 'Anonymous' }}</td>
-              <td>
-                <button class="reveal_btn" @click.stop="toggleIp(m)">{{ m._ip_revealed ? m.ip : 'Reveal' }}</button>
+              <td class="date_cell">{{ formatDate(m.date) }}</td>
+              <td class="match_cell">
+                <div class="names"><span class="winner">{{ m.winner }}</span> <span class="vs">vs</span> <span class="loser">{{ m.loser }}</span></div>
+                <div class="meta"><span class="hand_chip" :class="m.hand">{{ m.hand === 'RH' ? 'Right' : 'Left' }} hand</span></div>
               </td>
-              <td>
-                <span class="status_chip" :class="m.status">{{ m.status }}</span>
-              </td>
+              <td class="score_cell">{{ m.score }}</td>
             </tr>
           </tbody>
         </table>
@@ -60,31 +41,52 @@
     <section v-if="modalOpen" class="modal" role="dialog" aria-modal="true" aria-label="Match details">
       <div class="modal_content">
         <div class="modal_header">
-          <h3 class="title">Supermatch Details</h3>
-          <button class="close_btn" @click="closeModal" aria-label="Close">×</button>
+          <div class="modal_title_group">
+            <h3 class="title">Supermatch</h3>
+            <div class="subtitle">{{ activeMatch.winner }} over {{ activeMatch.loser }} • {{ formatDate(activeMatch.date) }}</div>
+          </div>
+          <div class="header_actions">
+            <span class="status_chip" :class="activeMatch.status">{{ activeMatch.status }}</span>
+            <button class="close_btn" @click="closeModal" aria-label="Close">×</button>
+          </div>
         </div>
         <div class="modal_body">
-          <div class="grid">
-            <div><span class="muted">Date</span><div>{{ formatDate(activeMatch.date) }}</div></div>
-            <div><span class="muted">Hand</span><div>{{ activeMatch.hand }}</div></div>
-            <div><span class="muted">Score</span><div>{{ activeMatch.score || '—' }}</div></div>
-            <div><span class="muted">Location</span><div>{{ activeMatch.location || '—' }}</div></div>
-            <div><span class="muted">Competitor A</span><div>{{ activeMatch.a }}</div></div>
-            <div><span class="muted">A Weight</span><div>{{ activeMatch.weightA || '—' }}</div></div>
-            <div><span class="muted">Competitor B</span><div>{{ activeMatch.b }}</div></div>
-            <div><span class="muted">B Weight</span><div>{{ activeMatch.weightB || '—' }}</div></div>
-            <div><span class="muted">Winner</span><div>{{ activeMatch.winner }}</div></div>
-            <div><span class="muted">Loser</span><div>{{ activeMatch.loser }}</div></div>
-            <div><span class="muted">Submitter</span><div>{{ activeMatch.submitter || 'Anonymous' }}</div></div>
-            <div><span class="muted">IP</span>
-              <div>
-                <button class="reveal_btn" @click="activeIpRevealed = !activeIpRevealed">{{ activeIpRevealed ? activeMatch.ip : 'Reveal' }}</button>
-              </div>
+          <div class="section">
+            <div class="section_title">Details</div>
+            <div class="grid">
+              <div><span class="muted">Date</span><div>{{ formatDate(activeMatch.date) }}</div></div>
+              <div><span class="muted">Location</span><div>{{ activeMatch.location || '—' }}</div></div>
+              <div><span class="muted">Hand</span><div><span class="hand_chip" :class="activeMatch.hand">{{ activeMatch.hand === 'RH' ? 'Right' : 'Left' }} hand</span></div></div>
+              <div><span class="muted">Score</span><div>{{ activeMatch.score || '—' }}</div></div>
             </div>
-            <div class="full"><span class="muted">Notes</span><div class="notes_pre">{{ activeMatch.notes || '—' }}</div></div>
-            <div><span class="muted">Status</span><div><span class="status_chip" :class="activeMatch.status">{{ activeMatch.status }}</span></div></div>
-            <div v-if="activeMatch.status !== 'pending'"><span class="muted">Decided by</span><div>{{ activeMatch.decidedBy || '—' }}</div></div>
-            <div v-if="activeMatch.status !== 'pending'"><span class="muted">Decided at</span><div>{{ formatDateTime(activeMatch.decidedAt) }}</div></div>
+          </div>
+          <div class="section">
+            <div class="section_title">Competitors</div>
+            <div class="grid">
+              <div><span class="muted">Competitor A</span><div>{{ activeMatch.a }}</div></div>
+              <div><span class="muted">A Weight</span><div>{{ activeMatch.weightA || '—' }}</div></div>
+              <div><span class="muted">Competitor B</span><div>{{ activeMatch.b }}</div></div>
+              <div><span class="muted">B Weight</span><div>{{ activeMatch.weightB || '—' }}</div></div>
+            </div>
+          </div>
+          <div class="section">
+            <div class="section_title">Submission</div>
+            <div class="grid">
+              <div><span class="muted">Submitter</span><div>{{ activeMatch.submitter || 'Anonymous' }}</div></div>
+              <div><span class="muted">IP</span>
+                <div>
+                  <button class="reveal_btn" @click="activeIpRevealed = !activeIpRevealed">{{ activeIpRevealed ? activeMatch.ip : 'Reveal' }}</button>
+                </div>
+              </div>
+              <div class="full"><span class="muted">Notes</span><div class="notes_pre">{{ activeMatch.notes || '—' }}</div></div>
+            </div>
+          </div>
+          <div class="section" v-if="activeMatch.status !== 'pending'">
+            <div class="section_title">Decision</div>
+            <div class="grid">
+              <div><span class="muted">Decided by</span><div>{{ activeMatch.decidedBy || '—' }}</div></div>
+              <div><span class="muted">Decided at</span><div>{{ formatDateTime(activeMatch.decidedAt) }}</div></div>
+            </div>
           </div>
         </div>
         <div class="modal_footer">
@@ -136,7 +138,7 @@ export default {
     setStatus(status){
       const idx = this.matches.findIndex(x=>x.id===this.activeMatch.id)
       if(idx>=0){
-        const decidedBy = 'admin@beta' // dummy; would be current admin identity
+        const decidedBy = 'admin@beta'
         const decidedAt = Date.now()
         this.matches.splice(idx,1,{ ...this.activeMatch, status, decidedBy, decidedAt })
         this.activeMatch.status = status
@@ -155,28 +157,51 @@ export default {
 .field.compact{display:grid;gap:6px}
 .select{appearance:none}
 .table_wrap{overflow:auto}
-.data_table{width:100%;border-collapse:separate;border-spacing:0}
+.data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
 .data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
+.data_table thead th:nth-child(1){width:96px}
+.data_table thead th:nth-child(3){width:86px}
 .data_table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .data_table tbody tr{cursor:pointer}
 .data_table tbody tr:hover{background:rgba(255,255,255,.03)}
-.status_chip{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--border);font-weight:800;text-transform:capitalize}
+.match_cell{display:flex;flex-direction:column;gap:6px;min-width:0}
+.names{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:800}
+.names .winner{color:#dfffe9}
+.names .vs{color:var(--muted);font-weight:900}
+.names .loser{color:var(--text)}
+.meta{display:flex;gap:8px;align-items:center}
+.hand_chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-weight:800}
+.hand_chip.RH{background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;border-color:transparent}
+.hand_chip.LH{background:linear-gradient(180deg,#2ea6ff,#1e90ff);color:#061626;border-color:transparent}
+.date_cell{white-space:nowrap}
+.score_cell{font-weight:900}
+.status_chip{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);font-weight:900;text-transform:capitalize}
 .status_chip.pending{background:rgba(255,255,255,.04)}
 .status_chip.approved{background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;border-color:transparent}
 .status_chip.denied{background:linear-gradient(180deg,#e74c3c,#c0392b)}
-.notes_cell{max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .reveal_btn{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);font-weight:800;cursor:pointer}
 .modal{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:60}
-.modal_content{width:min(760px,92vw);background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));border:1px solid var(--border);border-radius:14px;box-shadow:var(--glow);overflow:hidden}
-.modal_header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
-.modal_body{padding:14px 16px}
-.modal_footer{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:1px solid var(--border)}
+.modal_content{width:min(820px,94vw);max-height:88vh;background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));border:1px solid var(--border);border-radius:14px;box-shadow:var(--glow);display:flex;flex-direction:column;overflow:hidden}
+.modal_header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border);background:linear-gradient(180deg, rgba(11,22,48,1), rgba(8,18,40,1));z-index:1}
+.modal_title_group{display:flex;flex-direction:column;gap:4px}
+.subtitle{color:var(--muted);font-weight:700}
+.header_actions{display:flex;align-items:center;gap:10px}
+.modal_body{padding:14px 16px;overflow:auto}
+.section{display:grid;gap:10px;margin-bottom:14px}
+.section_title{font-weight:900}
+.modal_footer{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:linear-gradient(180deg, rgba(11,22,48,1), rgba(8,18,40,1))}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .grid .full{grid-column:1/-1}
 .muted{color:var(--muted);font-weight:700}
 .notes_pre{white-space:pre-wrap}
 .approve_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(23,162,184,.55);background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;font-weight:900}
 .deny_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg, rgba(231,76,60,.18), rgba(231,76,60,.14));color:#ffe6e3;font-weight:900}
-@media (max-width:720px){ .grid{ grid-template-columns:1fr } }
+@media (max-width:720px){
+  .grid{ grid-template-columns:1fr }
+  .data_table thead th{ padding:8px 10px }
+  .data_table tbody td{ padding:8px 10px }
+  .names{ gap:4px }
+  .hand_chip{ padding:3px 8px }
+}
 </style>
 
