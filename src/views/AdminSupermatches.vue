@@ -219,6 +219,7 @@ export default {
 .submitter_icon{display:inline-flex;width:26px;height:26px;align-items:center;justify-content:center;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
 .icon_cell{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.03)}
 .icon_cell.small{width:20px;height:20px;margin-right:6px}
+.col_submitter_icon{ display:none }
 .tooltip_host{position:relative;display:inline-flex;align-items:center;justify-content:center}
 .tooltip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 8px;border-radius:8px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));color:var(--text);font-weight:800;font-size:12px;opacity:0;pointer-events:none;transition:opacity .15s ease}
 .tooltip_host:hover .tooltip{opacity:1}
@@ -276,6 +277,7 @@ body::-webkit-scrollbar,
   .names{ gap:4px }
   .hand_chip{ padding:3px 8px }
   .col_submitter_name{ display:none }
+  .col_submitter_icon{ display:table-cell }
 }
 </style>
 
