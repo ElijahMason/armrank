@@ -20,19 +20,15 @@
           <thead>
             <tr>
               <th class="th_date">Date</th>
-              <th>Match</th>
               <th class="th_icon col_submitter_icon" title="Submitter">👤</th>
               <th class="th_submitter col_submitter_name">Submitter</th>
+              <th>Match</th>
               <th class="th_score">Score</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="m in filteredSortedMatches" :key="m.id" class="row" @click="openModal(m)" tabindex="0" @keydown.enter="openModal(m)">
               <td class="date_cell">{{ formatDate(m.date) }}</td>
-              <td class="match_cell">
-                <div class="names"><span class="winner">{{ m.winner }}</span> <span class="vs">vs</span> <span class="loser">{{ m.loser }}</span></div>
-                <div class="meta"><span class="hand_chip" :class="m.hand">{{ m.hand === 'RH' ? 'Right' : 'Left' }} hand</span></div>
-              </td>
               <td class="submitter_icon_cell col_submitter_icon">
                 <span class="tooltip_host" :aria-label="submitterShortLabel(m)">
                   <span class="icon_cell">{{ submitterIcon(m) }}</span>
@@ -45,6 +41,10 @@
                   <span class="tooltip">{{ submitterShortLabel(m) }}</span>
                 </span>
                 <span class="submitter_name">{{ m.submitter || 'Anonymous' }}</span>
+              </td>
+              <td class="match_cell">
+                <div class="names"><span class="winner">{{ m.winner }}</span> <span class="vs">vs</span> <span class="loser">{{ m.loser }}</span></div>
+                <div class="meta"><span class="hand_chip" :class="m.hand">{{ m.hand === 'RH' ? 'Right' : 'Left' }} hand</span></div>
               </td>
               <td class="score_cell">{{ m.score }}</td>
             </tr>
@@ -76,15 +76,6 @@
             </div>
           </div>
           <div class="section">
-            <div class="section_title">Competitors</div>
-            <div class="grid">
-              <div><span class="muted">Competitor A</span><div>{{ activeMatch.a }}</div></div>
-              <div><span class="muted">A Weight</span><div>{{ activeMatch.weightA ? activeMatch.weightA + ' lbs' : '—' }}</div></div>
-              <div><span class="muted">Competitor B</span><div>{{ activeMatch.b }}</div></div>
-              <div><span class="muted">B Weight</span><div>{{ activeMatch.weightB ? activeMatch.weightB + ' lbs' : '—' }}</div></div>
-            </div>
-          </div>
-          <div class="section">
             <div class="section_title">Submission</div>
             <div class="grid">
               <div>
@@ -106,6 +97,15 @@
               <div class="full"><span class="muted">Notes</span><div class="notes_pre">{{ activeMatch.notes || '—' }}</div></div>
             </div>
           </div>
+          <div class="section">
+            <div class="section_title">Competitors</div>
+            <div class="grid">
+              <div><span class="muted">Competitor A</span><div>{{ activeMatch.a }}</div></div>
+              <div><span class="muted">A Weight</span><div>{{ activeMatch.weightA ? activeMatch.weightA + ' lbs' : '—' }}</div></div>
+              <div><span class="muted">Competitor B</span><div>{{ activeMatch.b }}</div></div>
+              <div><span class="muted">B Weight</span><div>{{ activeMatch.weightB ? activeMatch.weightB + ' lbs' : '—' }}</div></div>
+            </div>
+          </div>
           <div class="section" v-if="activeMatch.status !== 'pending'">
             <div class="section_title">Decision</div>
             <div class="grid">
@@ -115,6 +115,8 @@
           </div>
         </div>
         <div class="modal_footer">
+          <button class="close_footer_btn" @click="closeModal">Close</button>
+          <div class="spacer"></div>
           <button class="deny_btn" @click="denyActive" :disabled="activeMatch.status==='denied'">Deny</button>
           <button class="approve_btn" @click="approveActive" :disabled="activeMatch.status==='approved'">Approve</button>
         </div>
@@ -190,9 +192,10 @@ export default {
 .admin_header{display:flex;align-items:center;justify-content:space-between}
 .controls{display:flex;gap:12px;align-items:center}
 .field.compact{display:grid;gap:6px}
-.select{appearance:none}
+.select{appearance:none;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:8px 10px;min-width:180px}
+.select:focus{outline:none;border-color:rgba(215,180,58,.55)}
 .table_wrap{overflow:auto}
-.data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed}
+.data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
 .data_table thead th.th_date{width:92px}
 .data_table thead th.th_icon{width:56px;text-align:center}
@@ -237,7 +240,9 @@ export default {
 .modal_body{padding:14px 16px;overflow:auto}
 .section{display:grid;gap:10px;margin-bottom:14px}
 .section_title{font-weight:900}
-.modal_footer{display:flex;justify-content:flex-end;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:linear-gradient(180deg, rgba(11,22,48,1), rgba(8,18,40,1))}
+.modal_footer{display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid var(--border);background:linear-gradient(180deg, rgba(11,22,48,1), rgba(8,18,40,1))}
+.modal_footer .spacer{flex:1}
+.close_footer_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.06));color:var(--muted);font-weight:900;cursor:pointer}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .grid .full{grid-column:1/-1}
 .muted{color:var(--muted);font-weight:700}
@@ -249,6 +254,21 @@ export default {
 .legend_icon{display:inline-block;width:20px;text-align:center;margin-right:6px}
 .approve_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(23,162,184,.55);background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;font-weight:900}
 .deny_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg, rgba(231,76,60,.18), rgba(231,76,60,.14));color:#ffe6e3;font-weight:900}
+/* Hide scrollbars universally while keeping scroll */
+html, body, .modal, .panel, .wrap, .rows_grid, .member_list, .table_wrap, .modal_body{
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.modal::-webkit-scrollbar,
+.panel::-webkit-scrollbar,
+.wrap::-webkit-scrollbar,
+.rows_grid::-webkit-scrollbar,
+.member_list::-webkit-scrollbar,
+.table_wrap::-webkit-scrollbar,
+.modal_body::-webkit-scrollbar{ display:none }
+
 @media (max-width:720px){
   .grid{ grid-template-columns:1fr }
   .data_table thead th{ padding:8px 10px }
