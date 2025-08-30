@@ -194,6 +194,8 @@ export default {
 .field.compact{display:grid;gap:6px}
 .select{appearance:none;border:1px solid var(--border);border-radius:10px;background:rgba(255,255,255,.02);color:var(--text);padding:8px 10px;min-width:180px}
 .select:focus{outline:none;border-color:rgba(215,180,58,.55)}
+.select option{background:#0b1630;color:var(--text);padding:6px}
+.select optgroup{background:#0b1630;color:var(--muted)}
 .table_wrap{overflow:auto}
 .data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
@@ -209,7 +211,7 @@ export default {
 .names .vs{color:var(--muted);font-weight:900}
 .names .loser{color:#ff9b91;text-shadow:0 0 12px rgba(231,76,60,.18)}
 .meta{display:flex;gap:8px;align-items:center}
-.hand_chip{display:inline-flex;align-items:center;justify-content:center;padding:4px 8px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-weight:800}
+.hand_chip{display:inline-flex;align-items:center;justify-content:center;padding:3px 8px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.04);font-weight:800;font-size:12px}
 .hand_chip.RH{background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;border-color:transparent}
 .hand_chip.LH{background:linear-gradient(180deg,#2ea6ff,#1e90ff);color:#061626;border-color:transparent}
 .date_cell{white-space:nowrap}
