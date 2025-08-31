@@ -57,8 +57,7 @@
       <div class="modal_content">
         <div class="modal_header">
           <div class="modal_title_group">
-            <h3 class="title">Supermatch</h3>
-            <div class="subtitle">{{ activeMatch.winner }} over {{ activeMatch.loser }} • {{ formatDate(activeMatch.date) }}</div>
+            <h3 class="title">{{ activeMatch.winner }} over {{ activeMatch.loser }}</h3>
           </div>
           <div class="header_actions">
             <span class="status_chip" :class="activeMatch.status">{{ activeMatch.status }}</span>
@@ -245,7 +244,7 @@ export default {
 .modal_title_group{display:flex;flex-direction:column;gap:4px}
 .subtitle{color:var(--muted);font-weight:700}
 .header_actions{display:flex;align-items:center;gap:10px}
-.close_btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));color:var(--text);font-weight:900;cursor:pointer}
+.close_btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));color:var(--text);font-weight:900;font-size:22px;line-height:1;cursor:pointer}
 .close_btn:hover{filter:brightness(1.08)}
 .modal_body{padding:14px 16px;overflow:auto}
 .section{display:grid;gap:10px;margin-bottom:14px}
@@ -263,7 +262,7 @@ export default {
 .status_select{position:relative}
 .status_select::after{content:"\25BE"; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--accent); pointer-events:none; font-size:14px}
 .approve_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(23,162,184,.55);background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;font-weight:900}
-.deny_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg, rgba(231,76,60,.18), rgba(231,76,60,.14));color:#ffe6e3;font-weight:900}
+.deny_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid #e74c3c;background:linear-gradient(180deg, rgba(231,76,60,.35), rgba(231,76,60,.28));color:#ffe6e3;font-weight:900;box-shadow:0 8px 22px rgba(231,76,60,.24)}
 /* Hide scrollbars universally while keeping scroll */
 html, body, .modal, .panel, .wrap, .rows_grid, .member_list, .table_wrap, .modal_body{
   -ms-overflow-style: none;
