@@ -233,10 +233,10 @@ export default {
 .tooltip_host:hover .tooltip{opacity:1}
 .tooltip.open{opacity:1}
 .tooltip_host.clickable{cursor:pointer}
-.status_chip{display:inline-block;padding:4px 10px;border-radius:999px;border:1px solid var(--border);font-weight:900;text-transform:capitalize}
-.status_chip.pending{background:rgba(255,255,255,.04)}
-.status_chip.approved{background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;border-color:transparent}
-.status_chip.denied{background:linear-gradient(180deg,#e74c3c,#c0392b)}
+.status_chip{display:inline-block;padding:4px 10px;border-radius:999px;border:2px solid var(--border);background:transparent;font-weight:900;text-transform:capitalize}
+.status_chip.pending{border-color:var(--accent);background:transparent}
+.status_chip.approved{border-color:#2ecc71;background:transparent}
+.status_chip.denied{border-color:#e74c3c;background:transparent}
 .reveal_btn{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);font-weight:800;cursor:pointer}
 .modal{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:60}
 .modal_content{width:min(820px,94vw);max-height:88vh;background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));border:1px solid var(--border);border-radius:14px;box-shadow:var(--glow);display:flex;flex-direction:column;overflow:hidden}
