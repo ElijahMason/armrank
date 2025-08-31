@@ -92,7 +92,7 @@
                   <div class="flip_card">
                     <div class="flip_main">
                       <div class="points_badges">
-                        <span class="points">48 skill points</span>
+                        <span class="points">48</span>
                         <div class="badges">
                           <div v-if="isClubLeader(flipped_athlete)" class="badge_btn crown" :class="{ show: open_tip_key === 'crown-flip' }" @click.stop="toggleTip('crown-flip')" tabindex="0" @keyup.enter.stop="toggleTip('crown-flip')" :aria-label="leaderClubLabel">
                             <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -185,7 +185,7 @@
               <div class="flip_card">
                 <div class="flip_main">
                   <div class="points_badges">
-                    <span class="points">48 skill points</span>
+                    <span class="points">48</span>
                     <div class="badges">
                       <div v-if="isClubLeader(flipped_athlete)" class="badge_btn crown" :class="{ show: open_tip_key === 'crown-flip' }" @click.stop="toggleTip('crown-flip')" tabindex="0" @keyup.enter.stop="toggleTip('crown-flip')" :aria-label="leaderClubLabel">
                         <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -719,6 +719,9 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .crown_icon{fill:currentColor}
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
+/* Right-align crown tooltip to avoid viewport overflow like in ClubDetails */
+.crown.badge_btn .tip{ right:0; left:auto; text-align:right; width:max-content; min-width:0; max-width:min(78vw, 320px) }
+.crown.badge_btn .tip::after{ left:auto; right:14px }
 .badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
 .badge_inline{ display:inline-flex; margin-left:6px }
 </style> 
