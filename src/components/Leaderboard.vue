@@ -37,64 +37,66 @@
             <tr v-if="!loaded"><td colspan="3">Loading…</td></tr>
             <tr v-else-if="load_error"><td colspan="3">Failed to load rankings data. Refresh the page and try again.</td></tr>
 
-            <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class" class="lb_row">
-              <td class="athlete" @click="onRowAthleteClick('f', i, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
-                <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
-                  <div class="fist_icon fist_left">
-                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+            <template v-else v-for="(row, i) in first_rows" :key="'f'+i">
+              <tr :class="row.row_class" class="lb_row">
+                <td class="athlete" @click="onRowAthleteClick('f', i, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
+                  <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
+                    <div class="fist_icon fist_left">
+                      <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                    </div>
+                    <div class="ring ring_one"></div>
+                    <div class="ring ring_two"></div>
+                    <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
+                    <div class="fist_icon fist_right">
+                      <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                    </div>
                   </div>
-                  <div class="ring ring_one"></div>
-                  <div class="ring ring_two"></div>
-                  <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
-                  <div class="fist_icon fist_right">
-                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                </td>
+                <td class="rank" @click="toggleFlipForKey('f', i)">
+                  <span v-if="i < 3" class="trophy" :class="'trophy_' + (i+1)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    <span class="trophy_num" aria-hidden="true" :style="(i+1===2||i+1===3)?{transform:'translate(1px, -6px)'}:{}">{{ i + 1 }}</span>
+                  </span>
+                  <span v-else>{{ i + 1 }}</span>
+                </td>
+                <td class="athlete" @click="onRowAthleteClick('f', i, row.right_name)"><span class="name_text">{{ row.right_name }}</span>
+                  <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
+                    <div class="fist_icon fist_left">
+                      <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                    </div>
+                    <div class="ring ring_one"></div>
+                    <div class="ring ring_two"></div>
+                    <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
+                    <div class="fist_icon fist_right">
+                      <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
+                    </div>
                   </div>
-                </div>
-              </td>
-              <td class="rank" @click="toggleFlipForKey('f', i)">
-                <span v-if="i < 3" class="trophy" :class="'trophy_' + (i+1)">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
-                  </svg>
-                  <span class="trophy_num" aria-hidden="true" :style="(i+1===2||i+1===3)?{transform:'translate(1px, -6px)'}:{}">{{ i + 1 }}</span>
-                </span>
-                <span v-else>{{ i + 1 }}</span>
-              </td>
-              <td class="athlete" @click="onRowAthleteClick('f', i, row.right_name)"><span class="name_text">{{ row.right_name }}</span>
-                <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
-                  <div class="fist_icon fist_left">
-                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
-                  </div>
-                  <div class="ring ring_one"></div>
-                  <div class="ring ring_two"></div>
-                  <svg class="bang" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4l6 12 14-6-8 12 14 4-14 4 8 12-14-6-6 12-6-12-14 6 8-12-14-4 14-4-8-12 14 6 6-12z"/></svg>
-                  <div class="fist_icon fist_right">
-                    <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr v-for="(row, i) in first_rows" :key="'f-details-'+i" v-if="flipped_key === 'f-'+i" class="flip_details_row">
-              <td class="flip_cell" :colspan="3">
-                <div class="flip_card">
-                  <div class="flip_main">
-                    <div class="points_badges">
-                      <span class="points">48 skill points</span>
-                      <div class="badges">
-                        <div v-if="isClubLeader(flipped_athlete)" class="badge_btn crown" :class="{ show: open_tip_key === 'crown-flip' }" @click.stop="toggleTip('crown-flip')" tabindex="0" @keyup.enter.stop="toggleTip('crown-flip')" :aria-label="leaderClubLabel">
-                          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                          <div class="tip">{{ leaderClubLabel }}</div>
+                </td>
+              </tr>
+              <tr v-if="flipped_key === 'f-'+i" :key="'f-details-'+i" class="flip_details_row">
+                <td class="flip_cell" :colspan="3">
+                  <div class="flip_card">
+                    <div class="flip_main">
+                      <div class="points_badges">
+                        <span class="points">48 skill points</span>
+                        <div class="badges">
+                          <div v-if="isClubLeader(flipped_athlete)" class="badge_btn crown" :class="{ show: open_tip_key === 'crown-flip' }" @click.stop="toggleTip('crown-flip')" tabindex="0" @keyup.enter.stop="toggleTip('crown-flip')" :aria-label="leaderClubLabel">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                            <div class="tip">{{ leaderClubLabel }}</div>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <button class="details_btn" @click.stop="openAthleteDetails(flipped_athlete)" aria-label="Open athlete details">
+                      <span class="btn_text">Details</span>
+                      <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
                   </div>
-                  <button class="details_btn" @click.stop="openAthleteDetails(flipped_athlete)" aria-label="Open athlete details">
-                    <span class="btn_text">Details</span>
-                    <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
 
@@ -117,7 +119,8 @@
         <!-- collapsed items OUTSIDE the table -->
         <div v-if="is_collapsible" class="collapse_wrap" :class="{ open: show_all }" ref="collapse_wrap_ref">
           <div class="rows_grid">
-            <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
+            <template v-for="(row, j) in extra_rows" :key="'x'+j">
+            <div class="row_grid" :class="row.row_class">
               <div class="cell athlete" @click="onRowAthleteClick('x', j, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
                 <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
                   <div class="fist_icon fist_left">
@@ -154,7 +157,7 @@
                 </div>
               </div>
             </div>
-            <div v-for="(row, j) in extra_rows" :key="'x-details-'+j" v-if="flipped_key === 'x-'+j" class="flip_details_card">
+            <div v-if="flipped_key === 'x-'+j" :key="'x-details-'+j" class="flip_details_card">
               <div class="flip_card">
                 <div class="flip_main">
                   <div class="points_badges">
@@ -173,6 +176,7 @@
                 </button>
               </div>
             </div>
+            </template>
           </div>
         </div>
         
