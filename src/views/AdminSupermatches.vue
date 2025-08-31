@@ -6,9 +6,9 @@
         <table class="data_table" role="table">
           <thead>
             <tr class="toolbar_row">
-              <th class="toolbar_th" :colspan="5">
+              <th class="toolbar_th" colspan="5">
                 <div class="table_toolbar">
-                  <h2 class="title">Admin • Supermatches</h2>
+                  <h2 class="title">Supermatch History</h2>
                   <div class="controls">
                     <label class="field compact">
                       <span class="label">Status</span>
@@ -203,7 +203,7 @@ export default {
 .table_wrap{overflow:auto}
 .data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
-.data_table thead .toolbar_row th{background:linear-gradient(180deg, rgba(11,22,48,1), rgba(8,18,40,1));}
+.data_table thead .toolbar_row th{background:var(--header-bg);}
 .toolbar_th{padding:0}
 .table_toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 12px;border-bottom:1px solid var(--border)}
 .data_table thead th.th_date{width:92px}
