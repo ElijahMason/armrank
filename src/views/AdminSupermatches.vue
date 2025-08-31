@@ -1,23 +1,27 @@
 <template>
   <main class="main_container">
     <section class="panel" role="region" aria-label="Admin Supermatches">
-      <div class="panel_header admin_header">
-        <h2 class="title">Admin • Supermatches</h2>
-        <div class="controls">
-          <label class="field compact">
-            <span class="label">Status</span>
-            <select v-model="selectedStatus" class="input select">
-              <option value="pending">Pending approval</option>
-              <option value="approved">Approved</option>
-              <option value="denied">Denied</option>
-            </select>
-          </label>
-        </div>
-      </div>
 
       <div class="table_wrap">
         <table class="data_table" role="table">
           <thead>
+            <tr class="toolbar_row">
+              <th class="toolbar_th" :colspan="5">
+                <div class="table_toolbar">
+                  <h2 class="title">Admin • Supermatches</h2>
+                  <div class="controls">
+                    <label class="field compact">
+                      <span class="label">Status</span>
+                      <select v-model="selectedStatus" class="input select">
+                        <option value="pending">Pending approval</option>
+                        <option value="approved">Approved</option>
+                        <option value="denied">Denied</option>
+                      </select>
+                    </label>
+                  </div>
+                </div>
+              </th>
+            </tr>
             <tr>
               <th class="th_date">Date</th>
               <th class="th_icon col_submitter_icon" title="Submitter">👤</th>
@@ -166,7 +170,7 @@ export default {
     formatDateTime(ts){ try{ const d=new Date(ts); return d.toLocaleString('en-US',{ dateStyle:'short', timeStyle:'short' }) }catch(e){ return '—' } },
     submitterIcon(m){ if(m?.isAdmin) return '🕵️‍♂️'; if((m?.trust ?? 0) < 0) return '🚩'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return '👥'; if(m?.loggedIn) return '👤'; return '🌚' },
     submitterIconLabel(m){ if(m?.isAdmin) return 'Admin'; if((m?.trust ?? 0) < 0) return 'Flagged (trust < 0)'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return 'Logged in, trusted (trust ≥ 1)'; if(m?.loggedIn) return 'Logged in'; return 'Anonymous (not logged in)' },
-    submitterShortLabel(m){ if(m?.isAdmin) return 'Admin'; if((m?.trust ?? 0) < 0) return 'Flagged'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return 'Trusted'; if(m?.loggedIn) return 'Logged in'; return 'Anon' },
+    submitterShortLabel(m){ if(m?.isAdmin) return 'Admin'; if((m?.trust ?? 0) < 0) return 'Flagged'; if(m?.loggedIn && (m?.trust ?? 0) >= 1) return 'Trusted'; if(m?.loggedIn) return 'Logged in'; return 'Anonymous' },
     openModal(m){ this.activeMatch = { ...m }; this.modalOpen = true; this.activeIpRevealed = false },
     closeModal(){ this.modalOpen = false; this.activeMatch = null; this.activeIpRevealed = false },
     toggleIp(m){ m._ip_revealed = !m._ip_revealed },
@@ -199,12 +203,17 @@ export default {
 .table_wrap{overflow:auto}
 .data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--border);border-radius:12px;overflow:hidden}
 .data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
+.data_table thead .toolbar_row th{background:linear-gradient(180deg, rgba(11,22,48,1), rgba(8,18,40,1));}
+.toolbar_th{padding:0}
+.table_toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 12px;border-bottom:1px solid var(--border)}
 .data_table thead th.th_date{width:92px}
 .data_table thead th.th_icon{width:56px;text-align:center}
 .data_table thead th.th_score{width:86px}
 .data_table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .data_table tbody tr{cursor:pointer}
 .data_table tbody tr:hover{background:rgba(255,255,255,.03)}
+.data_table tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
+.data_table tbody tr:nth-child(even){background:rgba(255,255,255,.01)}
 .match_cell{display:flex;flex-direction:column;gap:6px;min-width:0}
 .names{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:900}
 .names .winner{color:#20c997;text-shadow:0 0 12px rgba(32,201,151,.18)}
@@ -238,8 +247,8 @@ export default {
 .modal_title_group{display:flex;flex-direction:column;gap:4px}
 .subtitle{color:var(--muted);font-weight:700}
 .header_actions{display:flex;align-items:center;gap:10px}
-.close_btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--muted);font-weight:900;cursor:pointer}
-.close_btn:hover{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));color:#dfffe9}
+.close_btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));color:var(--text);font-weight:900;cursor:pointer}
+.close_btn:hover{filter:brightness(1.08)}
 .modal_body{padding:14px 16px;overflow:auto}
 .section{display:grid;gap:10px;margin-bottom:14px}
 .section_title{font-weight:900}
