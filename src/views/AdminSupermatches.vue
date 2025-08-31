@@ -3,20 +3,16 @@
     <section class="panel" role="region" aria-label="Admin Supermatches">
       <div class="panel_header admin_header">
         <h2 class="title">Supermatch History</h2>
-        <div class="controls">
-          <label class="field compact">
-            <span class="label">Status</span>
-            <select v-model="selectedStatus" class="input select">
-              <option value="pending">Pending approval</option>
-              <option value="approved">Approved</option>
-              <option value="denied">Denied</option>
-            </select>
-          </label>
-        </div>
       </div>
 
       <div class="sub_bar">
-        <span class="sub_pill">{{ selectedStatusLabel }}</span>
+        <div class="status_select" role="group" aria-label="Filter status">
+          <select v-model="selectedStatus" class="input select gold_select" aria-label="Status filter">
+            <option value="pending">Pending approval</option>
+            <option value="approved">Approved</option>
+            <option value="denied">Denied</option>
+          </select>
+        </div>
       </div>
 
       <div class="table_wrap">
@@ -205,7 +201,6 @@ export default {
 .select option{background:#0b1630;color:var(--text);padding:6px}
 .select optgroup{background:#0b1630;color:var(--muted)}
 .sub_bar{position:sticky; top:0; z-index:5; background:var(--header-bg); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px}
-.sub_pill{font-weight:800; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:6px 10px; border-radius:999px}
 .table_wrap{overflow:visible; height:auto; max-height:none;}
 .data_table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:auto}
 .data_table thead th{background:var(--header-bg);color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
@@ -215,6 +210,8 @@ export default {
 .data_table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .data_table tbody tr{cursor:pointer}
 .data_table tbody tr:hover td{background:rgba(10,23,64,.35)}
+.data_table tbody tr:nth-child(odd) td{ background:rgba(255,255,255,.02) }
+.data_table tbody tr:nth-child(even) td{ background:rgba(255,255,255,.01) }
 .match_cell{display:flex;flex-direction:column;gap:6px;min-width:0}
 .names{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:900}
 .names .winner{color:#20c997;text-shadow:0 0 12px rgba(32,201,151,.18)}
@@ -260,11 +257,11 @@ export default {
 .grid .full{grid-column:1/-1}
 .muted{color:var(--muted);font-weight:700}
 .notes_pre{white-space:pre-wrap}
-.legend{margin-top:6px}
-.legend_title{color:var(--muted);font-weight:800;margin-bottom:4px}
-.legend_list{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin:0;padding-left:18px}
-.legend_list li{list-style:disc}
-.legend_icon{display:inline-block;width:20px;text-align:center;margin-right:6px}
+
+/* Gold select styled like rankings pill but squarer */
+.gold_select{position:relative; appearance:none; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:8px 34px 8px 12px; border-radius:10px; font-weight:900}
+.status_select{position:relative}
+.status_select::after{content:"\25BE"; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text); pointer-events:none; font-size:14px}
 .approve_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(23,162,184,.55);background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;font-weight:900}
 .deny_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg, rgba(231,76,60,.18), rgba(231,76,60,.14));color:#ffe6e3;font-weight:900}
 /* Hide scrollbars universally while keeping scroll */
