@@ -40,6 +40,12 @@
             <template v-else v-for="(row, i) in first_rows" :key="'f'+i">
               <tr :class="row.row_class" class="lb_row">
                 <td class="athlete" @click="onRowAthleteClick('f', i, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
+                  <span v-if="isClubLeader(row.left_name)" class="badge_inline">
+                    <span class="badge_btn crown" :class="{ show: open_tip_key === 'row-f-left-'+i }" @click.stop="toggleTip('row-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('row-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                      <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
+                    </span>
+                  </span>
                   <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
                     <div class="fist_icon fist_left">
                       <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -62,6 +68,12 @@
                   <span v-else>{{ i + 1 }}</span>
                 </td>
                 <td class="athlete" @click="onRowAthleteClick('f', i, row.right_name)"><span class="name_text">{{ row.right_name }}</span>
+                  <span v-if="isClubLeader(row.right_name)" class="badge_inline">
+                    <span class="badge_btn crown" :class="{ show: open_tip_key === 'row-f-right-'+i }" @click.stop="toggleTip('row-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('row-f-right-'+i)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                      <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
+                    </span>
+                  </span>
                   <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
                     <div class="fist_icon fist_left">
                       <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -122,6 +134,12 @@
             <template v-for="(row, j) in extra_rows" :key="'x'+j">
             <div class="row_grid" :class="row.row_class">
               <div class="cell athlete" @click="onRowAthleteClick('x', j, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
+                <span v-if="isClubLeader(row.left_name)" class="badge_inline">
+                  <span class="badge_btn crown" :class="{ show: open_tip_key === 'row-x-left-'+j }" @click.stop="toggleTip('row-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('row-x-left-'+j)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                    <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
+                  </span>
+                </span>
                 <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
                   <div class="fist_icon fist_left">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -144,6 +162,12 @@
                 <span v-else>{{ first_rows_count + j + 1 }}</span>
               </div>
               <div class="cell athlete" @click="onRowAthleteClick('x', j, row.right_name)"><span class="name_text">{{ row.right_name }}</span>
+                <span v-if="isClubLeader(row.right_name)" class="badge_inline">
+                  <span class="badge_btn crown" :class="{ show: open_tip_key === 'row-x-right-'+j }" @click.stop="toggleTip('row-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('row-x-right-'+j)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                    <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
+                  </span>
+                </span>
                 <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
                   <div class="fist_icon fist_left">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -696,4 +720,5 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
 .badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
+.badge_inline{ display:inline-flex; margin-left:6px }
 </style> 
