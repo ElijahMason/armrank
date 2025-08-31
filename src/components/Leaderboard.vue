@@ -448,12 +448,19 @@ export default {
     toggleTip(key){
       this.open_tip_key = this.open_tip_key === key ? '' : key
     },
+    normalizeName(name){
+      const base = String(name || '').toLowerCase().trim()
+      // remove trailing parenthetical or dash-separated descriptors
+      const noParen = base.replace(/\s*\([^)]*\)\s*$/, '')
+      const noDash = noParen.replace(/\s*[–—-]\s*.*$/, '')
+      return noDash.replace(/\s+/g, ' ').trim()
+    },
     isClubLeader(name){
-      const target = String(name || '').trim().toLowerCase()
+      const target = this.normalizeName(name)
       return this.leader_name_to_club.has(target)
     },
     leaderClubOf(name){
-      const target = String(name || '').trim().toLowerCase()
+      const target = this.normalizeName(name)
       return this.leader_name_to_club.get(target) || ''
     },
     overallRank(hand, name){
@@ -566,15 +573,19 @@ export default {
     async loadClubs(){
       try{
         const url = new URL('clubs.json', import.meta.env.BASE_URL)
-        const res = await fetch(url)
-        if(!res.ok) return
+        let res = await fetch(url).catch(()=>null)
+        if(!res || !res.ok){
+          // fallback to root path
+          res = await fetch('/clubs.json').catch(()=>null)
+        }
+        if(!res || !res.ok) return
         const clubs = await res.json()
         const map = new Map()
         clubs.forEach(c => {
           const clubName = String(c?.name || '').trim()
           const leaders = Array.isArray(c?.leaders) ? c.leaders : []
           leaders.forEach(l => {
-            const key = String(l || '').trim().toLowerCase()
+            const key = this.normalizeName(l)
             if(key) map.set(key, clubName)
           })
         })
