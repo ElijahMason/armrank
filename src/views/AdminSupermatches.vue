@@ -1,27 +1,27 @@
 <template>
   <main class="main_container">
     <section class="panel" role="region" aria-label="Admin Supermatches">
+      <div class="panel_header admin_header">
+        <h2 class="title">Supermatch History</h2>
+        <div class="controls">
+          <label class="field compact">
+            <span class="label">Status</span>
+            <select v-model="selectedStatus" class="input select">
+              <option value="pending">Pending approval</option>
+              <option value="approved">Approved</option>
+              <option value="denied">Denied</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="sub_bar">
+        <span class="sub_pill">{{ selectedStatusLabel }}</span>
+      </div>
 
       <div class="table_wrap">
         <table class="data_table" role="table">
           <thead>
-            <tr class="toolbar_row">
-              <th class="toolbar_th" colspan="5">
-                <div class="table_toolbar">
-                  <h2 class="title">Supermatch History</h2>
-                  <div class="controls">
-                    <label class="field compact">
-                      <span class="label">Status</span>
-                      <select v-model="selectedStatus" class="input select">
-                        <option value="pending">Pending approval</option>
-                        <option value="approved">Approved</option>
-                        <option value="denied">Denied</option>
-                      </select>
-                    </label>
-                  </div>
-                </div>
-              </th>
-            </tr>
             <tr>
               <th class="th_date">Date</th>
               <th class="th_icon col_submitter_icon" title="Submitter">👤</th>
@@ -155,6 +155,10 @@ export default {
     function addDays(ts, days){ return ts - days*24*60*60*1000 }
   },
   computed:{
+    selectedStatusLabel(){
+      const map = { pending:'Pending', approved:'Approved', denied:'Denied' }
+      return map[this.selectedStatus] || 'Pending'
+    },
     filteredSortedMatches(){
       const want = String(this.selectedStatus || 'pending')
       return this.matches
@@ -200,20 +204,17 @@ export default {
 .select:focus{outline:none;border-color:rgba(215,180,58,.55)}
 .select option{background:#0b1630;color:var(--text);padding:6px}
 .select optgroup{background:#0b1630;color:var(--muted)}
-.table_wrap{overflow:auto}
-.data_table{width:100%;border-collapse:separate;border-spacing:0;table-layout:fixed;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-.data_table thead th{position:sticky;top:0;background:var(--header-bg);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);font-weight:800}
-.data_table thead .toolbar_row th{background:var(--header-bg);}
-.toolbar_th{padding:0}
-.table_toolbar{display:flex;align-items:center;justify-content:space-between;padding:12px 12px;border-bottom:1px solid var(--border)}
+.sub_bar{position:sticky; top:0; z-index:5; background:var(--header-bg); border-bottom:1px solid var(--border); padding:10px 16px; display:flex; align-items:center; gap:12px}
+.sub_pill{font-weight:800; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:6px 10px; border-radius:999px}
+.table_wrap{overflow:visible; height:auto; max-height:none;}
+.data_table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:auto}
+.data_table thead th{background:var(--header-bg);color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
 .data_table thead th.th_date{width:92px}
 .data_table thead th.th_icon{width:56px;text-align:center}
 .data_table thead th.th_score{width:86px}
 .data_table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 .data_table tbody tr{cursor:pointer}
-.data_table tbody tr:hover{background:rgba(255,255,255,.03)}
-.data_table tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
-.data_table tbody tr:nth-child(even){background:rgba(255,255,255,.01)}
+.data_table tbody tr:hover td{background:rgba(10,23,64,.35)}
 .match_cell{display:flex;flex-direction:column;gap:6px;min-width:0}
 .names{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-weight:900}
 .names .winner{color:#20c997;text-shadow:0 0 12px rgba(32,201,151,.18)}
