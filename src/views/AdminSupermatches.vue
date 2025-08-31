@@ -8,7 +8,7 @@
       <div class="sub_bar">
         <div class="status_select" role="group" aria-label="Filter status">
           <select v-model="selectedStatus" class="input select gold_select" aria-label="Status filter">
-            <option value="pending">Pending approval</option>
+            <option value="pending">Pending</option>
             <option value="approved">Approved</option>
             <option value="denied">Denied</option>
           </select>
@@ -259,9 +259,9 @@ export default {
 .notes_pre{white-space:pre-wrap}
 
 /* Gold select styled like rankings pill but squarer */
-.gold_select{position:relative; appearance:none; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:8px 34px 8px 12px; border-radius:10px; font-weight:900}
+.gold_select{position:relative; appearance:none; border:2px solid var(--accent); background:transparent; color:var(--text); padding:8px 34px 8px 12px; border-radius:10px; font-weight:900}
 .status_select{position:relative}
-.status_select::after{content:"\25BE"; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text); pointer-events:none; font-size:14px}
+.status_select::after{content:"\25BE"; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--accent); pointer-events:none; font-size:14px}
 .approve_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(23,162,184,.55);background:linear-gradient(180deg,#20c997,#17a2b8);color:#061626;font-weight:900}
 .deny_btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.18);background:linear-gradient(180deg, rgba(231,76,60,.18), rgba(231,76,60,.14));color:#ffe6e3;font-weight:900}
 /* Hide scrollbars universally while keeping scroll */
