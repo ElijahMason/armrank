@@ -71,11 +71,10 @@
                               <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
                             </span>
                           </div>
-                          <button class="details_btn" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
-                            <span class="btn_text">Details</span>
-                            <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          </button>
                         </div>
+                        <button class="details_side" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
+                          <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -123,11 +122,10 @@
                               <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
                             </span>
                           </div>
-                          <button class="details_btn" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
-                            <span class="btn_text">Details</span>
-                            <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          </button>
                         </div>
+                        <button class="details_side" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
+                          <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -191,11 +189,10 @@
                             <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
                           </span>
                         </div>
-                        <button class="details_btn" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
-                          <span class="btn_text">Details</span>
-                          <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
                       </div>
+                      <button class="details_side" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
+                        <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -241,11 +238,10 @@
                             <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
                           </span>
                         </div>
-                        <button class="details_btn" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
-                          <span class="btn_text">Details</span>
-                          <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                        </button>
                       </div>
+                      <button class="details_side" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
+                        <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -758,6 +754,9 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .details_btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer }
 .details_btn .arrow_right{ width:18px; height:18px }
 .details_btn:hover{ filter:brightness(1.06); color:var(--text) }
+/* Tall side details area */
+.details_side{ align-self:stretch; display:flex; align-items:center; justify-content:center; padding:0 10px; border-left:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer; border-radius:0 8px 8px 0 }
+.details_side .arrow_right{ width:18px; height:18px }
 
 /* Crown badge + tooltip (reused style) */
 .icon{width:18px; height:18px}
@@ -774,12 +773,12 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 
 /* Per-cell 3D flip */
 .flip_container{ position:relative; perspective:1000px; display:block }
-.flip_inner{ position:relative; transform-style:preserve-3d; transition:transform .35s ease; min-height:28px }
-.flip_container.is_flipped .flip_inner{ transform:rotateY(180deg) }
+.flip_inner{ position:relative; transform-style:preserve-3d; transition:transform .35s ease; min-height:34px }
+.flip_container.is_flipped .flip_inner{ transform:rotateX(180deg) }
 .flip_front, .flip_back{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; gap:8px }
 .flip_front{ justify-content:flex-end }
-.flip_back{ transform:rotateY(180deg); justify-content:space-between; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:6px 8px }
-.flip_content{ display:flex; align-items:center; gap:10px }
+.flip_back{ transform:rotateX(180deg); justify-content:space-between; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:6px 8px }
+.flip_content{ display:flex; align-items:center; gap:10px; flex:1 }
 .rank{ position:relative }
 .rank_hit{ position:absolute; top:0; bottom:0; width:48%; cursor:pointer }
 .rank_hit.left{ left:2% }
