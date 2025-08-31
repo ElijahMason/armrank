@@ -6,6 +6,7 @@
         <router-link class="nav_link" to="/leaderboards">Leaderboards <span v-if="has_update('leaderboards')" class="notif_dot" aria-label="New"></span></router-link>
         <router-link class="nav_link" to="/tournaments">Tournaments <span v-if="has_update('tournaments')" class="notif_dot" aria-label="New"></span></router-link>
         <router-link class="nav_link" to="/clubs">Clubs <span v-if="has_update('clubs')" class="notif_dot" aria-label="New"></span></router-link>
+        <router-link v-if="dev" class="nav_link" to="/admin">Admin</router-link>
       </nav>
     </div>
   </header>
@@ -13,8 +14,13 @@
 
 <script>
 import { updates, newness_window_ms } from '../updates'
+import { isDevMode } from '../utils/devMode'
 export default {
   name: 'TopBar',
+  data(){
+    return { dev: false }
+  },
+  mounted(){ this.dev = isDevMode() },
   methods:{
     has_update(page){
       try{

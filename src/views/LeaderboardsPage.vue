@@ -117,6 +117,8 @@
 
   <button class="feedback_tab" @click="feedback_open = true" aria-controls="feedback_sheet" :aria-expanded="String(feedback_open)">Feedback</button>
 
+  <div v-if="feedback_open" class="feedback_overlay" @click="feedback_open = false" aria-hidden="true"></div>
+
   <section id="feedback_sheet" class="feedback_sheet" :class="{ open: feedback_open }" role="dialog" aria-modal="true" aria-label="Feedback">
     <div class="sheet_header">
       <h2 class="title">Feedback</h2>
@@ -572,6 +574,7 @@ export default {
 
 /* Feedback bottom sheet */
 .feedback_tab{position:fixed;left:12px;bottom:0;z-index:40;padding:8px 14px 6px 14px;border-radius:8px 8px 0 0;border:1px solid rgba(30,144,255,.35);background:linear-gradient(180deg, rgba(30,144,255,.85), rgba(30,144,255,.8));color:#061626;font-weight:900;cursor:pointer}
+.feedback_overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:44}
 .feedback_sheet{position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(100%);width:min(720px,100%);background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.98));border:1px solid var(--border);border-radius:14px 14px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.35);z-index:45;transition:transform .28s ease}
 .feedback_sheet.open{transform:translateX(-50%) translateY(0)}
 .sheet_header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
