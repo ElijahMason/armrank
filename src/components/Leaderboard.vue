@@ -37,8 +37,8 @@
             <tr v-if="!loaded"><td colspan="3">Loading…</td></tr>
             <tr v-else-if="load_error"><td colspan="3">Failed to load rankings data. Refresh the page and try again.</td></tr>
 
-            <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class">
-              <td class="athlete"><span class="name_text">{{ row.left_name }}</span>
+            <tr v-else v-for="(row, i) in first_rows" :key="'f'+i" :class="row.row_class" class="lb_row">
+              <td class="athlete" @click="onRowAthleteClick('f', i, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
                 <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
                   <div class="fist_icon fist_left">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -51,7 +51,7 @@
                   </div>
                 </div>
               </td>
-              <td class="rank">
+              <td class="rank" @click="toggleFlipForKey('f', i)">
                 <span v-if="i < 3" class="trophy" :class="'trophy_' + (i+1)">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
@@ -60,7 +60,7 @@
                 </span>
                 <span v-else>{{ i + 1 }}</span>
               </td>
-              <td class="athlete"><span class="name_text">{{ row.right_name }}</span>
+              <td class="athlete" @click="onRowAthleteClick('f', i, row.right_name)"><span class="name_text">{{ row.right_name }}</span>
                 <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
                   <div class="fist_icon fist_left">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -71,6 +71,27 @@
                   <div class="fist_icon fist_right">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
                   </div>
+                </div>
+              </td>
+            </tr>
+            <tr v-for="(row, i) in first_rows" :key="'f-details-'+i" v-if="flipped_key === 'f-'+i" class="flip_details_row">
+              <td class="flip_cell" :colspan="3">
+                <div class="flip_card">
+                  <div class="flip_main">
+                    <div class="points_badges">
+                      <span class="points">48 skill points</span>
+                      <div class="badges">
+                        <div v-if="isClubLeader(flipped_athlete)" class="badge_btn crown" :class="{ show: open_tip_key === 'crown-flip' }" @click.stop="toggleTip('crown-flip')" tabindex="0" @keyup.enter.stop="toggleTip('crown-flip')" :aria-label="leaderClubLabel">
+                          <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                          <div class="tip">{{ leaderClubLabel }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <button class="details_btn" @click.stop="openAthleteDetails(flipped_athlete)" aria-label="Open athlete details">
+                    <span class="btn_text">Details</span>
+                    <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
                 </div>
               </td>
             </tr>
@@ -97,7 +118,7 @@
         <div v-if="is_collapsible" class="collapse_wrap" :class="{ open: show_all }" ref="collapse_wrap_ref">
           <div class="rows_grid">
             <div class="row_grid" v-for="(row, j) in extra_rows" :key="'x'+j" :class="row.row_class">
-              <div class="cell athlete"><span class="name_text">{{ row.left_name }}</span>
+              <div class="cell athlete" @click="onRowAthleteClick('x', j, row.left_name)"><span class="name_text">{{ row.left_name }}</span>
                 <div v-if="row.fight_left" class="fight_anim left" aria-hidden="true">
                   <div class="fist_icon fist_left">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -110,7 +131,7 @@
                   </div>
                 </div>
               </div>
-              <div class="cell rank">
+              <div class="cell rank" @click="toggleFlipForKey('x', j)">
                 <span v-if="first_rows_count + j + 1 <= 3" class="trophy" :class="'trophy_' + (first_rows_count + j + 1)">
                   <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/>
@@ -119,7 +140,7 @@
                 </span>
                 <span v-else>{{ first_rows_count + j + 1 }}</span>
               </div>
-              <div class="cell athlete"><span class="name_text">{{ row.right_name }}</span>
+              <div class="cell athlete" @click="onRowAthleteClick('x', j, row.right_name)"><span class="name_text">{{ row.right_name }}</span>
                 <div v-if="row.fight_right" class="fight_anim right" aria-hidden="true">
                   <div class="fist_icon fist_left">
                     <img class="fist_img" src="https://api.iconify.design/mdi/boxing-glove.svg?color=%23e74c3c" alt="" aria-hidden="true" />
@@ -133,17 +154,49 @@
                 </div>
               </div>
             </div>
+            <div v-for="(row, j) in extra_rows" :key="'x-details-'+j" v-if="flipped_key === 'x-'+j" class="flip_details_card">
+              <div class="flip_card">
+                <div class="flip_main">
+                  <div class="points_badges">
+                    <span class="points">48 skill points</span>
+                    <div class="badges">
+                      <div v-if="isClubLeader(flipped_athlete)" class="badge_btn crown" :class="{ show: open_tip_key === 'crown-flip' }" @click.stop="toggleTip('crown-flip')" tabindex="0" @keyup.enter.stop="toggleTip('crown-flip')" :aria-label="leaderClubLabel">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                        <div class="tip">{{ leaderClubLabel }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button class="details_btn" @click.stop="openAthleteDetails(flipped_athlete)" aria-label="Open athlete details">
+                  <span class="btn_text">Details</span>
+                  <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         
       </div>
     </section>
+    <AthleteDetails
+      :open="athlete_modal_open"
+      :athlete="selected_athlete"
+      :division="divisionLabel"
+      :weight="weight_map.get(selected_athlete) || classes[classes.length - 1]"
+      :rh_rank="overallRank('RH', selected_athlete)"
+      :lh_rank="overallRank('LH', selected_athlete)"
+      :club="leaderClubOf(selected_athlete)"
+      :points="48"
+      @close="athlete_modal_open = false"
+    />
   </main>
 </template>
 
 <script>
+import AthleteDetails from './AthleteDetails.vue'
 export default {
   name: 'Leaderboard',
+  components: { AthleteDetails },
   props: {
     rankings_tab_name: { type: String, required: true },
     weights_tab_name: { type: String, required: true },
@@ -166,12 +219,21 @@ export default {
       loaded: false,
       load_error: false,
       show_all: false,
+      // flip state
+      flipped_key: '',
+      flipped_athlete: '',
+      open_tip_key: '',
+      // modal
+      athlete_modal_open: false,
+      selected_athlete: '',
 
       left_list_raw: [],
       right_list_raw: [],
       weight_map: new Map(),
       left_challenge_map: new Map(),
       right_challenge_map: new Map(),
+      // clubs
+      leader_name_to_club: new Map(),
     }
   },
   computed: {
@@ -258,6 +320,13 @@ export default {
     first_rows_count(){
       return this.first_rows.length
     },
+    divisionLabel(){
+      return this.rankings_tab_name.includes('_F') ? 'Women' : 'Men'
+    },
+    leaderClubLabel(){
+      const c = this.leaderClubOf(this.flipped_athlete)
+      return c ? `${c} club leader` : 'Club leader'
+    },
   },
   methods: {
     selectClass(cls) {
@@ -265,6 +334,47 @@ export default {
     },
     toggleShowAll(){
       this.show_all = !this.show_all
+    },
+    onRowAthleteClick(section, index, name){
+      const key = `${section}-${index}`
+      if(this.flipped_key === key && this.flipped_athlete === name){
+        this.flipped_key = ''
+        this.flipped_athlete = ''
+        return
+      }
+      this.flipped_key = key
+      this.flipped_athlete = name || ''
+    },
+    toggleFlipForKey(section, index){
+      const key = `${section}-${index}`
+      this.flipped_key = this.flipped_key === key ? '' : key
+      if(!this.flipped_key) this.flipped_athlete = ''
+    },
+    toggleTip(key){
+      this.open_tip_key = this.open_tip_key === key ? '' : key
+    },
+    isClubLeader(name){
+      const target = String(name || '').trim().toLowerCase()
+      return this.leader_name_to_club.has(target)
+    },
+    leaderClubOf(name){
+      const target = String(name || '').trim().toLowerCase()
+      return this.leader_name_to_club.get(target) || ''
+    },
+    overallRank(hand, name){
+      const n = String(name || '').trim()
+      if(!n) return ''
+      if(hand === 'RH'){
+        const i = this.right_list_raw.findIndex(x => String(x || '').trim() === n)
+        return i >= 0 ? i + 1 : ''
+      }else{
+        const i = this.left_list_raw.findIndex(x => String(x || '').trim() === n)
+        return i >= 0 ? i + 1 : ''
+      }
+    },
+    openAthleteDetails(name){
+      this.selected_athlete = name
+      this.athlete_modal_open = true
     },
     gvizCsv(tab) {
       return `https://docs.google.com/spreadsheets/d/${this.sheet_id}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`
@@ -358,12 +468,31 @@ export default {
         this.loaded = true
       }
     },
+    async loadClubs(){
+      try{
+        const url = new URL('clubs.json', import.meta.env.BASE_URL)
+        const res = await fetch(url)
+        if(!res.ok) return
+        const clubs = await res.json()
+        const map = new Map()
+        clubs.forEach(c => {
+          const clubName = String(c?.name || '').trim()
+          const leaders = Array.isArray(c?.leaders) ? c.leaders : []
+          leaders.forEach(l => {
+            const key = String(l || '').trim().toLowerCase()
+            if(key) map.set(key, clubName)
+          })
+        })
+        this.leader_name_to_club = map
+      }catch{}
+    }
   },
   created(){
     this.selected_class = this.default_selected_class
   },
   mounted() {
     this.load()
+    this.loadClubs()
   },
   watch: {
     selected_class() {
@@ -539,4 +668,28 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 
 .row_grid .cell.athlete:first-child{ text-align:right }
 .row_grid .cell.athlete:last-child{ text-align:left }
+
+/* Flip details UI */
+.lb_row{ cursor:pointer }
+.flip_details_row .flip_cell{ padding:0 !important; background:transparent !important; border-bottom:none !important }
+.flip_details_card{ padding:8px 12px; border-bottom:1px solid var(--border) }
+.flip_card{ display:flex; align-items:center; gap:12px; justify-content:space-between; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:10px; padding:10px 12px }
+.flip_main{ display:flex; align-items:center; gap:12px }
+.points_badges{ display:flex; align-items:center; gap:14px; flex-wrap:wrap }
+.points{ font-weight:900; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--border); padding:6px 10px; border-radius:999px }
+.badges{ display:flex; align-items:center; gap:8px }
+
+/* Gray details button with right arrow */
+.details_btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer }
+.details_btn .arrow_right{ width:18px; height:18px }
+.details_btn:hover{ filter:brightness(1.06); color:var(--text) }
+
+/* Crown badge + tooltip (reused style) */
+.icon{width:18px; height:18px}
+.badge_btn{ position:relative; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:999px }
+.crown{background:linear-gradient(180deg, rgba(215,180,58,.2), rgba(185,147,34,.18)); color:var(--accent); border:1px solid rgba(215,180,58,.45)}
+.crown_icon{fill:currentColor}
+.badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
+.badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
+.badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
 </style> 
