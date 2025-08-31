@@ -244,7 +244,7 @@ export default {
 .modal_title_group{display:flex;flex-direction:column;gap:4px}
 .subtitle{color:var(--muted);font-weight:700}
 .header_actions{display:flex;align-items:center;gap:10px}
-.close_btn{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));color:var(--text);font-weight:900;font-size:22px;line-height:1;cursor:pointer}
+.close_btn{display:inline-flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04));color:var(--text);font-weight:900;padding:6px 12px;font-size:20px;line-height:1;cursor:pointer;transition:.18s ease}
 .close_btn:hover{filter:brightness(1.08)}
 .modal_body{padding:14px 16px;overflow:auto}
 .section{display:grid;gap:10px;margin-bottom:14px}
