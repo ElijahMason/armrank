@@ -622,10 +622,15 @@ export default {
 .sub_pill{font-weight:800; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); padding:6px 10px; border-radius:999px}
 .wrap{overflow: visible !important; height: auto; max-height: none; margin-bottom:0; padding-bottom:0; -webkit-overflow-scrolling: auto; overscroll-behavior: auto; touch-action: auto}
 
-.table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:auto}
+.table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:fixed}
 .table thead th{background:var(--header-bg);color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
 .table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);min-width:0;word-break:break-word;background:transparent}
+.table thead th.left_hdr, .table thead th.right_hdr, .table tbody td.athlete{ width: calc((100% - 64px) / 2) }
 .table tbody tr:hover td{background:transparent}
+.table tbody tr:active td{background:transparent !important}
+.table tbody td:active{background:transparent !important}
+.table tbody td *{ -webkit-tap-highlight-color: rgba(0,0,0,0) }
+.table tbody td{ -webkit-tap-highlight-color: rgba(0,0,0,0) }
 
 /* perfectly centered # column with turquoise tint; remove any underlines */
 th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:middle; padding-left:0 !important; padding-right:0 !important}
@@ -809,7 +814,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_container.side_left .flip_front{ justify-content:flex-end }
 .flip_container.side_right .flip_front{ justify-content:flex-start }
 .rank{ position:relative }
-.rank_hit{ position:absolute; top:0; bottom:0; width:50%; cursor:pointer; left:0 }
+.rank_hit{ position:absolute; top:0; bottom:0; width:50%; cursor:pointer; left:0; -webkit-tap-highlight-color: transparent; background:transparent }
 .rank_hit.left{ left:0 }
 .rank_hit.right{ right:0 }
 
