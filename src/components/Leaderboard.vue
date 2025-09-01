@@ -602,16 +602,22 @@ export default {
         const text = await fetch(this.gvizCsv('Clubs')).then(r=>r.text()).catch(()=>'' )
         const rows = this.csvToRows(String(text))
         const members = new Map()
-        rows.slice(1).forEach(r => {
-          const clubName = String(r[0] || '').trim()
-          if(!clubName) return
-          for(let i=1;i<r.length;i++){
-            const nm = this.normalizeName(r[i])
+        // Header row contains club names across columns
+        const header = rows[0] || []
+        const clubNames = header.map(h=>String(h||'').trim())
+        // For each subsequent row, map each non-empty cell to its column club
+        for(let i=1;i<rows.length;i++){
+          const r = rows[i]
+          for(let j=0;j<clubNames.length;j++){
+            const clubName = clubNames[j]
+            if(!clubName) continue
+            const raw = r[j]
+            const nm = this.normalizeName(raw)
             if(!nm) continue
             if(this.leader_name_to_club.has(nm)) continue
             if(!members.has(nm)) members.set(nm, clubName)
           }
-        })
+        }
         this.member_name_to_club = members
       }catch{}
     }
