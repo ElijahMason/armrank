@@ -583,11 +583,15 @@ export default {
     },
     async loadClubs(){
       try{
-        const url = new URL('clubs.json', import.meta.env.BASE_URL)
-        let res = await fetch(url).catch(()=>null)
-        if(!res || !res.ok){
-          // fallback to root path
-          res = await fetch('/clubs.json').catch(()=>null)
+        const origin = (typeof window !== 'undefined' && window.location && window.location.origin) ? window.location.origin : ''
+        const base = String(import.meta.env.BASE_URL || '/').replace(/\/+$/,'')
+        const absPrimary = origin + (base ? base : '') + '/clubs.json'
+        const pathBase = (typeof window !== 'undefined') ? window.location.pathname.replace(/\/+$/,'') : ''
+        const absSecondary = origin + pathBase + (pathBase.endsWith('/') ? '' : '/') + 'clubs.json'
+        const tries = [absPrimary, absSecondary, origin + '/clubs.json']
+        let res = null
+        for(const u of tries){
+          try{ res = await fetch(u); if(res && res.ok) break }catch{}
         }
         if(!res || !res.ok) return
         const clubs = await res.json()
@@ -610,6 +614,8 @@ export default {
         })
         this.leader_name_to_club = map
         this.leader_entries = entries
+        // Dev: log size for verification (no console noise in production builds is fine)
+        try{ console.debug('Loaded clubs leaders:', map.size) }catch{}
       }catch{}
     }
   },
