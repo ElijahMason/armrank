@@ -272,6 +272,7 @@ export default {
       show_all: false,
       // flip state
       flipped_cells: new Set(), // keys: `${section}-${index}-${side}` where side is 'L' or 'R'
+      flip_timers: new Map(),
       open_tip_key: '',
       // modal
       athlete_modal_open: false,
@@ -389,10 +390,20 @@ export default {
     onRowAthleteClick(){ /* no-op after per-cell flip introduced */ },
     toggleCellFlip(section, index, side, name){
       const key = `${section}-${index}-${side}`
-      if(this.flipped_cells.has(key)) this.flipped_cells.delete(key)
-      else this.flipped_cells.add(key)
-      // force reactive update by recreating the Set
+      // close all others first
+      this.flipped_cells.clear()
+      // toggle current
+      if(!this.flipped_cells.has(key)) this.flipped_cells.add(key)
+      // force reactive update
       this.flipped_cells = new Set(this.flipped_cells)
+      // auto close after 4s
+      if(this.flip_timers.has(key)) clearTimeout(this.flip_timers.get(key))
+      const t = setTimeout(()=>{
+        this.flipped_cells.delete(key)
+        this.flipped_cells = new Set(this.flipped_cells)
+        this.flip_timers.delete(key)
+      }, 4000)
+      this.flip_timers.set(key, t)
     },
     isCellFlipped(section, index, side){
       const key = `${section}-${index}-${side}`
@@ -614,7 +625,7 @@ export default {
 .table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:auto}
 .table thead th{background:var(--header-bg);color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
 .table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);min-width:0;word-break:break-word;background:transparent}
-.table tbody tr:hover td{background:rgba(10,23,64,.35)}
+.table tbody tr:hover td{background:transparent}
 
 /* perfectly centered # column with turquoise tint; remove any underlines */
 th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:middle}
@@ -796,7 +807,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_container.side_left .flip_back{ border-radius:8px 0 0 8px }
 .flip_container.side_right .flip_back{ border-radius:0 8px 8px 0 }
 .rank{ position:relative }
-.rank_hit{ position:absolute; top:0; bottom:0; width:48%; cursor:pointer }
+.rank_hit{ position:absolute; top:0; bottom:0; width:50%; cursor:pointer }
 .rank_hit.left{ left:2% }
 .rank_hit.right{ right:2% }
 
