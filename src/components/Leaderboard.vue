@@ -628,7 +628,7 @@ export default {
 .table tbody tr:hover td{background:transparent}
 
 /* perfectly centered # column with turquoise tint; remove any underlines */
-th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:middle}
+th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:middle; padding-left:0 !important; padding-right:0 !important}
 /* ensure overlays in athlete cells can sit between rows */
 .athlete{min-width:0; overflow:visible; position:relative; z-index:1}
 .name_text{display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -809,7 +809,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_container.side_left .flip_front{ justify-content:flex-end }
 .flip_container.side_right .flip_front{ justify-content:flex-start }
 .rank{ position:relative }
-.rank_hit{ position:absolute; top:0; bottom:0; width:50%; cursor:pointer }
+.rank_hit{ position:absolute; top:0; bottom:0; width:50%; cursor:pointer; left:0 }
 .rank_hit.left{ left:0 }
 .rank_hit.right{ right:0 }
 
@@ -819,4 +819,6 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 /* Remove tap highlight/selection to avoid flash */
 .table tbody td, .flip_container, .flip_container *{ -webkit-tap-highlight-color: transparent }
 .lb_row td{ user-select:none }
+.lb_row td:focus, .lb_row td:active, .lb_row:active td, .flip_container:focus, .flip_container:active{ outline:none; background:transparent !important }
+.table tbody tr:active td, .table tbody td:active{ background:transparent !important }
 </style> 
