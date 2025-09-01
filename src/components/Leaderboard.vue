@@ -800,18 +800,23 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_inner{ position:relative; transform-style:preserve-3d; transition:transform .35s ease; min-height:48px; height:100% }
 .flip_container.is_flipped .flip_inner{ transform:rotateX(180deg) }
 .flip_front, .flip_back{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; gap:8px; height:100% }
-.flip_front{ justify-content:flex-end; padding:0 }
+.flip_front{ justify-content:center; padding:0 }
 .flip_back{ transform:rotateX(180deg); justify-content:space-between; align-items:stretch; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:0 }
 .flip_content{ display:flex; align-items:center; gap:10px; flex:1 }
 .points{ white-space:nowrap; display:inline-flex }
 .flip_container.side_left .flip_back{ border-radius:8px 0 0 8px }
 .flip_container.side_right .flip_back{ border-radius:0 8px 8px 0 }
+.flip_container.side_left .flip_front{ justify-content:flex-end }
+.flip_container.side_right .flip_front{ justify-content:flex-start }
 .rank{ position:relative }
 .rank_hit{ position:absolute; top:0; bottom:0; width:50%; cursor:pointer }
-.rank_hit.left{ left:2% }
-.rank_hit.right{ right:2% }
+.rank_hit.left{ left:0 }
+.rank_hit.right{ right:0 }
 
 /* Remove default padding to let flip faces control full height */
 .table tbody td.athlete{ padding:0 }
 .row_grid .cell.athlete{ padding:0 }
+/* Remove tap highlight/selection to avoid flash */
+.table tbody td, .flip_container, .flip_container *{ -webkit-tap-highlight-color: transparent }
+.lb_row td{ user-select:none }
 </style> 
