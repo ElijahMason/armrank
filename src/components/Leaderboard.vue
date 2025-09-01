@@ -332,6 +332,7 @@ export default {
       right_challenge_map: new Map(),
       // clubs
       leader_name_to_club: new Map(),
+      leader_entries: [],
     }
   },
   computed: {
@@ -455,13 +456,23 @@ export default {
       const noDash = noParen.replace(/\s*[–—-]\s*.*$/, '')
       return noDash.replace(/\s+/g, ' ').trim()
     },
+    tokensFromName(name){
+      return this.normalizeName(name).split(' ').filter(Boolean)
+    },
     isClubLeader(name){
-      const target = this.normalizeName(name)
-      return this.leader_name_to_club.has(target)
+      return !!this.leaderClubOf(name)
     },
     leaderClubOf(name){
       const target = this.normalizeName(name)
-      return this.leader_name_to_club.get(target) || ''
+      const direct = this.leader_name_to_club.get(target)
+      if(direct) return direct
+      const atoks = this.tokensFromName(target)
+      if(atoks.length === 0) return ''
+      for(const { key, club } of this.leader_entries){
+        const ltoks = this.tokensFromName(key)
+        if(ltoks.length && ltoks.every(t => atoks.includes(t))) return club
+      }
+      return ''
     },
     overallRank(hand, name){
       const n = String(name || '').trim()
@@ -581,15 +592,24 @@ export default {
         if(!res || !res.ok) return
         const clubs = await res.json()
         const map = new Map()
+        const entries = []
         clubs.forEach(c => {
           const clubName = String(c?.name || '').trim()
           const leaders = Array.isArray(c?.leaders) ? c.leaders : []
           leaders.forEach(l => {
             const key = this.normalizeName(l)
             if(key) map.set(key, clubName)
+            // also map reversed "last first" variant when two tokens
+            const parts = key.split(' ').filter(Boolean)
+            if(parts.length === 2){
+              const rev = `${parts[1]} ${parts[0]}`
+              if(rev) map.set(rev, clubName)
+            }
+            entries.push({ key, club: clubName })
           })
         })
         this.leader_name_to_club = map
+        this.leader_entries = entries
       }catch{}
     }
   },
