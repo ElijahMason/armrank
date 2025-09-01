@@ -64,6 +64,7 @@
                               <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                               <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
                             </span>
+                            <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" aria-hidden="true"></span>
                           </div>
                         </div>
                         <button class="details_side" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
@@ -109,6 +110,7 @@
                               <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                               <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
                             </span>
+                            <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" aria-hidden="true"></span>
                           </div>
                         </div>
                         <button class="details_side" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
@@ -285,6 +287,8 @@ export default {
       right_challenge_map: new Map(),
       // clubs
       leader_name_to_club: new Map(),
+      club_name_to_logo: new Map(),
+      member_name_to_club: new Map(),
       leader_entries: [],
     }
   },
@@ -437,6 +441,16 @@ export default {
       }
       return ''
     },
+    isClubMember(name){
+      const k = this.normalizeName(name)
+      if(this.leader_name_to_club.has(k)) return ''
+      return this.member_name_to_club.get(k) || ''
+    },
+    memberClubLogo(name){
+      const club = this.isClubMember(name)
+      if(!club) return ''
+      return this.club_name_to_logo.get(club) || ''
+    },
     overallRank(hand, name){
       const n = String(name || '').trim()
       if(!n) return ''
@@ -562,6 +576,8 @@ export default {
         const entries = []
         clubs.forEach(c => {
           const clubName = String(c?.name || '').trim()
+          const logo = String(c?.image_url || '').trim()
+          if(clubName) this.club_name_to_logo.set(clubName, logo)
           const leaders = Array.isArray(c?.leaders) ? c.leaders : []
           leaders.forEach(l => {
             const key = this.normalizeName(l)
@@ -580,6 +596,24 @@ export default {
         // Dev: log size for verification (no console noise in production builds is fine)
         try{ console.debug('Loaded clubs leaders:', map.size) }catch{}
       }catch{}
+    },
+    async loadClubMembers(){
+      try{
+        const text = await fetch(this.gvizCsv('Clubs')).then(r=>r.text()).catch(()=>'' )
+        const rows = this.csvToRows(String(text))
+        const members = new Map()
+        rows.slice(1).forEach(r => {
+          const clubName = String(r[0] || '').trim()
+          if(!clubName) return
+          for(let i=1;i<r.length;i++){
+            const nm = this.normalizeName(r[i])
+            if(!nm) continue
+            if(this.leader_name_to_club.has(nm)) continue
+            if(!members.has(nm)) members.set(nm, clubName)
+          }
+        })
+        this.member_name_to_club = members
+      }catch{}
     }
   },
   created(){
@@ -588,6 +622,7 @@ export default {
   mounted() {
     this.load()
     this.loadClubs()
+    this.loadClubMembers && this.loadClubMembers()
   },
   watch: {
     selected_class() {
@@ -784,7 +819,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .details_btn .arrow_right{ width:18px; height:18px }
 .details_btn:hover{ filter:brightness(1.06); color:var(--text) }
 /* Tall side details area */
-.details_side{ align-self:stretch; display:flex; align-items:center; justify-content:center; padding:0 12px; background:rgba(255,255,255,.18); color:var(--text); cursor:pointer; border-radius:0 8px 8px 0; border:none; min-width:48px }
+.details_side{ align-self:stretch; display:flex; align-items:center; justify-content:center; padding:0 12px; background:rgba(255,255,255,.18); color:var(--text); cursor:pointer; border-radius:0; border:none; min-width:48px }
 .details_side .arrow_right{ width:18px; height:18px }
 
 /* Crown badge + tooltip (reused style) */
@@ -792,6 +827,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .badge_btn{ position:relative; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:999px }
 .crown{background:linear-gradient(180deg, rgba(215,180,58,.2), rgba(185,147,34,.18)); color:var(--accent); border:1px solid rgba(215,180,58,.45)}
 .crown_icon{fill:currentColor}
+.member_logo{ width:28px; height:28px; border-radius:50%; background-size:cover; background-position:center; border:1px solid var(--border) }
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
 /* Right-align crown tooltip to avoid viewport overflow like in ClubDetails */
