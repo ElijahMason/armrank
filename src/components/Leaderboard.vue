@@ -59,12 +59,14 @@
                       <div class="flip_back">
                         <div class="flip_content">
                           <span class="points">48</span>
-                          <div class="badges">
+                          <div class="badges left_badges">
                             <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-left-'+i }" @click.stop="toggleTip('flip-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
                               <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                               <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
                             </span>
-                            <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" aria-hidden="true"></span>
+                            <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-left-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-f-left-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-ml-'+i)">
+                              <span class="tip">{{ isClubMember(row.left_name) }} featured member</span>
+                            </span>
                           </div>
                         </div>
                         <button class="details_side" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
@@ -75,6 +77,7 @@
                   </div>
                 </td>
                 <td class="rank">
+                  <div class="rank_box"></div>
                   <span class="rank_hit left" @click.stop="toggleCellFlip('f', i, 'L', row.left_name)" aria-label="Flip left athlete"></span>
                   <span class="rank_hit right" @click.stop="toggleCellFlip('f', i, 'R', row.right_name)" aria-label="Flip right athlete"></span>
                   <span v-if="i < 3" class="trophy" :class="'trophy_' + (i+1)">
@@ -110,7 +113,9 @@
                               <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                               <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
                             </span>
-                            <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" aria-hidden="true"></span>
+                            <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-right-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-f-right-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-ml-'+i)">
+                              <span class="tip">{{ isClubMember(row.right_name) }} featured member</span>
+                            </span>
                           </div>
                         </div>
                         <button class="details_side" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
@@ -680,13 +685,16 @@ th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:m
 .name_text{display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 
 td.rank{
+  position:relative;
+  height:100%;
+  padding:0 !important;
+  vertical-align:middle;
+}
+td.rank .rank_box{
+  position:absolute; inset:0;
   display:flex; align-items:center; justify-content:center;
   font-weight:900; color:var(--accent);
-  background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important;
-  border-left:none !important; border-right:none !important;
-  border-bottom:1px solid var(--border) !important;
-  border-radius:6px;
-  padding:10px 0 !important;
+  background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16));
 }
 td.rank::before, td.rank::after, th.rank::before, th.rank::after{ content:none !important; display:none !important }
 
@@ -819,6 +827,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .points_badges{ display:flex; align-items:center; gap:14px; flex-wrap:wrap }
 .points{ font-weight:900; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--border); padding:6px 10px; border-radius:999px }
 .badges{ display:flex; align-items:center; gap:8px }
+.left_badges{ margin-left:auto }
 
 /* Gray details button with right arrow */
 .details_btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer }
