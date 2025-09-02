@@ -324,18 +324,47 @@ export default {
   directives:{
     overflowScroll:{
       mounted(el){
-        requestAnimationFrame(()=>{
-          const lane = el.querySelector('.scroll_lane')
-          if(!lane) return
-          const shouldScroll = lane.scrollWidth > el.clientWidth + 2
-          if(shouldScroll){ lane.classList.add('do_scroll') }
-        })
+        const lane = el.querySelector('.scroll_lane')
+        if(!lane) return
+        const measure = ()=>{
+          const containerWidth = el.clientWidth || 0
+          const contentWidth = lane.scrollWidth || 0
+          // Add a small buffer so we only scroll when it's clearly overflowing
+          const shouldScroll = contentWidth - containerWidth > 8
+          lane.classList.toggle('do_scroll', shouldScroll)
+        }
+        // Initial after paint and after a small delay to allow icon/fonts layout
+        requestAnimationFrame(measure)
+        setTimeout(measure, 50)
+        // Observe size/content changes
+        const ro = new ResizeObserver(measure)
+        try{ ro.observe(el) }catch{}
+        // Mutation observer for lane content changes
+        const mo = new MutationObserver(measure)
+        try{ mo.observe(lane, { childList:true, subtree:true, attributes:true, characterData:true }) }catch{}
+        // Store observers for cleanup
+        el.__overflow_ro = ro
+        el.__overflow_mo = mo
+        // Recompute on window resize
+        const onResize = ()=>measure()
+        window.addEventListener('resize', onResize)
+        el.__overflow_resize = onResize
       },
       updated(el){
         const lane = el.querySelector('.scroll_lane')
         if(!lane) return
-        const shouldScroll = lane.scrollWidth > el.clientWidth + 2
+        const containerWidth = el.clientWidth || 0
+        const contentWidth = lane.scrollWidth || 0
+        const shouldScroll = contentWidth - containerWidth > 8
         lane.classList.toggle('do_scroll', shouldScroll)
+      },
+      unmounted(el){
+        if(el.__overflow_ro){ try{ el.__overflow_ro.disconnect() }catch{} }
+        if(el.__overflow_mo){ try{ el.__overflow_mo.disconnect() }catch{} }
+        if(el.__overflow_resize){ try{ window.removeEventListener('resize', el.__overflow_resize) }catch{} }
+        delete el.__overflow_ro
+        delete el.__overflow_mo
+        delete el.__overflow_resize
       }
     }
   },
