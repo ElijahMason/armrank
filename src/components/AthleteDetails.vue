@@ -110,13 +110,7 @@
             <div class="rail_inner">
               <!-- Tournament medals (hard-coded for 2025 Joe Woody) -->
               <span v-for="(m, idx) in medals()" :key="'medal-'+idx" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
-                <svg viewBox="0 0 32 32" aria-hidden="true">
-                  <!-- Ribbon behind medal -->
-                  <path class="medal_ribbon_left" d="M9 3 L14 3 L12 14 L7 14 Z"/>
-                  <path class="medal_ribbon_right" d="M18 3 L23 3 L25 14 L20 14 Z"/>
-                  <!-- Medal circle -->
-                  <circle class="medal_circle" cx="16" cy="21" r="8"/>
-                </svg>
+                <Medal class="medal_icon" aria-hidden="true" />
                 <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                 <span class="tip">{{ medalTip(m) }}</span>
               </span>
@@ -188,8 +182,10 @@
 </template>
 
 <script>
+import { Medal } from 'lucide-vue-next'
 export default {
   name: 'AthleteDetails',
+  components:{ Medal },
   props: {
     open: { type: Boolean, default: false },
     athlete: { type: String, default: '' },
@@ -426,6 +422,10 @@ export default {
 .medal_2 .medal_circle{ fill: var(--silver) }
 .medal_3 .medal_circle{ fill: var(--bronze) }
 .medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45) }
+.medal_icon{ width:34px; height:34px; display:block }
+.medal_1 .medal_icon{ color: var(--accent) }
+.medal_2 .medal_icon{ color: var(--silver) }
+.medal_3 .medal_icon{ color: var(--bronze) }
 .skill_block{ margin-top:10px }
 .chart_wrap{ position:relative }
 .skill_svg{ display:block; width:100%; height:180px }
