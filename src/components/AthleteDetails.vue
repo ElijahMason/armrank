@@ -9,7 +9,7 @@
 
       <div class="content" @click="onRootClick">
         <!-- Arm-specific stats: Left on the left, Right on the right -->
-        <div class="hero alt_hero vg_theme arm_hero">
+        <div class="hero arm_hero">
           <div class="arm_card left_arm">
             <div class="arm_title">Left Hand</div>
             <div class="row">
@@ -17,11 +17,11 @@
               <div class="value"><span class="accent">{{ fakeSkill('LH') }}</span></div>
             </div>
             <div class="row">
-              <div class="label">Weight class rank</div>
+              <div class="label">Rank ({{ weight }}lb)</div>
               <div class="value">{{ formatRank(lh_class_rank) }}</div>
             </div>
             <div class="row">
-              <div class="label">Overall rank</div>
+              <div class="label">Rank (overall)</div>
               <div class="value">{{ formatRank(lh_rank) }}</div>
             </div>
           </div>
@@ -32,11 +32,11 @@
               <div class="value"><span class="accent">{{ fakeSkill('RH') }}</span></div>
             </div>
             <div class="row">
-              <div class="label">Weight class rank</div>
+              <div class="label">Rank ({{ weight }}lb)</div>
               <div class="value">{{ formatRank(rh_class_rank) }}</div>
             </div>
             <div class="row">
-              <div class="label">Overall rank</div>
+              <div class="label">Rank (overall)</div>
               <div class="value">{{ formatRank(rh_rank) }}</div>
             </div>
           </div>
@@ -44,7 +44,6 @@
 
         <!-- Skill over time chart (fake data for now) placed right under arm cards -->
         <section class="block alt_hero vg_theme skill_block">
-          <h3 class="rail_title">Skill over time</h3>
           <div class="chart_wrap">
             <svg :viewBox="`0 0 ${chart_w} ${chart_h}`" preserveAspectRatio="none" class="skill_svg" role="img" aria-label="Skill history chart">
               <defs>
@@ -63,14 +62,12 @@
               </g>
               <polyline :points="lh_points()" class="series lh" :stroke="'url(#gradLH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
               <polyline :points="rh_points()" class="series rh" :stroke="'url(#gradRH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
-              <!-- Minimal labels: top/bottom values and a few date ticks -->
-              <text :x="pad - 8" :y="pad + 4" class="chart_text ylbl" text-anchor="end">60</text>
-              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">40</text>
+              <!-- Minimal labels: a few date ticks -->
               <text v-for="(lab, idx) in dateTicks()" :key="'t'+idx" :x="tickX(lab.i)" :y="chart_h - pad + 14" class="chart_text xtick" text-anchor="middle">{{ lab.t }}</text>
             </svg>
             <div class="legend">
-              <span class="legend_item lh"><span class="swatch"></span> Left hand</span>
-              <span class="legend_item rh"><span class="swatch"></span> Right hand</span>
+              <span class="legend_item lh"><span class="swatch"></span> Left (skill level)</span>
+              <span class="legend_item rh"><span class="swatch"></span> Right (skill level)</span>
             </div>
           </div>
         </section>
@@ -105,7 +102,6 @@
         </div>
 
         <section class="badge_rail">
-          <h3 class="rail_title">Badges</h3>
           <div class="rail">
             <div class="rail_inner">
               <!-- Tournament medals (hard-coded for 2025 Joe Woody) -->
@@ -429,6 +425,7 @@ export default {
 .medal_2 .medal_icon{ color: var(--silver) }
 .medal_3 .medal_icon{ color: var(--bronze) }
 .skill_block{ margin-top:10px }
+.skill_block{ margin-bottom:16px }
 .chart_wrap{ position:relative }
 .skill_svg{ display:block; width:100%; height:180px }
 .axis{ stroke: var(--border); stroke-width: 1 }
