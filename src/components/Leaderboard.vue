@@ -671,7 +671,7 @@ export default {
 .table{width:100%;max-width:100%;border-collapse:collapse;font-size:15px; table-layout:fixed}
 .table thead th{background:var(--header-bg);color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
 .table tbody td{padding:10px 12px;border-bottom:1px solid var(--border);min-width:0;word-break:break-word;background:transparent}
-.table thead th.left_hdr, .table thead th.right_hdr, .table tbody td.athlete{ width: calc((100% - 64px) / 2) }
+.table thead th.left_hdr, .table thead th.right_hdr, .table tbody td.athlete{ width: calc((100% - 52px) / 2) }
 .table tbody tr:hover td{background:transparent}
 .table tbody tr:active td{background:transparent !important}
 .table tbody td:active{background:transparent !important}
@@ -679,7 +679,7 @@ export default {
 .table tbody td{ -webkit-tap-highlight-color: rgba(0,0,0,0) }
 
 /* perfectly centered # column with turquoise tint; remove any underlines */
-th.rank, td.rank{width:64px; min-width:64px; text-align:center; vertical-align:middle; padding-left:0 !important; padding-right:0 !important}
+th.rank, td.rank{width:52px; min-width:52px; text-align:center; vertical-align:middle; padding-left:0 !important; padding-right:0 !important}
 /* ensure overlays in athlete cells can sit between rows */
 .athlete{min-width:0; overflow:visible; position:relative; z-index:1}
 .name_text{display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
@@ -744,7 +744,7 @@ tbody.swap{ animation: fadeSlide .22s ease both }
 .collapse_wrap{ max-height:0; overflow:hidden; transition:max-height .28s ease; will-change:max-height }
 .collapse_wrap.open{ max-height:2000px }
 .rows_grid{ display:block; width:100% }
-.row_grid{ display:grid; grid-template-columns:minmax(0,1fr) 64px minmax(0,1fr); align-items:center }
+.row_grid{ display:grid; grid-template-columns:minmax(0,1fr) 52px minmax(0,1fr); align-items:center }
 .row_grid .cell{ padding:10px 12px; border-bottom:1px solid var(--border) }
 .row_grid .cell.athlete{ position:relative; overflow:visible; z-index:1 }
 .row_grid .cell.rank{ display:flex; align-items:center; justify-content:center; font-weight:900; color:var(--accent); background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)) !important; border-left:none !important; border-right:none !important; border-bottom:1px solid var(--border) !important; border-radius:6px; padding:10px 0 !important }
@@ -812,11 +812,11 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .right_hdr{text-align:left}
 .table thead th.rank{ text-align:center }
 
-.table tbody td.athlete:first-child{ text-align:right }
-.table tbody td.athlete:last-child{ text-align:left }
+.table tbody td.athlete:first-child{ text-align:right; padding-right:12px }
+.table tbody td.athlete:last-child{ text-align:left; padding-left:12px }
 
-.row_grid .cell.athlete:first-child{ text-align:right }
-.row_grid .cell.athlete:last-child{ text-align:left }
+.row_grid .cell.athlete:first-child{ text-align:right; padding-right:12px }
+.row_grid .cell.athlete:last-child{ text-align:left; padding-left:12px }
 
 /* Flip details UI */
 .lb_row{ cursor:pointer }
