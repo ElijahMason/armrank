@@ -24,6 +24,7 @@
           <div class="stat" v-if="club">
             <div class="label">Club</div>
             <div class="value badge_line">
+              <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
               <span>{{ club }}</span>
               <span class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -89,6 +90,7 @@ export default {
     rh_rank: { type: [String, Number], default: '' },
     lh_rank: { type: [String, Number], default: '' },
     club: { type: String, default: '' },
+    club_logo: { type: String, default: '' },
     points: { type: [String, Number], default: 48 },
   },
   data(){
@@ -163,9 +165,9 @@ export default {
 
 /* Badge Wall */
 /* Video-game-like horizontal badge rail */
-.badge_rail{ position:relative; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015)); border:1px solid var(--border); border-radius:12px; padding:12px; margin-top:10px; overflow:hidden }
+.badge_rail{ position:relative; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015)); border:1px solid var(--border); border-radius:12px; padding:12px; margin-top:10px; overflow:visible }
 .rail_title{ margin:0 0 8px 0 }
-.rail{ position:relative; background:linear-gradient(90deg, rgba(215,180,58,.08), rgba(12,100,120,.08)); border:1px dashed rgba(255,255,255,.12); border-radius:10px; padding:10px 12px; overflow:auto; -webkit-overflow-scrolling:touch }
+.rail{ position:relative; background:linear-gradient(90deg, rgba(215,180,58,.08), rgba(12,100,120,.08)); border:1px dashed rgba(255,255,255,.12); border-radius:10px; padding:10px 12px; overflow:visible }
 .rail_inner{ display:flex; align-items:center; gap:12px; min-width:max-content }
 .rail_edge{ position:absolute; top:40px; bottom:12px; width:20px; pointer-events:none; background:linear-gradient(90deg, rgba(11,22,48,0), rgba(11,22,48,.8)) }
 .rail_edge.left{ left:12px; transform:rotate(180deg) }
@@ -179,6 +181,7 @@ export default {
 
 /* Crown badge + tooltip */
 .icon{width:18px; height:18px}
+.club_logo{ width:22px; height:22px; border-radius:50%; background-size:cover; background-position:center; border:1px solid var(--border) }
 .badge_btn{ position:relative; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:999px }
 .crown{background:linear-gradient(180deg, rgba(215,180,58,.2), rgba(185,147,34,.18)); color:var(--accent); border:1px solid rgba(215,180,58,.45)}
 .crown_icon{fill:currentColor}

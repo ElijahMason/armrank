@@ -250,6 +250,7 @@
       :rh_rank="overallRank('RH', selected_athlete)"
       :lh_rank="overallRank('LH', selected_athlete)"
       :club="leaderClubOf(selected_athlete)"
+      :club_logo="clubLogoFor(selected_athlete)"
       :points="48"
       @close="athlete_modal_open = false"
     />
@@ -461,6 +462,11 @@ export default {
       const club = this.isClubMember(name)
       if(!club) return ''
       return this.club_name_to_logo.get(club) || ''
+    },
+    clubLogoFor(name){
+      const lc = this.leaderClubOf(name)
+      if(lc){ return this.club_name_to_logo.get(lc) || '' }
+      return this.memberClubLogo(name) || ''
     },
     overallRank(hand, name){
       const n = String(name || '').trim()
