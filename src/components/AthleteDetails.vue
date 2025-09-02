@@ -108,6 +108,18 @@
           <h3 class="rail_title">Badges</h3>
           <div class="rail">
             <div class="rail_inner">
+              <!-- Tournament medals (hard-coded for 2025 Joe Woody) -->
+              <span v-for="(m, idx) in medals()" :key="'medal-'+idx" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
+                <svg viewBox="0 0 32 32" aria-hidden="true">
+                  <!-- Ribbon behind medal -->
+                  <path class="medal_ribbon_left" d="M9 3 L14 3 L12 14 L7 14 Z"/>
+                  <path class="medal_ribbon_right" d="M18 3 L23 3 L25 14 L20 14 Z"/>
+                  <!-- Medal circle -->
+                  <circle class="medal_circle" cx="16" cy="21" r="8"/>
+                </svg>
+                <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
+                <span class="tip">{{ medalTip(m) }}</span>
+              </span>
               <!-- RH overall badge -->
               <span v-if="trophyType(rh_rank)" class="badge_item trophy trophy_in_popup" :class="'trophy_' + rh_rank" :aria-label="trophyTip('RH', rh_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
@@ -214,6 +226,35 @@ export default {
         const low = w.toLowerCase()
         return low.charAt(0).toUpperCase() + low.slice(1)
       })
+    },
+    medals(){
+      const name = String(this.athlete || '').trim().toLowerCase()
+      const out = []
+      const pushMedal = (place, weight, hand)=>{
+        const handUpper = hand === 'LH' ? 'LH' : 'RH'
+        out.push({ place: Number(place), weight: String(weight), hand: handUpper, tournament: 'Joe Woody 2025 Tournament' })
+      }
+      if(name === 'elijah mason'){
+        // #1 198 RH and LH
+        pushMedal(1, 198, 'RH')
+        pushMedal(1, 198, 'LH')
+      }else if(name === 'heath skinner'){
+        // #2 176 LH, #3 176 RH
+        pushMedal(2, 176, 'LH')
+        pushMedal(3, 176, 'RH')
+      }else if(name === 'khovani kem'){
+        // #1 154 both (two badges)
+        pushMedal(1, 154, 'RH')
+        pushMedal(1, 154, 'LH')
+      }
+      return out
+    },
+    medalAria(m){
+      return `${m.tournament} — #${m.place} ${m.weight} lbs ${m.hand}`
+    },
+    medalTip(m){
+      const base = `Joe Woody 2025 Tournament — #${m.place} ${m.weight} lbs ${m.hand}`
+      return this.titleCaseTooltip(base)
     },
     // Build fake time series anchored around the current fake skill
     series(hand){
@@ -349,7 +390,7 @@ export default {
 .rail_edge.right{ right:12px }
 .badge_item{ position:relative; display:inline-flex; align-items:center; justify-content:center }
 .badge_item.trophy{ width:34px; height:34px }
-.badge_item .tip{ position:absolute; bottom:calc(100% + 6px); left:0; background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; font-weight:800; font-size:12px; opacity:0; pointer-events:none; transition:opacity .16s ease; white-space:nowrap }
+.badge_item .tip{ position:absolute; bottom:calc(100% + 6px); left:0; background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; font-weight:800; font-size:12px; opacity:0; pointer-events:none; transition:opacity .16s ease; white-space:normal; width:max-content; min-width:0; max-width:min(78vw, 320px); overflow-wrap:anywhere; word-break:normal; text-align:left }
 .badge_item:hover .tip{ opacity:1 }
 .rank_badge{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; padding:0 8px; border-radius:999px; font-weight:900; font-size:12px; position:relative }
 .rank_badge.top10_a{background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)); color:var(--accent); border:1px solid rgba(215,180,58,.35)}
@@ -377,6 +418,14 @@ export default {
 .trophy_3 svg{ fill: var(--bronze) }
 .trophy_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px); pointer-events:none }
 .trophy_in_popup{ transform: translateY(2px) }
+.medal{ width:34px; height:34px }
+.medal svg{ width:34px; height:34px; display:block }
+.medal .medal_circle{ fill:#c0c0c0 }
+.medal .medal_ribbon_left, .medal .medal_ribbon_right{ fill: rgba(46,163,255,.55) }
+.medal_1 .medal_circle{ fill: var(--accent) }
+.medal_2 .medal_circle{ fill: var(--silver) }
+.medal_3 .medal_circle{ fill: var(--bronze) }
+.medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45) }
 .skill_block{ margin-top:10px }
 .chart_wrap{ position:relative }
 .skill_svg{ display:block; width:100%; height:180px }
