@@ -94,7 +94,7 @@
               <polyline :points="rh_points()" class="series rh" :stroke="'url(#gradRH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
               <!-- Minimal labels: top/bottom values and a few date ticks -->
               <text :x="pad - 8" :y="pad + 4" class="chart_text ylbl" text-anchor="end">60</text>
-              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">0</text>
+              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">20</text>
               <text v-for="(lab, idx) in dateTicks()" :key="'t'+idx" :x="tickX(lab.i)" :y="chart_h - pad + 14" class="chart_text xtick" text-anchor="middle">{{ lab.t }}</text>
             </svg>
             <div class="legend">
@@ -267,7 +267,7 @@ export default {
       const w = this.chart_w - this.pad*2
       const h = this.chart_h - this.pad*2
       const maxV = 60
-      const minV = 0
+      const minV = 20
       return vals.map((v, i) => {
         const x = this.pad + (n === 1 ? 0 : (i/(n-1))*w)
         const y = this.pad + (1 - (v - minV)/(maxV - minV)) * h
@@ -421,8 +421,10 @@ export default {
 .medal_1 .medal_circle{ fill: var(--accent) }
 .medal_2 .medal_circle{ fill: var(--silver) }
 .medal_3 .medal_circle{ fill: var(--bronze) }
-.medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#ffffff; text-shadow:0 1px 0 rgba(0,0,0,.35); transform: translateY(-7px) }
-.medal_1 .medal_num{ transform: translate(-0.5px, -7px) }
+.medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#ffffff; text-shadow:0 1px 0 rgba(0,0,0,.35); transform: translateY(-6px) }
+.medal_1 .medal_num{ transform: translate(-6px, -6px) }
+.medal_2 .medal_num{ transform: translateY(-6px) }
+.medal_3 .medal_num{ transform: translate(0.5px, -6px) }
 .medal_icon{ width:34px; height:34px; display:block }
 .medal_1 .medal_icon{ color: var(--accent) }
 .medal_2 .medal_icon{ color: var(--silver) }
