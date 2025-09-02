@@ -57,20 +57,14 @@
               <div class="label">Weight Class</div>
               <div class="value">{{ weight }} lbs</div>
             </div>
-            <div class="row" v-if="club || isDeveloper()">
+            <div class="row" v-if="club">
               <div class="label">Club</div>
               <div class="value badge_line">
-                <template v-if="club">
-                  <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
-                  <span>{{ club }}</span>
-                  <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                    <span class="tip">{{ club }}</span>
-                  </span>
-                </template>
-                <span v-if="isDeveloper()" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'popup-dev' }" @click.stop="toggleTip('popup-dev')" tabindex="0" @keyup.enter.stop="toggleTip('popup-dev')" aria-label="Developer">
+                <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
+                <span>{{ club }}</span>
+                <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                  <span class="tip">Developer</span>
+                  <span class="tip">{{ club }}</span>
                 </span>
               </div>
             </div>
@@ -82,7 +76,7 @@
           <div class="rail">
             <div class="rail_inner">
               <!-- RH overall badge -->
-              <span v-if="trophyType(rh_rank)" class="badge_item trophy" :class="'trophy_' + rh_rank" :aria-label="trophyTip('RH', rh_rank)">
+              <span v-if="trophyType(rh_rank)" class="badge_item trophy trophy_in_popup" :class="'trophy_' + rh_rank" :aria-label="trophyTip('RH', rh_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
                 <span class="trophy_num" aria-hidden="true">{{ rh_rank }}</span>
                 <span class="tip">{{ trophyTip('RH', rh_rank) }}</span>
@@ -93,7 +87,7 @@
               </span>
 
               <!-- LH overall badge -->
-              <span v-if="trophyType(lh_rank)" class="badge_item trophy" :class="'trophy_' + lh_rank" :aria-label="trophyTip('LH', lh_rank)">
+              <span v-if="trophyType(lh_rank)" class="badge_item trophy trophy_in_popup" :class="'trophy_' + lh_rank" :aria-label="trophyTip('LH', lh_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
                 <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
                 <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
@@ -104,7 +98,7 @@
               </span>
 
               <!-- RH class badge -->
-              <span v-if="trophyType(rh_class_rank)" class="badge_item trophy" :class="'trophy_' + rh_class_rank" :aria-label="classTrophyTip('RH', rh_class_rank)">
+              <span v-if="trophyType(rh_class_rank)" class="badge_item trophy trophy_in_popup" :class="'trophy_' + rh_class_rank" :aria-label="classTrophyTip('RH', rh_class_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
                 <span class="trophy_num" aria-hidden="true">{{ rh_class_rank }}</span>
                 <span class="tip">{{ classTrophyTip('RH', rh_class_rank) }}</span>
@@ -115,7 +109,7 @@
               </span>
 
               <!-- LH class badge -->
-              <span v-if="trophyType(lh_class_rank)" class="badge_item trophy" :class="'trophy_' + lh_class_rank" :aria-label="classTrophyTip('LH', lh_class_rank)">
+              <span v-if="trophyType(lh_class_rank)" class="badge_item trophy trophy_in_popup" :class="'trophy_' + lh_class_rank" :aria-label="classTrophyTip('LH', lh_class_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
                 <span class="trophy_num" aria-hidden="true">{{ lh_class_rank }}</span>
                 <span class="tip">{{ classTrophyTip('LH', lh_class_rank) }}</span>
@@ -132,7 +126,7 @@
               </span>
               <span v-if="isDeveloper()" class="badge_item badge_btn dev_crown" :class="{ show: open_tip_key === 'popup-dev-rail' }" @click.stop="toggleTip('popup-dev-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-dev-rail')" aria-label="Developer">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                <span class="tip">Developer</span>
+                <span class="tip tip_right">Developer</span>
               </span>
             </div>
             <div class="rail_edge left"></div>
@@ -282,6 +276,8 @@ export default {
 .dev_crown{ background:linear-gradient(180deg, rgba(150,60,215,.22), rgba(120,40,185,.18)); color:#b68cff; border:1px solid rgba(182,140,255,.45) }
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
+.badge_btn .tip.tip_right{ left:auto; right:0; text-align:right }
+.badge_btn .tip.tip_right::after{ left:auto; right:14px }
 .badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
 
 /* Trophy styles mirrored from leaderboard */
@@ -291,6 +287,7 @@ export default {
 .trophy_2 svg{ fill: var(--silver) }
 .trophy_3 svg{ fill: var(--bronze) }
 .trophy_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px); pointer-events:none }
+.trophy_in_popup{ transform: translateY(2px) }
 .rank_badges{ display:inline-flex; align-items:center; gap:8px }
 </style>
 
