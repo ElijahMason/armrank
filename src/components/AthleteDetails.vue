@@ -78,12 +78,12 @@
             <svg :viewBox="`0 0 ${chart_w} ${chart_h}`" preserveAspectRatio="none" class="skill_svg" role="img" aria-label="Skill history chart">
               <defs>
                 <linearGradient id="gradRH" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.8"/>
-                  <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.15"/>
+                  <stop offset="0%" stop-color="#34c759" stop-opacity="0.85"/>
+                  <stop offset="100%" stop-color="#34c759" stop-opacity="0.20"/>
                 </linearGradient>
                 <linearGradient id="gradLH" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="0%" stop-color="#9fb0d0" stop-opacity="0.8"/>
-                  <stop offset="100%" stop-color="#9fb0d0" stop-opacity="0.15"/>
+                  <stop offset="0%" stop-color="#2ea3ff" stop-opacity="0.85"/>
+                  <stop offset="100%" stop-color="#2ea3ff" stop-opacity="0.20"/>
                 </linearGradient>
               </defs>
               <g class="grid">
@@ -377,8 +377,8 @@ export default {
 .legend{ display:flex; gap:16px; margin-top:8px; color:var(--muted); font-weight:800; font-size:12px }
 .legend_item{ display:inline-flex; align-items:center; gap:8px }
 .legend_item .swatch{ width:12px; height:12px; border-radius:2px; display:inline-block }
-.legend_item.rh .swatch{ background:linear-gradient(180deg, rgba(215,180,58,.8), rgba(215,180,58,.15)) }
-.legend_item.lh .swatch{ background:linear-gradient(180deg, rgba(159,176,208,.8), rgba(159,176,208,.15)) }
+.legend_item.rh .swatch{ background:linear-gradient(180deg, rgba(52,199,89,.85), rgba(52,199,89,.20)) }
+.legend_item.lh .swatch{ background:linear-gradient(180deg, rgba(46,163,255,.85), rgba(46,163,255,.20)) }
 .chart_text{ fill: var(--muted); font-size:10px; font-weight:800 }
 .chart_text.ylbl{ opacity:.8 }
 .chart_text.xtick{ opacity:.9 }
