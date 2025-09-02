@@ -77,8 +77,8 @@
                             </span>
                           </div>
                         </div>
-                        <button class="details_side" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
-                          <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
+                          <svg class="mag_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                       </div>
                     </div>
@@ -134,8 +134,8 @@
                             </span>
                           </div>
                         </div>
-                        <button class="details_side" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
-                          <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
+                          <svg class="mag_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </button>
                       </div>
                     </div>
@@ -206,8 +206,8 @@
                           </span>
                         </div>
                       </div>
-                      <button class="details_side" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
-                        <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
+                        <svg class="mag_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                       </button>
                     </div>
                   </div>
@@ -260,8 +260,8 @@
                           </span>
                         </div>
                       </div>
-                      <button class="details_side" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
-                        <svg class="arrow_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
+                        <svg class="mag_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 21l-4.35-4.35M10 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                       </button>
                     </div>
                   </div>
@@ -900,7 +900,8 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .details_btn:hover{ filter:brightness(1.06); color:var(--text) }
 /* Tall side details area */
 .details_side{ align-self:stretch; display:flex; align-items:center; justify-content:center; padding:0 12px; background:rgba(255,255,255,.18); color:var(--text); cursor:pointer; border-radius:0; border:none; min-width:48px }
-.details_side .arrow_right{ width:18px; height:18px }
+.details_side .mag_icon{ width:18px; height:18px }
+.details_side.cyan_fill{ background:linear-gradient(180deg, rgba(0,180,200,.28), rgba(0,160,180,.24)); color:#bdf8ff; border-left:1px solid rgba(0,200,220,.35); border-right:1px solid rgba(0,200,220,.35) }
 
 /* Crown badge + tooltip (reused style) */
 .icon{width:18px; height:18px}

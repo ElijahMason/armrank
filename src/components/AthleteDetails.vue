@@ -92,6 +92,10 @@
               </g>
               <polyline :points="lh_points()" class="series lh" :stroke="'url(#gradLH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
               <polyline :points="rh_points()" class="series rh" :stroke="'url(#gradRH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
+              <!-- Minimal labels: top/bottom values and a few date ticks -->
+              <text :x="pad - 8" :y="pad + 4" class="chart_text ylbl" text-anchor="end">60</text>
+              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">0</text>
+              <text v-for="(lab, idx) in dateTicks()" :key="'t'+idx" :x="tickX(lab.i)" :y="chart_h - pad + 14" class="chart_text xtick" text-anchor="middle">{{ lab.t }}</text>
             </svg>
             <div class="legend">
               <span class="legend_item lh"><span class="swatch"></span> Left Hand</span>
@@ -208,10 +212,12 @@ export default {
     // Build fake time series anchored around the current fake skill
     series(hand){
       const current = Number(this.fakeSkill(hand)) || 40
-      // 10 points history, older -> newer
-      const offsets = [-8, -6, -4, -2, -1, 0, 1, 2, 1, 0]
+      // Different patterns for each hand to visually differentiate
+      const offsetsRH = [-6, -5, -3, -2, -1, 0, 1, 1, 2, 0]
+      const offsetsLH = [-7, -4, -3, -1, 0, 1, 0, 2, 1, 1]
+      const offsets = hand === 'RH' ? offsetsRH : offsetsLH
       const base = Math.max(10, Math.min(59, current))
-      return offsets.map((d, i) => Math.max(0, Math.min(60, base + d + (hand==='RH'?1:0) + (i%3===0? -1: 0))))
+      return offsets.map((d, i) => Math.max(0, Math.min(60, base + d + (i%4===0? -1: 0))))
     },
     polyPoints(vals){
       const n = vals.length
@@ -229,6 +235,18 @@ export default {
     rhSeries(){ return this.series('RH') },
     lh_points(){ return this.polyPoints(this.lhSeries()) },
     rh_points(){ return this.polyPoints(this.rhSeries()) },
+    // Minimalist date ticks (3 evenly spaced labels: e.g., M-2, M-1, Now)
+    dateTicks(){
+      const n = this.lhSeries().length
+      const idxs = [0, Math.floor(n/2), n-1]
+      const labels = ['M-2','M-1','Now']
+      return idxs.map((i, j) => ({ i, t: labels[j] }))
+    },
+    tickX(i){
+      const n = this.lhSeries().length
+      const w = this.chart_w - this.pad*2
+      return this.pad + (n === 1 ? 0 : (i/(n-1))*w)
+    },
     // TODO: implement real skill level computation once model is ready
     fakeSkill(hand){
       const rank = hand === 'RH' ? Number(this.rh_rank) : Number(this.lh_rank)
@@ -361,6 +379,9 @@ export default {
 .legend_item .swatch{ width:12px; height:12px; border-radius:2px; display:inline-block }
 .legend_item.rh .swatch{ background:linear-gradient(180deg, rgba(215,180,58,.8), rgba(215,180,58,.15)) }
 .legend_item.lh .swatch{ background:linear-gradient(180deg, rgba(159,176,208,.8), rgba(159,176,208,.15)) }
+.chart_text{ fill: var(--muted); font-size:10px; font-weight:800 }
+.chart_text.ylbl{ opacity:.8 }
+.chart_text.xtick{ opacity:.9 }
 .rank_badges{ display:inline-flex; align-items:center; gap:8px }
 </style>
 
