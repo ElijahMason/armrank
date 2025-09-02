@@ -929,16 +929,14 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_container.is_flipped .flip_inner{ transform:rotateX(180deg) }
 .flip_front, .flip_back{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; gap:8px; height:100% }
 .flip_front{ justify-content:center; padding:0 }
-.flip_back{ transform:rotateX(180deg); justify-content:space-between; align-items:stretch; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:0 }
-.flip_content{ display:flex; align-items:center; gap:10px; flex:1 }
-.flip_back{ overflow:hidden }
-.flip_content{ min-width:0; padding-left:8px }
-.flip_content .points_label{ margin-right:6px; padding-left:6px; color:var(--muted); font-weight:600 }
-.flip_content .badges{ overflow:hidden }
+.flip_back{ transform:rotateX(180deg); justify-content:space-between; align-items:stretch; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:0; overflow:visible }
+.flip_content{ display:flex; align-items:center; gap:10px; flex:1 1 auto; min-width:0; padding-left:8px; overflow:hidden }
+.details_side{ flex:0 0 auto }
+.flip_content .points_label{ margin-right:6px; padding-left:6px; color:var(--muted); font-weight:600; flex:0 0 auto }
+.flip_content .badges{ display:inline-flex; align-items:center; gap:8px; white-space:nowrap; flex:0 0 auto; overflow:visible; will-change:transform; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)) }
 .flip_content .badges.left_badges{ margin-left:auto }
-.flip_content .badges{ display:flex; align-items:center; gap:8px; white-space:nowrap; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)) }
-.flip_container.is_flipped .flip_content .badges{ animation: marquee 12s linear infinite }
-@keyframes marquee { 0%{ transform: translateX(0) } 10%{ transform: translateX(0) } 100%{ transform: translateX(-25%) } }
+.flip_container.is_flipped .flip_content .badges{ animation: marquee 16s linear infinite }
+@keyframes marquee { 0%{ transform: translateX(0) } 10%{ transform: translateX(0) } 100%{ transform: translateX(-40%) } }
 .flip_container.side_left .flip_back{ border-radius:8px 0 0 8px }
 .flip_container.side_right .flip_back{ border-radius:0 8px 8px 0 }
 .flip_container.side_left .flip_front{ justify-content:flex-end }
