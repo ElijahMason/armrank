@@ -249,7 +249,7 @@
       :weight="weight_map.get(selected_athlete) || classes[classes.length - 1]"
       :rh_rank="overallRank('RH', selected_athlete)"
       :lh_rank="overallRank('LH', selected_athlete)"
-      :club="leaderClubOf(selected_athlete)"
+      :club="popupClub(selected_athlete)"
       :club_logo="clubLogoFor(selected_athlete)"
       :points="48"
       @close="athlete_modal_open = false"
@@ -467,6 +467,9 @@ export default {
       const lc = this.leaderClubOf(name)
       if(lc){ return this.club_name_to_logo.get(lc) || '' }
       return this.memberClubLogo(name) || ''
+    },
+    popupClub(name){
+      return this.leaderClubOf(name) || this.isClubMember(name) || ''
     },
     overallRank(hand, name){
       const n = String(name || '').trim()
