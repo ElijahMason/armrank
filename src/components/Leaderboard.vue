@@ -58,23 +58,27 @@
                       </div>
                       <div class="flip_back">
                         <div class="flip_content">
-                          <span class="points_label">Lv48</span>
-                          <div class="badges left_badges">
-                            <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-left-'+i }" @click.stop="toggleTip('flip-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
-                              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                              <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
-                            </span>
-                            <span v-if="String(row.left_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-f-left-'+i }" @click.stop="toggleTip('flip-dev-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-f-left-'+i)" aria-label="Developer">
-                              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                              <span class="tip">Developer</span>
-                            </span>
-                            <span v-if="String(row.left_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-f-left-'+i }" @click.stop="toggleTip('flip-admin-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-f-left-'+i)" aria-label="Admin">
-                              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                              <span class="tip">Admin</span>
-                            </span>
-                            <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-left-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-f-left-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-ml-'+i)">
-                              <span class="tip">{{ isClubMember(row.left_name) }}</span>
-                            </span>
+                          <div class="scroll_wrap">
+                            <div class="scroll_lane">
+                              <span class="points_label">Lv{{ fakeSkill('LH', row.left_name) }}</span>
+                              <div class="badges left_badges">
+                                <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-left-'+i }" @click.stop="toggleTip('flip-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
+                                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                  <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
+                                </span>
+                                <span v-if="String(row.left_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-f-left-'+i }" @click.stop="toggleTip('flip-dev-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-f-left-'+i)" aria-label="Developer">
+                                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                  <span class="tip">Developer</span>
+                                </span>
+                                <span v-if="String(row.left_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-f-left-'+i }" @click.stop="toggleTip('flip-admin-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-f-left-'+i)" aria-label="Admin">
+                                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                  <span class="tip">Admin</span>
+                                </span>
+                                <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-left-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-f-left-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-ml-'+i)">
+                                  <span class="tip">{{ isClubMember(row.left_name) }}</span>
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
@@ -115,23 +119,27 @@
                       </div>
                       <div class="flip_back">
                         <div class="flip_content">
-                          <span class="points_label">Lv48</span>
-                          <div class="badges">
-                            <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-right-'+i }" @click.stop="toggleTip('flip-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-'+i)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
-                              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                              <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
-                            </span>
-                            <span v-if="String(row.right_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-f-right-'+i }" @click.stop="toggleTip('flip-dev-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-f-right-'+i)" aria-label="Developer">
-                              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                              <span class="tip">Developer</span>
-                            </span>
-                            <span v-if="String(row.right_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-f-right-'+i }" @click.stop="toggleTip('flip-admin-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-f-right-'+i)" aria-label="Admin">
-                              <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                              <span class="tip">Admin</span>
-                            </span>
-                            <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-right-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-f-right-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-ml-'+i)">
-                              <span class="tip">{{ isClubMember(row.right_name) }}</span>
-                            </span>
+                          <div class="scroll_wrap">
+                            <div class="scroll_lane">
+                              <span class="points_label">Lv{{ fakeSkill('RH', row.right_name) }}</span>
+                              <div class="badges">
+                                <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-right-'+i }" @click.stop="toggleTip('flip-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-'+i)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
+                                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                  <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
+                                </span>
+                                <span v-if="String(row.right_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-f-right-'+i }" @click.stop="toggleTip('flip-dev-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-f-right-'+i)" aria-label="Developer">
+                                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                  <span class="tip">Developer</span>
+                                </span>
+                                <span v-if="String(row.right_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-f-right-'+i }" @click.stop="toggleTip('flip-admin-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-f-right-'+i)" aria-label="Admin">
+                                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                  <span class="tip">Admin</span>
+                                </span>
+                                <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-right-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-f-right-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-ml-'+i)">
+                                  <span class="tip">{{ isClubMember(row.right_name) }}</span>
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
                         <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
@@ -187,23 +195,27 @@
                     </div>
                     <div class="flip_back">
                       <div class="flip_content">
-                        <span class="points_label">Lv48</span>
-                        <div class="badges left_badges">
-                          <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-left-'+j }" @click.stop="toggleTip('flip-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-'+j)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                            <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
-                          </span>
-                          <span v-if="String(row.left_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-x-left-'+j }" @click.stop="toggleTip('flip-dev-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-x-left-'+j)" aria-label="Developer">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                            <span class="tip">Developer</span>
-                          </span>
-                          <span v-if="String(row.left_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-x-left-'+j }" @click.stop="toggleTip('flip-admin-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-x-left-'+j)" aria-label="Admin">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                            <span class="tip">Admin</span>
-                          </span>
-                          <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-x-left-ml-'+j }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-x-left-ml-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-ml-'+j)">
-                            <span class="tip">{{ isClubMember(row.left_name) }}</span>
-                          </span>
+                        <div class="scroll_wrap">
+                          <div class="scroll_lane">
+                            <span class="points_label">Lv{{ fakeSkill('LH', row.left_name) }}</span>
+                            <div class="badges left_badges">
+                              <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-left-'+j }" @click.stop="toggleTip('flip-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-'+j)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
+                              </span>
+                              <span v-if="String(row.left_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-x-left-'+j }" @click.stop="toggleTip('flip-dev-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-x-left-'+j)" aria-label="Developer">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                <span class="tip">Developer</span>
+                              </span>
+                              <span v-if="String(row.left_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-x-left-'+j }" @click.stop="toggleTip('flip-admin-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-x-left-'+j)" aria-label="Admin">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                <span class="tip">Admin</span>
+                              </span>
+                              <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-x-left-ml-'+j }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-x-left-ml-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-ml-'+j)">
+                                <span class="tip">{{ isClubMember(row.left_name) }}</span>
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.left_name)" aria-label="Open athlete details">
@@ -241,23 +253,27 @@
                     </div>
                     <div class="flip_back">
                       <div class="flip_content">
-                        <span class="points_label">Lv48</span>
-                        <div class="badges">
-                          <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-right-'+j }" @click.stop="toggleTip('flip-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-'+j)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                            <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
-                          </span>
-                          <span v-if="String(row.right_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-x-right-'+j }" @click.stop="toggleTip('flip-dev-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-x-right-'+j)" aria-label="Developer">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                            <span class="tip">Developer</span>
-                          </span>
-                          <span v-if="String(row.right_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-x-right-'+j }" @click.stop="toggleTip('flip-admin-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-x-right-'+j)" aria-label="Admin">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                            <span class="tip">Admin</span>
-                          </span>
-                          <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-x-right-ml-'+j }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-x-right-ml-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-ml-'+j)">
-                            <span class="tip">{{ isClubMember(row.right_name) }}</span>
-                          </span>
+                        <div class="scroll_wrap">
+                          <div class="scroll_lane">
+                            <span class="points_label">Lv{{ fakeSkill('RH', row.right_name) }}</span>
+                            <div class="badges">
+                              <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-right-'+j }" @click.stop="toggleTip('flip-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-'+j)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
+                              </span>
+                              <span v-if="String(row.right_name||'').trim().toLowerCase()==='elijah mason'" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'flip-dev-x-right-'+j }" @click.stop="toggleTip('flip-dev-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-dev-x-right-'+j)" aria-label="Developer">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                <span class="tip">Developer</span>
+                              </span>
+                              <span v-if="String(row.right_name||'').trim().toLowerCase()==='peter lalande'" class="badge_btn admin_crown" :class="{ show: open_tip_key === 'flip-admin-x-right-'+j }" @click.stop="toggleTip('flip-admin-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-admin-x-right-'+j)" aria-label="Admin">
+                                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                                <span class="tip">Admin</span>
+                              </span>
+                              <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-x-right-ml-'+j }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-x-right-ml-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-ml-'+j)">
+                                <span class="tip">{{ isClubMember(row.right_name) }}</span>
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <button class="details_side cyan_fill" @click.stop="openAthleteDetails(row.right_name)" aria-label="Open athlete details">
@@ -530,6 +546,13 @@ export default {
         const i = arr.findIndex(o => String(o?.name || '').trim() === n)
         return i >= 0 ? i + 1 : ''
       }
+    },
+    // Fake skill level: 60 - overall rank (clamped 0..59)
+    fakeSkill(hand, name){
+      const r = this.overallRank(hand, name)
+      const n = Number(r)
+      if(!Number.isFinite(n) || n <= 0) return 0
+      return Math.max(0, 60 - n)
     },
     openAthleteDetails(name){
       this.selected_athlete = name
@@ -930,13 +953,15 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_front, .flip_back{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; gap:8px; height:100% }
 .flip_front{ justify-content:center; padding:0 }
 .flip_back{ transform:rotateX(180deg); justify-content:space-between; align-items:stretch; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:0; overflow:visible }
-.flip_content{ display:flex; align-items:center; gap:10px; flex:1 1 auto; min-width:0; padding-left:8px; overflow:hidden }
+.flip_content{ display:flex; align-items:center; gap:10px; flex:1 1 auto; min-width:0; padding-left:8px; overflow:hidden; position:relative }
 .details_side{ flex:0 0 auto }
 .flip_content .points_label{ margin-right:6px; padding-left:6px; color:var(--muted); font-weight:600; flex:0 0 auto }
-.flip_content .badges{ display:inline-flex; align-items:center; gap:8px; white-space:nowrap; flex:0 0 auto; overflow:visible; will-change:transform; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)) }
+.scroll_wrap{ position:relative; overflow:hidden; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)) }
+.scroll_lane{ display:inline-flex; align-items:center; gap:8px; white-space:nowrap; will-change:transform }
+.flip_container.is_flipped .scroll_lane{ animation: marquee 6s linear infinite }
 .flip_content .badges.left_badges{ margin-left:auto }
 .flip_container.is_flipped .flip_content .badges{ animation: marquee 16s linear infinite }
-@keyframes marquee { 0%{ transform: translateX(0) } 10%{ transform: translateX(0) } 100%{ transform: translateX(-40%) } }
+@keyframes marquee { 0%{ transform: translateX(0) } 5%{ transform: translateX(0) } 100%{ transform: translateX(-75%) } }
 .flip_container.side_left .flip_back{ border-radius:8px 0 0 8px }
 .flip_container.side_right .flip_back{ border-radius:0 8px 8px 0 }
 .flip_container.side_left .flip_front{ justify-content:flex-end }
