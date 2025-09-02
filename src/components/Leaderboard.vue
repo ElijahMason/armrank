@@ -58,7 +58,7 @@
                       </div>
                       <div class="flip_back">
                         <div class="flip_content">
-                          <div class="scroll_wrap">
+                          <div class="scroll_wrap" v-overflow-scroll>
                             <div class="scroll_lane">
                               <span class="points_label">Lv{{ fakeSkill('LH', row.left_name) }}</span>
                               <div class="badges left_badges">
@@ -119,7 +119,7 @@
                       </div>
                       <div class="flip_back">
                         <div class="flip_content">
-                          <div class="scroll_wrap">
+                          <div class="scroll_wrap" v-overflow-scroll>
                             <div class="scroll_lane">
                               <span class="points_label">Lv{{ fakeSkill('RH', row.right_name) }}</span>
                               <div class="badges">
@@ -195,7 +195,7 @@
                     </div>
                     <div class="flip_back">
                       <div class="flip_content">
-                        <div class="scroll_wrap">
+                        <div class="scroll_wrap" v-overflow-scroll>
                           <div class="scroll_lane">
                             <span class="points_label">Lv{{ fakeSkill('LH', row.left_name) }}</span>
                             <div class="badges left_badges">
@@ -253,7 +253,7 @@
                     </div>
                     <div class="flip_back">
                       <div class="flip_content">
-                        <div class="scroll_wrap">
+                        <div class="scroll_wrap" v-overflow-scroll>
                           <div class="scroll_lane">
                             <span class="points_label">Lv{{ fakeSkill('RH', row.right_name) }}</span>
                             <div class="badges">
@@ -320,6 +320,24 @@ export default {
     default_selected_class: { type: String, required: true },
     sticky_prefix: { type: String, default: '' },
     max_initial_rows: { type: Number, default: 10 },
+  },
+  directives:{
+    overflowScroll:{
+      mounted(el){
+        requestAnimationFrame(()=>{
+          const lane = el.querySelector('.scroll_lane')
+          if(!lane) return
+          const shouldScroll = lane.scrollWidth > el.clientWidth + 2
+          if(shouldScroll){ lane.classList.add('do_scroll') }
+        })
+      },
+      updated(el){
+        const lane = el.querySelector('.scroll_lane')
+        if(!lane) return
+        const shouldScroll = lane.scrollWidth > el.clientWidth + 2
+        lane.classList.toggle('do_scroll', shouldScroll)
+      }
+    }
   },
   data() {
     const sheet_id_raw = 'https://docs.google.com/spreadsheets/d/1aD3ZFkMHCrg4lZe80lONyQz-MsEVStelCiCEyHb6-2Y/edit?usp=sharing'
@@ -958,7 +976,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_content .points_label{ margin-right:6px; padding-left:6px; color:var(--muted); font-weight:600; flex:0 0 auto }
 .scroll_wrap{ position:relative; overflow:hidden; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)) }
 .scroll_lane{ display:inline-flex; align-items:center; gap:8px; white-space:nowrap; will-change:transform }
-.flip_container.is_flipped .scroll_lane{ animation: marquee 6s linear infinite }
+.flip_container.is_flipped .scroll_lane.do_scroll{ animation: marquee 6s linear infinite }
 .flip_content .badges.left_badges{ margin-left:auto }
 .flip_container.is_flipped .flip_content .badges{ animation: marquee 16s linear infinite }
 @keyframes marquee { 0%{ transform: translateX(0) } 5%{ transform: translateX(0) } 100%{ transform: translateX(-75%) } }
