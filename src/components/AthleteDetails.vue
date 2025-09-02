@@ -421,7 +421,8 @@ export default {
 .medal_1 .medal_circle{ fill: var(--accent) }
 .medal_2 .medal_circle{ fill: var(--silver) }
 .medal_3 .medal_circle{ fill: var(--bronze) }
-.medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45) }
+.medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#ffffff; text-shadow:0 1px 0 rgba(0,0,0,.35); transform: translateY(-14px) }
+.medal_1 .medal_num{ transform: translate(-1px, -14px) }
 .medal_icon{ width:34px; height:34px; display:block }
 .medal_1 .medal_icon{ color: var(--accent) }
 .medal_2 .medal_icon{ color: var(--silver) }
