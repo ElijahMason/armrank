@@ -668,7 +668,16 @@ export default {
       }else{
         wtLabel = String(weight).includes('overall') ? 'overall' : `${weight}lbs${String(weight).includes('+') && !String(weight).endsWith('lbs') ? '' : ''}`
       }
-      return `#${rank} ${divLabel ? divLabel + ' ' : ''}${wtLabel} ${handLabel}`.trim()
+      return this.titleCaseTooltip(`#${rank} ${divLabel ? divLabel + ' ' : ''}${wtLabel} ${handLabel}`.trim())
+    },
+    titleCaseTooltip(text){
+      const str = String(text == null ? '' : text)
+      return str.replace(/[A-Za-z][A-Za-z']*/g, (w)=>{
+        const up = w.toUpperCase()
+        if(up === 'RH' || up === 'LH') return up
+        const low = w.toLowerCase()
+        return low.charAt(0).toUpperCase() + low.slice(1)
+      })
     },
     makeClassRankIndexStrict(rows, nameCol, weightMap){
       const out = new Map()
