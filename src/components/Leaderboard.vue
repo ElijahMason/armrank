@@ -249,6 +249,8 @@
       :weight="weight_map.get(selected_athlete) || classes[classes.length - 1]"
       :rh_rank="overallRank('RH', selected_athlete)"
       :lh_rank="overallRank('LH', selected_athlete)"
+      :rh_class_rank="classRank('RH', selected_athlete)"
+      :lh_class_rank="classRank('LH', selected_athlete)"
       :club="popupClub(selected_athlete)"
       :club_logo="clubLogoFor(selected_athlete)"
       :club_leader="isClubLeader(selected_athlete)"
@@ -480,6 +482,20 @@ export default {
         return i >= 0 ? i + 1 : ''
       }else{
         const i = this.left_list_raw.findIndex(x => String(x || '').trim() === n)
+        return i >= 0 ? i + 1 : ''
+      }
+    },
+    classRank(hand, name){
+      const n = String(name || '').trim()
+      if(!n) return ''
+      const cls = this.weight_map.get(n) || this.classes[this.classes.length - 1]
+      if(hand === 'RH'){
+        const arr = (this.right_groups.get(cls) || [])
+        const i = arr.findIndex(o => String(o?.name || '').trim() === n)
+        return i >= 0 ? i + 1 : ''
+      }else{
+        const arr = (this.left_groups.get(cls) || [])
+        const i = arr.findIndex(o => String(o?.name || '').trim() === n)
         return i >= 0 ? i + 1 : ''
       }
     },

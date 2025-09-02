@@ -38,7 +38,7 @@
           <h3 class="rail_title">Badges</h3>
           <div class="rail">
             <div class="rail_inner">
-              <!-- RH badge -->
+              <!-- RH overall badge -->
               <span v-if="trophyType(rh_rank)" class="badge_item trophy" :class="'trophy_' + rh_rank" :aria-label="trophyTip('RH', rh_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
                 <span class="trophy_num" aria-hidden="true">{{ rh_rank }}</span>
@@ -49,8 +49,29 @@
                 <span class="tip">{{ trophyTip('RH', rh_rank) }}</span>
               </span>
 
-              <!-- LH badge -->
+              <!-- LH overall badge -->
               <span v-if="trophyType(lh_rank)" class="badge_item trophy" :class="'trophy_' + lh_rank" :aria-label="trophyTip('LH', lh_rank)">
+              <!-- RH class badge -->
+              <span v-if="trophyType(rh_class_rank)" class="badge_item trophy" :class="'trophy_' + rh_class_rank" :aria-label="classTrophyTip('RH', rh_class_rank)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
+                <span class="trophy_num" aria-hidden="true">{{ rh_class_rank }}</span>
+                <span class="tip">{{ classTrophyTip('RH', rh_class_rank) }}</span>
+              </span>
+              <span v-else-if="isTopTen(rh_class_rank)" class="badge_item rank_badge" :class="topTenClass('RH')" :aria-label="classTrophyTip('RH', rh_class_rank)">
+                <span class="badge_text">{{ rh_class_rank }}</span>
+                <span class="tip">{{ classTrophyTip('RH', rh_class_rank) }}</span>
+              </span>
+
+              <!-- LH class badge -->
+              <span v-if="trophyType(lh_class_rank)" class="badge_item trophy" :class="'trophy_' + lh_class_rank" :aria-label="classTrophyTip('LH', lh_class_rank)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
+                <span class="trophy_num" aria-hidden="true">{{ lh_class_rank }}</span>
+                <span class="tip">{{ classTrophyTip('LH', lh_class_rank) }}</span>
+              </span>
+              <span v-else-if="isTopTen(lh_class_rank)" class="badge_item rank_badge" :class="topTenClass('LH')" :aria-label="classTrophyTip('LH', lh_class_rank)">
+                <span class="badge_text">{{ lh_class_rank }}</span>
+                <span class="tip">{{ classTrophyTip('LH', lh_class_rank) }}</span>
+              </span>
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
                 <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
                 <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
@@ -89,6 +110,8 @@ export default {
     weight: { type: String, default: '' },
     rh_rank: { type: [String, Number], default: '' },
     lh_rank: { type: [String, Number], default: '' },
+    rh_class_rank: { type: [String, Number], default: '' },
+    lh_class_rank: { type: [String, Number], default: '' },
     club: { type: String, default: '' },
     club_logo: { type: String, default: '' },
     club_leader: { type: Boolean, default: false },
@@ -123,6 +146,13 @@ export default {
     trophyType(rank){
       const n = Number(rank)
       return Number.isFinite(n) && n >= 1 && n <= 3
+    },
+    classTrophyTip(hand, rank){
+      const h = hand === 'LH' ? 'Left Hand' : 'Right Hand'
+      const n = Number(rank)
+      if(!Number.isFinite(n) || n < 1) return `${h} class ranking`
+      if(n === 1) return `#1 ${h} (class)`
+      return `#${n} ${h} (class)`
     },
     trophyTip(hand, rank){
       const h = hand === 'LH' ? 'Left Hand' : 'Right Hand'
