@@ -7,7 +7,7 @@
         <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
       </div>
 
-      <div class="content">
+      <div class="content" @click="onRootClick">
         <!-- Arm-specific stats: Left on the left, Right on the right -->
         <div class="hero alt_hero vg_theme arm_hero">
           <div class="arm_card left_arm">
@@ -152,11 +152,7 @@
                 <span class="tip">{{ classTrophyTip('LH', lh_class_rank) }}</span>
               </span>
 
-              <!-- Club leader badge if applicable -->
-              <span v-if="club" class="badge_item badge_btn crown" :class="{ show: open_tip_key === 'popup-crown-rail' }" @click.stop="toggleTip('popup-crown-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown-rail')" :aria-label="club">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                <span class="tip">{{ club }}</span>
-              </span>
+              <!-- Club leader badge removed in popup rail -->
               <span v-if="isDeveloper()" class="badge_item badge_btn dev_crown" :class="{ show: open_tip_key === 'popup-dev-rail' }" @click.stop="toggleTip('popup-dev-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-dev-rail')" aria-label="Developer">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                 <span class="tip tip_right">Developer</span>
@@ -209,6 +205,7 @@ export default {
     }
   },
   methods:{
+    onRootClick(){ this.open_tip_key = '' },
     // Build fake time series anchored around the current fake skill
     series(hand){
       const current = Number(this.fakeSkill(hand)) || 40
