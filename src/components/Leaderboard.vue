@@ -65,7 +65,7 @@
                               <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
                             </span>
                             <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-left-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-f-left-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-ml-'+i)">
-                              <span class="tip">{{ isClubMember(row.left_name) }} featured member</span>
+                              <span class="tip">{{ isClubMember(row.left_name) }}</span>
                             </span>
                           </div>
                         </div>
@@ -114,7 +114,7 @@
                               <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
                             </span>
                             <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-f-right-ml-'+i }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-f-right-ml-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-ml-'+i)">
-                              <span class="tip">{{ isClubMember(row.right_name) }} featured member</span>
+                              <span class="tip">{{ isClubMember(row.right_name) }}</span>
                             </span>
                           </div>
                         </div>
@@ -178,7 +178,7 @@
                             <span class="tip">{{ leaderClubOf(row.left_name) }} club leader</span>
                           </span>
                           <span v-else-if="memberClubLogo(row.left_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-x-left-ml-'+j }" :style="{ backgroundImage: `url(${memberClubLogo(row.left_name)})` }" @click.stop="toggleTip('flip-x-left-ml-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-ml-'+j)">
-                            <span class="tip">{{ isClubMember(row.left_name) }} featured member</span>
+                            <span class="tip">{{ isClubMember(row.left_name) }}</span>
                           </span>
                         </div>
                       </div>
@@ -224,7 +224,7 @@
                             <span class="tip">{{ leaderClubOf(row.right_name) }} club leader</span>
                           </span>
                           <span v-else-if="memberClubLogo(row.right_name)" class="badge_btn member_logo" :class="{ show: open_tip_key === 'flip-x-right-ml-'+j }" :style="{ backgroundImage: `url(${memberClubLogo(row.right_name)})` }" @click.stop="toggleTip('flip-x-right-ml-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-ml-'+j)">
-                            <span class="tip">{{ isClubMember(row.right_name) }} featured member</span>
+                            <span class="tip">{{ isClubMember(row.right_name) }}</span>
                           </span>
                         </div>
                       </div>

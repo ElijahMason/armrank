@@ -8,7 +8,7 @@
       </div>
 
       <div class="content">
-        <div class="hero">
+        <div class="hero alt_hero">
           <div class="stat">
             <div class="label">Skill Points</div>
             <div class="value"><span class="accent">{{ points }}</span></div>
@@ -25,49 +25,41 @@
             <div class="label">Club</div>
             <div class="value badge_line">
               <span>{{ club }}</span>
-              <span class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="`${club} club leader`">
+              <span class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                <span class="tip">{{ club }} club leader</span>
+                <span class="tip">{{ club }}</span>
               </span>
             </div>
           </div>
         </div>
 
-        <div class="grid">
-          <section class="block">
-            <h3>Overall Ranks</h3>
-            <div class="rows">
-              <div class="row">
-                <span class="label">Right Hand</span>
-                <span class="val rank_badges">
-                  <span v-if="trophyType(rh_rank)" class="trophy" :class="'trophy_' + rh_rank">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
-                    <span class="trophy_num" aria-hidden="true">{{ rh_rank }}</span>
-                  </span>
-                  <span v-else>{{ formatRank(rh_rank) }}</span>
+        <section class="badge_wall">
+          <h3 class="wall_title">Badges</h3>
+          <div class="wall_grid">
+            <div class="hand_col">
+              <div class="hand_head">Right Hand</div>
+              <div class="hand_badges">
+                <span v-if="trophyType(rh_rank)" class="trophy" :class="'trophy_' + rh_rank" :aria-label="trophyTip('RH', rh_rank)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
+                  <span class="trophy_num" aria-hidden="true">{{ rh_rank }}</span>
+                  <span class="tip">{{ trophyTip('RH', rh_rank) }}</span>
                 </span>
-              </div>
-              <div class="row">
-                <span class="label">Left Hand</span>
-                <span class="val rank_badges">
-                  <span v-if="trophyType(lh_rank)" class="trophy" :class="'trophy_' + lh_rank">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
-                    <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
-                  </span>
-                  <span v-else>{{ formatRank(lh_rank) }}</span>
-                </span>
+                <span v-else class="badge_text">{{ formatRank(rh_rank) }}</span>
               </div>
             </div>
-          </section>
-          <section class="block">
-            <h3>Highlights</h3>
-            <ul class="list">
-              <li v-if="isTopThree">Top 3 in current division</li>
-              <li v-if="club">Leader or featured member of {{ club }}</li>
-              <li>Active competitor in {{ division }} division</li>
-            </ul>
-          </section>
-        </div>
+            <div class="hand_col">
+              <div class="hand_head">Left Hand</div>
+              <div class="hand_badges">
+                <span v-if="trophyType(lh_rank)" class="trophy" :class="'trophy_' + lh_rank" :aria-label="trophyTip('LH', lh_rank)">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
+                  <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
+                  <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
+                </span>
+                <span v-else class="badge_text">{{ formatRank(lh_rank) }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
       <div class="actions_bottom">
@@ -112,6 +104,13 @@ export default {
       const n = Number(rank)
       return Number.isFinite(n) && n >= 1 && n <= 3
     },
+    trophyTip(hand, rank){
+      const h = hand === 'LH' ? 'Left Hand' : 'Right Hand'
+      const n = Number(rank)
+      if(!Number.isFinite(n) || n < 1) return `${h} ranking`
+      if(n === 1) return `#1 ${h}`
+      return `#${n} ${h}`
+    },
     toggleTip(k){ this.open_tip_key = this.open_tip_key === k ? '' : k }
   }
 }
@@ -128,6 +127,7 @@ export default {
 .close_btn:hover{filter:brightness(1.08)}
 .content{padding:12px 16px}
 .hero{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:10px; margin-bottom:10px}
+.alt_hero{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015)); border:1px solid var(--border); border-radius:12px; padding:12px}
 .stat{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px}
 .label{color:var(--muted); font-weight:700}
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
@@ -141,6 +141,18 @@ export default {
 .list{margin:0; padding-left:18px}
 .actions_bottom{ display:flex; justify-content:flex-end; padding:12px 16px; border-top:1px solid var(--border) }
 .close_action_btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; cursor:pointer}
+
+/* Badge Wall */
+.badge_wall{ background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px; margin-top:10px }
+.wall_title{ margin:0 0 8px 0 }
+.wall_grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:12px }
+.hand_col{ background:rgba(255,255,255,.02); border:1px dashed var(--border); border-radius:10px; padding:10px; display:flex; flex-direction:column; gap:10px }
+.hand_head{ font-weight:900; color:var(--muted) }
+.hand_badges{ display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+.badge_text{ font-weight:800; color:var(--muted) }
+.trophy{ position:relative }
+.trophy .tip{ position:absolute; bottom:calc(100% + 6px); left:0; background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; font-weight:800; font-size:12px; opacity:0; pointer-events:none; transition:opacity .16s ease; white-space:nowrap }
+.trophy:hover .tip{ opacity:1 }
 
 /* Crown badge + tooltip */
 .icon{width:18px; height:18px}
