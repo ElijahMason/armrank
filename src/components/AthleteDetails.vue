@@ -42,38 +42,9 @@
           </div>
         </div>
 
-        <!-- General non-arm stats (full width) -->
-        <div class="block alt_hero vg_theme general_block">
-          <div class="rows">
-            <div class="row">
-              <div class="label">Skill Points</div>
-              <div class="value"><span class="accent">{{ points }}</span></div>
-            </div>
-            <div class="row">
-              <div class="label">Division</div>
-              <div class="value">{{ division }}</div>
-            </div>
-            <div class="row">
-              <div class="label">Weight Class</div>
-              <div class="value">{{ weight }} lbs</div>
-            </div>
-            <div class="row" v-if="club">
-              <div class="label">Club</div>
-              <div class="value badge_line">
-                <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
-                <span>{{ club }}</span>
-                <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
-                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                  <span class="tip tip_right">{{ club }} Club Leader</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Skill over time chart (fake data for now) -->
+        <!-- Skill over time chart (fake data for now) placed right under arm cards -->
         <section class="block alt_hero vg_theme skill_block">
-          <h3 class="rail_title">Skill Over Time (Fake)</h3>
+          <h3 class="rail_title">Skill over time</h3>
           <div class="chart_wrap">
             <svg :viewBox="`0 0 ${chart_w} ${chart_h}`" preserveAspectRatio="none" class="skill_svg" role="img" aria-label="Skill history chart">
               <defs>
@@ -94,15 +65,44 @@
               <polyline :points="rh_points()" class="series rh" :stroke="'url(#gradRH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
               <!-- Minimal labels: top/bottom values and a few date ticks -->
               <text :x="pad - 8" :y="pad + 4" class="chart_text ylbl" text-anchor="end">60</text>
-              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">20</text>
+              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">30</text>
               <text v-for="(lab, idx) in dateTicks()" :key="'t'+idx" :x="tickX(lab.i)" :y="chart_h - pad + 14" class="chart_text xtick" text-anchor="middle">{{ lab.t }}</text>
             </svg>
             <div class="legend">
-              <span class="legend_item lh"><span class="swatch"></span> Left Hand</span>
-              <span class="legend_item rh"><span class="swatch"></span> Right Hand</span>
+              <span class="legend_item lh"><span class="swatch"></span> Left hand</span>
+              <span class="legend_item rh"><span class="swatch"></span> Right hand</span>
             </div>
           </div>
         </section>
+
+        <!-- General non-arm stats (full width) -->
+        <div class="block alt_hero vg_theme general_block">
+          <div class="rows">
+            <div class="row">
+              <div class="label">Sex</div>
+              <div class="value">{{ division === 'Women' ? 'Female' : 'Male' }}</div>
+            </div>
+            <div class="row">
+              <div class="label">Weight class</div>
+              <div class="value">{{ weight }} lbs</div>
+            </div>
+            <div class="row">
+              <div class="label">Date of last weigh-in</div>
+              <div class="value">8/9/25</div>
+            </div>
+            <div class="row" v-if="club">
+              <div class="label">Club</div>
+              <div class="value badge_line">
+                <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
+                <span>{{ club }}</span>
+                <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                  <span class="tip tip_right">{{ club }} Club Leader</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <section class="badge_rail">
           <h3 class="rail_title">Badges</h3>
@@ -267,7 +267,7 @@ export default {
       const w = this.chart_w - this.pad*2
       const h = this.chart_h - this.pad*2
       const maxV = 60
-      const minV = 20
+      const minV = 30
       return vals.map((v, i) => {
         const x = this.pad + (n === 1 ? 0 : (i/(n-1))*w)
         const y = this.pad + (1 - (v - minV)/(maxV - minV)) * h
