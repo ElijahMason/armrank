@@ -64,7 +64,7 @@
                 <span>{{ club }}</span>
                 <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                  <span class="tip">{{ club }}</span>
+                  <span class="tip tip_right">{{ club }} Club Leader</span>
                 </span>
               </div>
             </div>
@@ -206,6 +206,15 @@ export default {
   },
   methods:{
     onRootClick(){ this.open_tip_key = '' },
+    titleCaseTooltip(text){
+      const str = String(text == null ? '' : text)
+      return str.replace(/[A-Za-z][A-Za-z']*/g, (w)=>{
+        const up = w.toUpperCase()
+        if(up === 'RH' || up === 'LH') return up
+        const low = w.toLowerCase()
+        return low.charAt(0).toUpperCase() + low.slice(1)
+      })
+    },
     // Build fake time series anchored around the current fake skill
     series(hand){
       const current = Number(this.fakeSkill(hand)) || 40
@@ -279,17 +288,17 @@ export default {
       const divTag = this.division === 'Women' ? ' (Women)' : ''
       const wt = String(this.weight || '').trim()
       const wtLabel = wt ? `${wt}lb` : 'class'
-      if(!Number.isFinite(n) || n < 1) return `${wtLabel} ${handAbbr}${divTag}`
-      if(n === 1) return `#1 ${wtLabel} ${handAbbr}${divTag}`
-      return `#${n} ${wtLabel} ${handAbbr}${divTag}`
+      if(!Number.isFinite(n) || n < 1) return this.titleCaseTooltip(`${wtLabel} ${handAbbr}${divTag}`)
+      if(n === 1) return this.titleCaseTooltip(`#1 ${wtLabel} ${handAbbr}${divTag}`)
+      return this.titleCaseTooltip(`#${n} ${wtLabel} ${handAbbr}${divTag}`)
     },
     trophyTip(hand, rank){
       const handAbbr = hand === 'LH' ? 'LH' : 'RH'
       const n = Number(rank)
       const divTag = this.division === 'Women' ? ' (Women)' : ''
-      if(!Number.isFinite(n) || n < 1) return `overall ${handAbbr}${divTag}`
-      if(n === 1) return `#1 overall ${handAbbr}${divTag}`
-      return `#${n} overall ${handAbbr}${divTag}`
+      if(!Number.isFinite(n) || n < 1) return this.titleCaseTooltip(`overall ${handAbbr}${divTag}`)
+      if(n === 1) return this.titleCaseTooltip(`#1 overall ${handAbbr}${divTag}`)
+      return this.titleCaseTooltip(`#${n} overall ${handAbbr}${divTag}`)
     },
     toggleTip(k){ this.open_tip_key = this.open_tip_key === k ? '' : k }
   }
