@@ -71,6 +71,35 @@
           </div>
         </div>
 
+        <!-- Skill over time chart (fake data for now) -->
+        <section class="block alt_hero vg_theme skill_block">
+          <h3 class="rail_title">Skill Over Time (Fake)</h3>
+          <div class="chart_wrap">
+            <svg :viewBox="`0 0 ${chart_w} ${chart_h}`" preserveAspectRatio="none" class="skill_svg" role="img" aria-label="Skill history chart">
+              <defs>
+                <linearGradient id="gradRH" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.15"/>
+                </linearGradient>
+                <linearGradient id="gradLH" x1="0" x2="0" y1="0" y2="1">
+                  <stop offset="0%" stop-color="#9fb0d0" stop-opacity="0.8"/>
+                  <stop offset="100%" stop-color="#9fb0d0" stop-opacity="0.15"/>
+                </linearGradient>
+              </defs>
+              <g class="grid">
+                <line :x1="pad" :x2="chart_w - pad" :y1="chart_h - pad" :y2="chart_h - pad" class="axis" />
+                <line :x1="pad" :x2="pad" :y1="pad" :y2="chart_h - pad" class="axis" />
+              </g>
+              <polyline :points="lh_points" class="series lh" />
+              <polyline :points="rh_points" class="series rh" />
+            </svg>
+            <div class="legend">
+              <span class="legend_item lh"><span class="swatch"></span> Left Hand</span>
+              <span class="legend_item rh"><span class="swatch"></span> Right Hand</span>
+            </div>
+          </div>
+        </section>
+
         <section class="badge_rail">
           <h3 class="rail_title">Badges</h3>
           <div class="rail">
@@ -128,6 +157,10 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                 <span class="tip tip_right">Developer</span>
               </span>
+              <span v-if="isAdmin()" class="badge_item badge_btn admin_crown" :class="{ show: open_tip_key === 'popup-admin-rail' }" @click.stop="toggleTip('popup-admin-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-admin-rail')" aria-label="Admin">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                <span class="tip tip_right">Admin</span>
+              </span>
             </div>
             <div class="rail_edge left"></div>
             <div class="rail_edge right"></div>
@@ -160,7 +193,7 @@ export default {
     points: { type: [String, Number], default: 48 },
   },
   data(){
-    return { open_tip_key: '' }
+    return { open_tip_key: '', chart_w: 560, chart_h: 180, pad: 24 }
   },
   computed: {
     isTopThree(){
@@ -172,6 +205,30 @@ export default {
     }
   },
   methods:{
+    // Build fake time series anchored around the current fake skill
+    series(hand){
+      const current = Number(this.fakeSkill(hand)) || 40
+      // 10 points history, older -> newer
+      const offsets = [-8, -6, -4, -2, -1, 0, 1, 2, 1, 0]
+      const base = Math.max(10, Math.min(59, current))
+      return offsets.map((d, i) => Math.max(0, Math.min(60, base + d + (hand==='RH'?1:0) + (i%3===0? -1: 0))))
+    },
+    polyPoints(vals){
+      const n = vals.length
+      const w = this.chart_w - this.pad*2
+      const h = this.chart_h - this.pad*2
+      const maxV = 60
+      const minV = 0
+      return vals.map((v, i) => {
+        const x = this.pad + (n === 1 ? 0 : (i/(n-1))*w)
+        const y = this.pad + (1 - (v - minV)/(maxV - minV)) * h
+        return `${x},${y}`
+      }).join(' ')
+    },
+    lhSeries(){ return this.series('LH') },
+    rhSeries(){ return this.series('RH') },
+    lh_points(){ return this.polyPoints(this.lhSeries()) },
+    rh_points(){ return this.polyPoints(this.rhSeries()) },
     // TODO: implement real skill level computation once model is ready
     fakeSkill(hand){
       const rank = hand === 'RH' ? Number(this.rh_rank) : Number(this.lh_rank)
@@ -180,6 +237,9 @@ export default {
     },
     isDeveloper(){
       return String(this.athlete || '').trim().toLowerCase() === 'elijah mason'
+    },
+    isAdmin(){
+      return String(this.athlete || '').trim().toLowerCase() === 'peter lalande'
     },
     formatRank(r){
       if(r === '' || r === null || r === undefined) return '—'
@@ -274,6 +334,7 @@ export default {
 .crown{background:linear-gradient(180deg, rgba(215,180,58,.2), rgba(185,147,34,.18)); color:var(--accent); border:1px solid rgba(215,180,58,.45)}
 .crown_icon{fill:currentColor}
 .dev_crown{ background:linear-gradient(180deg, rgba(150,60,215,.22), rgba(120,40,185,.18)); color:#b68cff; border:1px solid rgba(182,140,255,.45) }
+.admin_crown{ background:linear-gradient(180deg, rgba(215,60,60,.22), rgba(185,40,40,.18)); color:#ff8c8c; border:1px solid rgba(255,140,140,.45) }
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
 .badge_btn .tip.tip_right{ left:auto; right:0; text-align:right }
@@ -288,6 +349,18 @@ export default {
 .trophy_3 svg{ fill: var(--bronze) }
 .trophy_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px); pointer-events:none }
 .trophy_in_popup{ transform: translateY(2px) }
+.skill_block{ margin-top:10px }
+.chart_wrap{ position:relative }
+.skill_svg{ display:block; width:100%; height:180px }
+.axis{ stroke: var(--border); stroke-width: 1 }
+.series{ fill:none; stroke-width:2.5 }
+.series.rh{ stroke: url(#gradRH) }
+.series.lh{ stroke: url(#gradLH) }
+.legend{ display:flex; gap:16px; margin-top:8px; color:var(--muted); font-weight:800; font-size:12px }
+.legend_item{ display:inline-flex; align-items:center; gap:8px }
+.legend_item .swatch{ width:12px; height:12px; border-radius:2px; display:inline-block }
+.legend_item.rh .swatch{ background:linear-gradient(180deg, rgba(215,180,58,.8), rgba(215,180,58,.15)) }
+.legend_item.lh .swatch{ background:linear-gradient(180deg, rgba(159,176,208,.8), rgba(159,176,208,.15)) }
 .rank_badges{ display:inline-flex; align-items:center; gap:8px }
 </style>
 
