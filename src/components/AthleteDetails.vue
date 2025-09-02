@@ -26,7 +26,7 @@
             <div class="value badge_line">
               <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
               <span>{{ club }}</span>
-              <span class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
+              <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                 <span class="tip">{{ club }}</span>
               </span>
@@ -91,6 +91,7 @@ export default {
     lh_rank: { type: [String, Number], default: '' },
     club: { type: String, default: '' },
     club_logo: { type: String, default: '' },
+    club_leader: { type: Boolean, default: false },
     points: { type: [String, Number], default: 48 },
   },
   data(){

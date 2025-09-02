@@ -251,6 +251,7 @@
       :lh_rank="overallRank('LH', selected_athlete)"
       :club="popupClub(selected_athlete)"
       :club_logo="clubLogoFor(selected_athlete)"
+      :club_leader="isClubLeader(selected_athlete)"
       :points="48"
       @close="athlete_modal_open = false"
     />
