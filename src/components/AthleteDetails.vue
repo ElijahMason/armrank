@@ -110,7 +110,7 @@
             <div class="rail_inner">
               <!-- Tournament medals (hard-coded for 2025 Joe Woody) -->
               <span v-for="(m, idx) in medals()" :key="'medal-'+idx" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
-                <Medal class="medal_icon" aria-hidden="true" />
+                <Award class="medal_icon" aria-hidden="true" />
                 <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                 <span class="tip">{{ medalTip(m) }}</span>
               </span>
@@ -182,10 +182,10 @@
 </template>
 
 <script>
-import { Medal } from 'lucide-vue-next'
+import { Award } from 'lucide-vue-next'
 export default {
   name: 'AthleteDetails',
-  components:{ Medal },
+  components:{ Award },
   props: {
     open: { type: Boolean, default: false },
     athlete: { type: String, default: '' },
