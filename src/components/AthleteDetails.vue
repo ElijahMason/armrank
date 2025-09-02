@@ -8,28 +8,71 @@
       </div>
 
       <div class="content">
-        <div class="hero alt_hero vg_theme">
-          <div class="stat">
-            <div class="label">Skill Points</div>
-            <div class="value"><span class="accent">{{ points }}</span></div>
+        <!-- Arm-specific stats: Left on the left, Right on the right -->
+        <div class="hero alt_hero vg_theme arm_hero">
+          <div class="arm_card left_arm">
+            <div class="arm_title">Left Hand</div>
+            <div class="row">
+              <div class="label">Fake Skill Level</div>
+              <div class="value"><span class="accent">{{ fakeSkill('LH') }}</span></div>
+            </div>
+            <div class="row">
+              <div class="label">Weight Class Rank</div>
+              <div class="value">{{ formatRank(lh_class_rank) }}</div>
+            </div>
+            <div class="row">
+              <div class="label">Overall Rank</div>
+              <div class="value">{{ formatRank(lh_rank) }}</div>
+            </div>
           </div>
-          <div class="stat">
-            <div class="label">Division</div>
-            <div class="value">{{ division }}</div>
+          <div class="arm_card right_arm">
+            <div class="arm_title">Right Hand</div>
+            <div class="row">
+              <div class="label">Fake Skill Level</div>
+              <div class="value"><span class="accent">{{ fakeSkill('RH') }}</span></div>
+            </div>
+            <div class="row">
+              <div class="label">Weight Class Rank</div>
+              <div class="value">{{ formatRank(rh_class_rank) }}</div>
+            </div>
+            <div class="row">
+              <div class="label">Overall Rank</div>
+              <div class="value">{{ formatRank(rh_rank) }}</div>
+            </div>
           </div>
-          <div class="stat">
-            <div class="label">Weight Class</div>
-            <div class="value">{{ weight }} lbs</div>
-          </div>
-          <div class="stat" v-if="club">
-            <div class="label">Club</div>
-            <div class="value badge_line">
-              <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
-              <span>{{ club }}</span>
-              <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                <span class="tip">{{ club }}</span>
-              </span>
+        </div>
+
+        <!-- General non-arm stats (full width) -->
+        <div class="block alt_hero vg_theme general_block">
+          <div class="rows">
+            <div class="row">
+              <div class="label">Skill Points</div>
+              <div class="value"><span class="accent">{{ points }}</span></div>
+            </div>
+            <div class="row">
+              <div class="label">Division</div>
+              <div class="value">{{ division }}</div>
+            </div>
+            <div class="row">
+              <div class="label">Weight Class</div>
+              <div class="value">{{ weight }} lbs</div>
+            </div>
+            <div class="row" v-if="club || isDeveloper()">
+              <div class="label">Club</div>
+              <div class="value badge_line">
+                <template v-if="club">
+                  <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
+                  <span>{{ club }}</span>
+                  <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                    <span class="tip">{{ club }}</span>
+                  </span>
+                </template>
+                <span v-if="isDeveloper()" class="badge_btn dev_crown" :class="{ show: open_tip_key === 'popup-dev' }" @click.stop="toggleTip('popup-dev')" tabindex="0" @keyup.enter.stop="toggleTip('popup-dev')" aria-label="Developer">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                  <span class="tip">Developer</span>
+                </span>
+              </div>
             </div>
           </div>
         </div>
@@ -87,6 +130,10 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                 <span class="tip">{{ club }}</span>
               </span>
+              <span v-if="isDeveloper()" class="badge_item badge_btn dev_crown" :class="{ show: open_tip_key === 'popup-dev-rail' }" @click.stop="toggleTip('popup-dev-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-dev-rail')" aria-label="Developer">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                <span class="tip">Developer</span>
+              </span>
             </div>
             <div class="rail_edge left"></div>
             <div class="rail_edge right"></div>
@@ -131,6 +178,15 @@ export default {
     }
   },
   methods:{
+    // TODO: implement real skill level computation once model is ready
+    fakeSkill(hand){
+      const rank = hand === 'RH' ? Number(this.rh_rank) : Number(this.lh_rank)
+      if(!Number.isFinite(rank) || rank <= 0) return '—'
+      return Math.max(0, 60 - rank)
+    },
+    isDeveloper(){
+      return String(this.athlete || '').trim().toLowerCase() === 'elijah mason'
+    },
     formatRank(r){
       if(r === '' || r === null || r === undefined) return '—'
       const n = Number(r)
@@ -178,6 +234,10 @@ export default {
 .close_btn:hover{filter:brightness(1.08)}
 .content{padding:12px 16px}
 .hero{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:10px; margin-bottom:10px}
+.arm_hero{ grid-template-columns:repeat(2, minmax(140px,1fr)) }
+.arm_card{ background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px }
+.arm_card .arm_title{ font-weight:900; margin-bottom:8px }
+.arm_card .row{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:6px 0 }
 .alt_hero{background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015)); border:1px solid var(--border); border-radius:12px; padding:12px}
 .vg_theme{ position:relative; overflow:hidden }
 .vg_theme::before{ content:""; position:absolute; inset:-40px; background:radial-gradient(220px 120px at 20% -10%, rgba(215,180,58,.18), transparent 60%), radial-gradient(220px 120px at 120% 110%, rgba(20,130,150,.18), transparent 60%); pointer-events:none }
@@ -219,6 +279,7 @@ export default {
 .badge_btn{ position:relative; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:999px }
 .crown{background:linear-gradient(180deg, rgba(215,180,58,.2), rgba(185,147,34,.18)); color:var(--accent); border:1px solid rgba(215,180,58,.45)}
 .crown_icon{fill:currentColor}
+.dev_crown{ background:linear-gradient(180deg, rgba(150,60,215,.22), rgba(120,40,185,.18)); color:#b68cff; border:1px solid rgba(182,140,255,.45) }
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
 .badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
