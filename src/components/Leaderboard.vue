@@ -58,7 +58,7 @@
                       </div>
                       <div class="flip_back">
                         <div class="flip_content">
-                          <span class="points">48</span>
+                          <span class="points_label">Lv48</span>
                           <div class="badges left_badges">
                             <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-left-'+i }" @click.stop="toggleTip('flip-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
                               <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -115,7 +115,7 @@
                       </div>
                       <div class="flip_back">
                         <div class="flip_content">
-                          <span class="points">48</span>
+                          <span class="points_label">Lv48</span>
                           <div class="badges">
                             <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-right-'+i }" @click.stop="toggleTip('flip-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-'+i)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
                               <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -187,7 +187,7 @@
                     </div>
                     <div class="flip_back">
                       <div class="flip_content">
-                        <span class="points">48</span>
+                        <span class="points_label">Lv48</span>
                         <div class="badges left_badges">
                           <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-left-'+j }" @click.stop="toggleTip('flip-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-'+j)" :aria-label="`${leaderClubOf(row.left_name)} club leader`">
                             <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -241,7 +241,7 @@
                     </div>
                     <div class="flip_back">
                       <div class="flip_content">
-                        <span class="points">48</span>
+                        <span class="points_label">Lv48</span>
                         <div class="badges">
                           <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-right-'+j }" @click.stop="toggleTip('flip-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-'+j)" :aria-label="`${leaderClubOf(row.right_name)} club leader`">
                             <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -931,7 +931,14 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_front{ justify-content:center; padding:0 }
 .flip_back{ transform:rotateX(180deg); justify-content:space-between; align-items:stretch; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:0 }
 .flip_content{ display:flex; align-items:center; gap:10px; flex:1 }
-.points{ white-space:nowrap; display:inline-flex }
+.flip_back{ overflow:hidden }
+.flip_content{ min-width:0; padding-left:8px }
+.flip_content .points_label{ margin-right:6px; padding-left:6px; color:var(--muted); font-weight:600 }
+.flip_content .badges{ overflow:hidden }
+.flip_content .badges.left_badges{ margin-left:auto }
+.flip_content .badges{ display:flex; align-items:center; gap:8px; white-space:nowrap; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 85%, rgba(0,0,0,0)) }
+.flip_container.is_flipped .flip_content .badges{ animation: marquee 12s linear infinite }
+@keyframes marquee { 0%{ transform: translateX(0) } 10%{ transform: translateX(0) } 100%{ transform: translateX(-25%) } }
 .flip_container.side_left .flip_back{ border-radius:8px 0 0 8px }
 .flip_container.side_right .flip_back{ border-radius:0 8px 8px 0 }
 .flip_container.side_left .flip_front{ justify-content:flex-end }
