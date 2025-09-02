@@ -51,6 +51,15 @@
 
               <!-- LH overall badge -->
               <span v-if="trophyType(lh_rank)" class="badge_item trophy" :class="'trophy_' + lh_rank" :aria-label="trophyTip('LH', lh_rank)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
+                <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
+                <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
+              </span>
+              <span v-else-if="isTopTen(lh_rank)" class="badge_item rank_badge" :class="topTenClass('LH')" :aria-label="trophyTip('LH', lh_rank)">
+                <span class="badge_text">{{ lh_rank }}</span>
+                <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
+              </span>
+
               <!-- RH class badge -->
               <span v-if="trophyType(rh_class_rank)" class="badge_item trophy" :class="'trophy_' + rh_class_rank" :aria-label="classTrophyTip('RH', rh_class_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
@@ -71,14 +80,6 @@
               <span v-else-if="isTopTen(lh_class_rank)" class="badge_item rank_badge" :class="topTenClass('LH')" :aria-label="classTrophyTip('LH', lh_class_rank)">
                 <span class="badge_text">{{ lh_class_rank }}</span>
                 <span class="tip">{{ classTrophyTip('LH', lh_class_rank) }}</span>
-              </span>
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
-                <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
-                <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
-              </span>
-              <span v-else-if="isTopTen(lh_rank)" class="badge_item rank_badge" :class="topTenClass('LH')" :aria-label="trophyTip('LH', lh_rank)">
-                <span class="badge_text">{{ lh_rank }}</span>
-                <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
               </span>
 
               <!-- Club leader badge if applicable -->
