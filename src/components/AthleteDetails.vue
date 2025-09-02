@@ -274,18 +274,22 @@ export default {
       return Number.isFinite(n) && n >= 1 && n <= 3
     },
     classTrophyTip(hand, rank){
-      const h = hand === 'LH' ? 'Left Hand' : 'Right Hand'
+      const handAbbr = hand === 'LH' ? 'LH' : 'RH'
       const n = Number(rank)
-      if(!Number.isFinite(n) || n < 1) return `${h} class ranking`
-      if(n === 1) return `#1 ${h} (class)`
-      return `#${n} ${h} (class)`
+      const divTag = this.division === 'Women' ? ' (Women)' : ''
+      const wt = String(this.weight || '').trim()
+      const wtLabel = wt ? `${wt}lb` : 'class'
+      if(!Number.isFinite(n) || n < 1) return `${wtLabel} ${handAbbr}${divTag}`
+      if(n === 1) return `#1 ${wtLabel} ${handAbbr}${divTag}`
+      return `#${n} ${wtLabel} ${handAbbr}${divTag}`
     },
     trophyTip(hand, rank){
-      const h = hand === 'LH' ? 'Left Hand' : 'Right Hand'
+      const handAbbr = hand === 'LH' ? 'LH' : 'RH'
       const n = Number(rank)
-      if(!Number.isFinite(n) || n < 1) return `${h} ranking`
-      if(n === 1) return `#1 ${h}`
-      return `#${n} ${h}`
+      const divTag = this.division === 'Women' ? ' (Women)' : ''
+      if(!Number.isFinite(n) || n < 1) return `overall ${handAbbr}${divTag}`
+      if(n === 1) return `#1 overall ${handAbbr}${divTag}`
+      return `#${n} overall ${handAbbr}${divTag}`
     },
     toggleTip(k){ this.open_tip_key = this.open_tip_key === k ? '' : k }
   }
