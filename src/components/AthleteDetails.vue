@@ -43,8 +43,8 @@
                 <span class="trophy_num" aria-hidden="true">{{ rh_rank }}</span>
                 <span class="tip">{{ trophyTip('RH', rh_rank) }}</span>
               </span>
-              <span v-else class="badge_item rank_disc" :aria-label="trophyTip('RH', rh_rank)">
-                <span class="disc_text">RH {{ formatRank(rh_rank) }}</span>
+              <span v-else-if="isTopTen(rh_rank)" class="badge_item rank_badge" :class="topTenClass('RH')" :aria-label="trophyTip('RH', rh_rank)">
+                <span class="badge_text">{{ rh_rank }}</span>
                 <span class="tip">{{ trophyTip('RH', rh_rank) }}</span>
               </span>
 
@@ -54,8 +54,8 @@
                 <span class="trophy_num" aria-hidden="true">{{ lh_rank }}</span>
                 <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
               </span>
-              <span v-else class="badge_item rank_disc" :aria-label="trophyTip('LH', lh_rank)">
-                <span class="disc_text">LH {{ formatRank(lh_rank) }}</span>
+              <span v-else-if="isTopTen(lh_rank)" class="badge_item rank_badge" :class="topTenClass('LH')" :aria-label="trophyTip('LH', lh_rank)">
+                <span class="badge_text">{{ lh_rank }}</span>
                 <span class="tip">{{ trophyTip('LH', lh_rank) }}</span>
               </span>
 
@@ -108,6 +108,14 @@ export default {
       if(r === '' || r === null || r === undefined) return '—'
       const n = Number(r)
       return Number.isFinite(n) && n > 0 ? `#${n}` : '—'
+    },
+    isTopTen(rank){
+      const n = Number(rank)
+      return Number.isFinite(n) && n >= 1 && n <= 10
+    },
+    topTenClass(hand){
+      // style variant like clubs: alternate tint (we reuse .top10_a/.top10_b names)
+      return hand === 'RH' ? 'top10_a' : 'top10_b'
     },
     trophyType(rank){
       const n = Number(rank)
@@ -165,8 +173,9 @@ export default {
 .badge_item{ position:relative; display:inline-flex; align-items:center; justify-content:center }
 .badge_item .tip{ position:absolute; bottom:calc(100% + 6px); left:0; background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; font-weight:800; font-size:12px; opacity:0; pointer-events:none; transition:opacity .16s ease; white-space:nowrap }
 .badge_item:hover .tip{ opacity:1 }
-.rank_disc{ background:rgba(255,255,255,.06); border:1px solid var(--border); color:var(--text); border-radius:999px; padding:6px 10px; font-weight:900; letter-spacing:.4px }
-.disc_text{ line-height:1 }
+.rank_badge{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; padding:0 8px; border-radius:999px; font-weight:900; font-size:12px; position:relative }
+.rank_badge.top10_a{background:linear-gradient(180deg, rgba(20,130,150,.18), rgba(12,100,120,.16)); color:var(--accent); border:1px solid rgba(215,180,58,.35)}
+.rank_badge.top10_b{background:rgba(255,255,255,.12); color:#9fb0d0; border:1px solid rgba(255,255,255,.18)}
 
 /* Crown badge + tooltip */
 .icon{width:18px; height:18px}
