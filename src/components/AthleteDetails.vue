@@ -90,8 +90,8 @@
                 <line :x1="pad" :x2="chart_w - pad" :y1="chart_h - pad" :y2="chart_h - pad" class="axis" />
                 <line :x1="pad" :x2="pad" :y1="pad" :y2="chart_h - pad" class="axis" />
               </g>
-              <polyline :points="lh_points" class="series lh" />
-              <polyline :points="rh_points" class="series rh" />
+              <polyline :points="lh_points()" class="series lh" :stroke="'url(#gradLH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
+              <polyline :points="rh_points()" class="series rh" :stroke="'url(#gradRH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
             </svg>
             <div class="legend">
               <span class="legend_item lh"><span class="swatch"></span> Left Hand</span>
