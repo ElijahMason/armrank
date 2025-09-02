@@ -183,6 +183,7 @@ export default {
 .stat{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px}
 .label{color:var(--muted); font-weight:700}
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
+.value.badge_line{ display:flex; align-items:center; gap:8px }
 .accent{color:var(--accent)}
 .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
@@ -204,6 +205,7 @@ export default {
 .rail_edge.left{ left:12px; transform:rotate(180deg) }
 .rail_edge.right{ right:12px }
 .badge_item{ position:relative; display:inline-flex; align-items:center; justify-content:center }
+.badge_item.trophy{ width:34px; height:34px }
 .badge_item .tip{ position:absolute; bottom:calc(100% + 6px); left:0; background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; font-weight:800; font-size:12px; opacity:0; pointer-events:none; transition:opacity .16s ease; white-space:nowrap }
 .badge_item:hover .tip{ opacity:1 }
 .rank_badge{ display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:28px; padding:0 8px; border-radius:999px; font-weight:900; font-size:12px; position:relative }
@@ -221,12 +223,12 @@ export default {
 .badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
 
 /* Trophy styles mirrored from leaderboard */
-.trophy{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; transform: translateY(4px) }
+.trophy{ position:relative; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px }
 .trophy svg{ width:34px; height:34px; display:block }
 .trophy_1 svg{ fill: var(--accent) }
 .trophy_2 svg{ fill: var(--silver) }
 .trophy_3 svg{ fill: var(--bronze) }
-.trophy_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-7px); pointer-events:none }
+.trophy_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px); pointer-events:none }
 .rank_badges{ display:inline-flex; align-items:center; gap:8px }
 </style>
 
