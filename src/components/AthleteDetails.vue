@@ -13,30 +13,30 @@
           <div class="arm_card left_arm">
             <div class="arm_title">Left Hand</div>
             <div class="row">
-              <div class="label">Fake Skill Level</div>
+              <div class="label">Fake skill level</div>
               <div class="value"><span class="accent">{{ fakeSkill('LH') }}</span></div>
             </div>
             <div class="row">
-              <div class="label">Weight Class Rank</div>
+              <div class="label">Weight class rank</div>
               <div class="value">{{ formatRank(lh_class_rank) }}</div>
             </div>
             <div class="row">
-              <div class="label">Overall Rank</div>
+              <div class="label">Overall rank</div>
               <div class="value">{{ formatRank(lh_rank) }}</div>
             </div>
           </div>
           <div class="arm_card right_arm">
             <div class="arm_title">Right Hand</div>
             <div class="row">
-              <div class="label">Fake Skill Level</div>
+              <div class="label">Fake skill level</div>
               <div class="value"><span class="accent">{{ fakeSkill('RH') }}</span></div>
             </div>
             <div class="row">
-              <div class="label">Weight Class Rank</div>
+              <div class="label">Weight class rank</div>
               <div class="value">{{ formatRank(rh_class_rank) }}</div>
             </div>
             <div class="row">
-              <div class="label">Overall Rank</div>
+              <div class="label">Overall rank</div>
               <div class="value">{{ formatRank(rh_rank) }}</div>
             </div>
           </div>
@@ -65,7 +65,7 @@
               <polyline :points="rh_points()" class="series rh" :stroke="'url(#gradRH)'" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round" />
               <!-- Minimal labels: top/bottom values and a few date ticks -->
               <text :x="pad - 8" :y="pad + 4" class="chart_text ylbl" text-anchor="end">60</text>
-              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">30</text>
+              <text :x="pad - 8" :y="chart_h - pad + 4" class="chart_text ylbl" text-anchor="end">40</text>
               <text v-for="(lab, idx) in dateTicks()" :key="'t'+idx" :x="tickX(lab.i)" :y="chart_h - pad + 14" class="chart_text xtick" text-anchor="middle">{{ lab.t }}</text>
             </svg>
             <div class="legend">
@@ -267,7 +267,7 @@ export default {
       const w = this.chart_w - this.pad*2
       const h = this.chart_h - this.pad*2
       const maxV = 60
-      const minV = 30
+      const minV = 40
       return vals.map((v, i) => {
         const x = this.pad + (n === 1 ? 0 : (i/(n-1))*w)
         const y = this.pad + (1 - (v - minV)/(maxV - minV)) * h
@@ -422,7 +422,7 @@ export default {
 .medal_2 .medal_circle{ fill: var(--silver) }
 .medal_3 .medal_circle{ fill: var(--bronze) }
 .medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#ffffff; text-shadow:0 1px 0 rgba(0,0,0,.35); transform: translateY(-6px) }
-.medal_1 .medal_num{ transform: translate(-6px, -6px) }
+.medal_1 .medal_num{ transform: translateX(-6px) }
 .medal_2 .medal_num{ transform: translateY(-6px) }
 .medal_3 .medal_num{ transform: translate(0.5px, -6px) }
 .medal_icon{ width:34px; height:34px; display:block }
