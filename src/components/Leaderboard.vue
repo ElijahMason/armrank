@@ -683,6 +683,7 @@ th.rank, td.rank{width:52px; min-width:52px; text-align:center; vertical-align:m
 /* ensure overlays in athlete cells can sit between rows */
 .athlete{min-width:0; overflow:visible; position:relative; z-index:1}
 .name_text{display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.flip_front .name_text{ padding:0 12px }
 
 td.rank{
   position:relative;
@@ -812,11 +813,11 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .right_hdr{text-align:left}
 .table thead th.rank{ text-align:center }
 
-.table tbody td.athlete:first-child{ text-align:right; padding-right:12px }
-.table tbody td.athlete:last-child{ text-align:left; padding-left:12px }
+.table tbody td.athlete:first-child{ text-align:right }
+.table tbody td.athlete:last-child{ text-align:left }
 
-.row_grid .cell.athlete:first-child{ text-align:right; padding-right:12px }
-.row_grid .cell.athlete:last-child{ text-align:left; padding-left:12px }
+.row_grid .cell.athlete:first-child{ text-align:right }
+.row_grid .cell.athlete:last-child{ text-align:left }
 
 /* Flip details UI */
 .lb_row{ cursor:pointer }
