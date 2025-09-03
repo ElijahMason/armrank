@@ -171,7 +171,7 @@
       </div>
 
       <div class="actions_bottom">
-        <button class="challenge_btn" @click="onChallengeClick">Challenge to supermatch</button>
+        <button v-if="dev" class="challenge_btn" @click="onChallengeClick">Challenge to supermatch</button>
         <button class="close_action_btn" @click="$emit('close')">Close</button>
       </div>
     </div>
@@ -180,6 +180,7 @@
 
 <script>
 import { Award } from 'lucide-vue-next'
+import { isDevMode } from '../utils/devMode'
 export default {
   name: 'AthleteDetails',
   components:{ Award },
@@ -198,7 +199,7 @@ export default {
     points: { type: [String, Number], default: 48 },
   },
   data(){
-    return { open_tip_key: '', chart_w: 560, chart_h: 180, pad: 24 }
+    return { open_tip_key: '', chart_w: 560, chart_h: 180, pad: 24, dev: false }
   },
   computed: {
     isTopThree(){
@@ -208,6 +209,9 @@ export default {
       if(vals.length === 0) return false
       return Math.min(...vals) <= 3
     }
+  },
+  mounted(){
+    try{ this.dev = isDevMode() }catch{}
   },
   methods:{
     onRootClick(){ this.open_tip_key = '' },
@@ -391,6 +395,7 @@ export default {
 .rail_title{ margin:0 0 8px 0 }
 .rail{ position:relative; background:linear-gradient(90deg, rgba(215,180,58,.08), rgba(12,100,120,.08)); border:1px dashed rgba(255,255,255,.12); border-radius:10px; padding:10px 12px; overflow:visible }
 .rail_inner{ display:flex; align-items:center; gap:12px; min-width:max-content }
+.rail_inner{ flex-wrap: wrap; min-width: 0 }
 .rail_edge{ position:absolute; top:40px; bottom:12px; width:20px; pointer-events:none; background:linear-gradient(90deg, rgba(11,22,48,0), rgba(11,22,48,.8)) }
 .rail_edge.left{ left:12px; transform:rotate(180deg) }
 .rail_edge.right{ right:12px }
