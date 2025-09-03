@@ -171,6 +171,7 @@
       </div>
 
       <div class="actions_bottom">
+        <button class="challenge_btn" @click="onChallengeClick">Challenge to supermatch</button>
         <button class="close_action_btn" @click="$emit('close')">Close</button>
       </div>
     </div>
@@ -210,6 +211,15 @@ export default {
   },
   methods:{
     onRootClick(){ this.open_tip_key = '' },
+    onChallengeClick(){
+      try{
+        const name = String(this.athlete || '').trim()
+        if(name){
+          window.dispatchEvent(new CustomEvent('armrank:challenge', { detail: { name } }))
+        }
+      }catch{}
+      this.$emit('close')
+    },
     titleCaseTooltip(text){
       const str = String(text == null ? '' : text)
       return str.replace(/[A-Za-z][A-Za-z']*/g, (w)=>{
@@ -370,6 +380,10 @@ export default {
 .list{margin:0; padding-left:18px}
 .actions_bottom{ display:flex; justify-content:flex-end; padding:12px 16px; border-top:1px solid var(--border) }
 .close_action_btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; cursor:pointer}
+
+/* Big fancy challenge button */
+.challenge_btn{ display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; margin-right:8px; border-radius:999px; border:1px solid rgba(23,162,184,.45); background:linear-gradient(180deg, rgba(20,130,150,.28), rgba(12,100,120,.22)); color:#c9f1ff; font-weight:900; letter-spacing:.2px; cursor:pointer; box-shadow:0 10px 24px rgba(12,100,120,.25) }
+.challenge_btn:hover{ filter:brightness(1.08) }
 
 /* Badge Wall */
 /* Video-game-like horizontal badge rail */

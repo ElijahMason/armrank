@@ -278,9 +278,32 @@ export default {
     try{
       this.submitter_name = localStorage.getItem('armrank_submitter_name') || ''
       if((this.submitter_name || '').trim()) this.submitter_blurred = true
+      // Listen for challenge events from athlete details
+      const onChallenge = (evt)=>{
+        try{
+          const name = String(evt?.detail?.name || '').trim()
+          if(!name) return
+          // Prefill as Competitor B; leave A blank for challenger
+          this.sm_b = name
+          this.sm_b_blurred = true
+          this.sm_winner = ''
+          this.sm_score = ''
+          this.advanced_open = false
+          // Scroll to supermatch panel
+          const el = document.getElementById('supermatch')
+          if(el){ el.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+        }catch{}
+      }
+      window.addEventListener('armrank:challenge', onChallenge)
+      this.__onChallenge = onChallenge
     }catch{}
     this.fetchClientIp()
     this.loadKnownNames()
+  },
+  unmounted(){
+    try{
+      if(this.__onChallenge){ window.removeEventListener('armrank:challenge', this.__onChallenge) }
+    }catch{}
   },
   methods:{
     gvizCsv(tab){
