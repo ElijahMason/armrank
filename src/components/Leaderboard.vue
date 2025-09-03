@@ -62,6 +62,11 @@
                             <div class="scroll_lane">
                               <span class="points_label">Lv{{ fakeSkill('LH', row.left_name) }}</span>
                               <div class="badges left_badges">
+                                <span v-for="(m, mi) in medals(row.left_name)" :key="'fL-medal-'+i+'-'+mi" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
+                                  <Award class="medal_icon" aria-hidden="true" />
+                                  <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
+                                  <span class="tip">{{ medalTip(m) }}</span>
+                                </span>
                                 <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-left-'+i }" @click.stop="toggleTip('flip-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} Club Leader`">
                                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                                   <span class="tip">{{ leaderClubOf(row.left_name) }} Club Leader</span>
@@ -123,6 +128,11 @@
                             <div class="scroll_lane">
                               <span class="points_label">Lv{{ fakeSkill('RH', row.right_name) }}</span>
                               <div class="badges">
+                                <span v-for="(m, mi) in medals(row.right_name)" :key="'fR-medal-'+i+'-'+mi" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
+                                  <Award class="medal_icon" aria-hidden="true" />
+                                  <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
+                                  <span class="tip">{{ medalTip(m) }}</span>
+                                </span>
                                 <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-right-'+i }" @click.stop="toggleTip('flip-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-'+i)" :aria-label="`${leaderClubOf(row.right_name)} Club Leader`">
                                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                                   <span class="tip">{{ leaderClubOf(row.right_name) }} Club Leader</span>
@@ -199,6 +209,11 @@
                           <div class="scroll_lane">
                             <span class="points_label">Lv{{ fakeSkill('LH', row.left_name) }}</span>
                             <div class="badges left_badges">
+                              <span v-for="(m, mi) in medals(row.left_name)" :key="'xL-medal-'+j+'-'+mi" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
+                                <Award class="medal_icon" aria-hidden="true" />
+                                <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
+                                <span class="tip">{{ medalTip(m) }}</span>
+                              </span>
                               <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-left-'+j }" @click.stop="toggleTip('flip-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-'+j)" :aria-label="`${leaderClubOf(row.left_name)} Club Leader`">
                                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                                 <span class="tip">{{ leaderClubOf(row.left_name) }} Club Leader</span>
@@ -257,6 +272,11 @@
                           <div class="scroll_lane">
                             <span class="points_label">Lv{{ fakeSkill('RH', row.right_name) }}</span>
                             <div class="badges">
+                              <span v-for="(m, mi) in medals(row.right_name)" :key="'xR-medal-'+j+'-'+mi" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
+                                <Award class="medal_icon" aria-hidden="true" />
+                                <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
+                                <span class="tip">{{ medalTip(m) }}</span>
+                              </span>
                               <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-right-'+j }" @click.stop="toggleTip('flip-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-'+j)" :aria-label="`${leaderClubOf(row.right_name)} Club Leader`">
                                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                                 <span class="tip">{{ leaderClubOf(row.right_name) }} Club Leader</span>
@@ -310,9 +330,10 @@
 
 <script>
 import AthleteDetails from './AthleteDetails.vue'
+import { Award } from 'lucide-vue-next'
 export default {
   name: 'Leaderboard',
-  components: { AthleteDetails },
+  components: { AthleteDetails, Award },
   props: {
     rankings_tab_name: { type: String, required: true },
     weights_tab_name: { type: String, required: true },
@@ -497,6 +518,37 @@ export default {
     },
   },
   methods: {
+    medals(name){
+      const nm = String(name || '').trim().toLowerCase()
+      const out = []
+      const pushMedal = (place, weight, hand)=>{
+        const handUpper = hand === 'LH' ? 'LH' : 'RH'
+        out.push({ place: Number(place), weight: String(weight), hand: handUpper, tournament: 'Joe Woody 2025 Tournament' })
+      }
+      if(nm === 'elijah mason'){
+        pushMedal(1, 198, 'RH')
+        pushMedal(1, 198, 'LH')
+      }else if(nm === 'heath skinner'){
+        pushMedal(2, 176, 'LH')
+        pushMedal(3, 176, 'RH')
+      }else if(nm === 'khovani kem'){
+        pushMedal(1, 154, 'RH')
+        pushMedal(1, 154, 'LH')
+      }
+      return out
+    },
+    medalAria(m){
+      return `${m.tournament} — #${m.place} ${m.weight} lbs ${m.hand}`
+    },
+    medalTip(m){
+      const base = `Joe Woody 2025 Tournament — #${m.place} ${m.weight} lbs ${m.hand}`
+      return base.replace(/[A-Za-z][A-Za-z']*/g, (w)=>{
+        const up = w.toUpperCase()
+        if(up === 'RH' || up === 'LH') return up
+        const low = w.toLowerCase()
+        return low.charAt(0).toUpperCase() + low.slice(1)
+      })
+    },
     selectClass(cls) {
       this.selected_class = cls
     },
@@ -965,6 +1017,14 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .points{ font-weight:900; color:var(--text); background:rgba(255,255,255,.06); border:1px solid var(--border); padding:6px 10px; border-radius:999px }
 .badges{ display:flex; align-items:center; gap:8px }
 .left_badges{ margin-left:auto }
+/* Medal badges (match popup style) */
+.badge_item{ position:relative; display:inline-flex; align-items:center; justify-content:center }
+.medal{ width:28px; height:28px }
+.medal_icon{ width:28px; height:28px; display:block }
+.medal_1 .medal_icon{ color: var(--accent) }
+.medal_2 .medal_icon{ color: var(--silver) }
+.medal_3 .medal_icon{ color: var(--bronze) }
+.medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; color:#ffffff; text-shadow:0 1px 0 rgba(0,0,0,.35); transform: translateY(-5px) }
 
 /* Gray details button with right arrow */
 .details_btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer }
