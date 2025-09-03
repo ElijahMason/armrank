@@ -1067,7 +1067,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_front, .flip_back{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden; display:flex; align-items:center; gap:8px; height:100% }
 .flip_front{ justify-content:center; padding:0 }
 .flip_back{ transform:rotateX(180deg); justify-content:space-between; align-items:stretch; background:linear-gradient(180deg, rgba(11,22,48,.94), rgba(8,18,40,.92)); border:1px solid var(--border); border-radius:8px; padding:0; overflow:visible }
-.flip_content{ display:flex; align-items:center; gap:10px; flex:1 1 auto; min-width:0; padding-left:8px; overflow:hidden; position:relative }
+.flip_content{ display:flex; align-items:center; gap:10px; flex:1 1 auto; min-width:0; padding-left:8px; overflow:visible; position:relative }
 .details_side{ flex:0 0 48px }
 .flip_back{ display:flex }
 .flip_content{ width:auto }
@@ -1076,7 +1076,8 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_content .points_label{ margin-right:6px; padding-left:6px; color:var(--muted); font-weight:600; flex:0 0 auto }
 .flip_back{ gap:8px }
 .flip_content{ flex:1 1 calc(100% - 56px) }
-.scroll_wrap{ position:relative; overflow:hidden; mask-image: linear-gradient(90deg, rgba(0,0,0,1) 92%, rgba(0,0,0,0)); -webkit-mask-image: linear-gradient(90deg, rgba(0,0,0,1) 92%, rgba(0,0,0,0)); flex:1 1 auto; min-width:0 }
+.scroll_wrap{ position:relative; overflow:visible; flex:1 1 auto; min-width:0 }
+.flip_content::after{ content:""; position:absolute; top:0; right:0; bottom:0; width:48px; background:linear-gradient(90deg, rgba(11,22,48,0), rgba(11,22,48,.98)); pointer-events:none; z-index:1 }
 .scroll_lane{ display:inline-flex; align-items:center; gap:8px; white-space:nowrap; will-change:transform }
 .flip_container.is_flipped .scroll_lane.do_scroll{ animation: marquee 6s linear infinite }
 .flip_content .badges.left_badges{ margin-left:auto }
