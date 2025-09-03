@@ -1055,6 +1055,11 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .badge_btn:hover .tip, .badge_btn.show .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
 .badge_inline{ display:inline-flex; margin-left:6px }
 
+/* Hide medal tooltip text by default; show on hover (similar to badge_btn) */
+.badge_item .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
+.badge_item .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
+.badge_item:hover .tip{ opacity:1; transform:translateX(0) translateY(0); pointer-events:auto }
+
 /* Per-cell 3D flip */
 .flip_container{ position:relative; perspective:1000px; display:block; height:100% }
 .flip_inner{ position:relative; transform-style:preserve-3d; transition:transform .35s ease; min-height:48px; height:100% }
