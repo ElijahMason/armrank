@@ -430,9 +430,9 @@ export default {
 .stat{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px}
 .label{color:var(--muted); font-weight:700}
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
-.value.badge_line{ display:flex; align-items:center; gap:2px; justify-content:flex-end; padding-right:6px }
-.club_name_text{ color: var(--accent); font-weight:800; margin-right:0; background:none; border:0; padding:0; cursor:pointer; font-size:inherit }
-.club_arrow{ color: var(--accent); margin-left:2px; opacity:.8 }
+.value.badge_line{ display:flex; align-items:center; gap:2px; justify-content:flex-end; padding-right:14px }
+.club_name_text{ color:#12d1e6; font-weight:800; margin-right:0; background:none; border:0; padding:0; cursor:pointer; font-size:inherit }
+.club_arrow{ color:#69c8d3; margin-left:2px; opacity:.85 }
 .club_arrow .chev_right{ width:18px; height:18px }
 .accent{color:var(--accent)}
 .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px}
