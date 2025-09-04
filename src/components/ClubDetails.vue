@@ -215,6 +215,10 @@
       </div>
 
       <div class="actions_bottom">
+        <button v-if="$route?.query?.from==='athlete'" class="back_from_club" @click="$emit('close'); $router.push({ name:'leaderboards', query:{ goto:'athlete' } })" aria-label="Back to athlete details">
+          <svg class="back_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Back
+        </button>
         <button class="close_action_btn" @click="$emit('close')">Close</button>
       </div>
     </div>
@@ -820,6 +824,8 @@ export default {
 @keyframes fadeSlide{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
 
 .actions_bottom{ display:flex; justify-content:flex-end; padding:12px 16px; border-top:1px solid var(--border) }
+.back_from_club{ margin-right:auto; display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px; border:1px solid rgba(46,163,255,.35); background:linear-gradient(180deg, rgba(46,163,255,.20), rgba(46,163,255,.14)); color:#c9ebff; font-weight:900; cursor:pointer }
+.back_from_club .back_icon{ width:16px; height:16px; display:block }
 
 /* Bottom close button */
 .close_action_btn{display:inline-flex; align-items:center; justify-content:center; padding:10px 14px; border-radius:999px; border:1px solid rgba(215,180,58,.22); background:linear-gradient(180deg,rgba(215,180,58,.18),rgba(185,147,34,.16)); color:var(--text); font-weight:800; cursor:pointer}
