@@ -112,10 +112,7 @@
               </span>
               <!-- Amateur medals -->
               <span v-for="(m, idx) in amateurMedals()" :key="'amedal-'+idx" class="badge_item amedal" :class="'amedal_' + m.place" :aria-label="amateurMedalAria(m)">
-                <svg class="amedal_icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="9" r="6" class="amedal_circle" />
-                  <path d="M8 14l-2 6 4-2 2 2 2-2 4 2-2-6" class="amedal_ribbon" />
-                </svg>
+                <Medal class="amedal_icon" aria-hidden="true" />
                 <span class="amedal_num" aria-hidden="true">{{ m.place }}</span>
                 <span class="tip">{{ amateurMedalTip(m) }}</span>
               </span>
@@ -188,11 +185,11 @@
 </template>
 
 <script>
-import { Award } from 'lucide-vue-next'
+import { Award, Medal } from 'lucide-vue-next'
 import { isDevMode } from '../utils/devMode'
 export default {
   name: 'AthleteDetails',
-  components:{ Award },
+  components:{ Award, Medal },
   props: {
     open: { type: Boolean, default: false },
     athlete: { type: String, default: '' },
@@ -476,11 +473,9 @@ export default {
 .medal_3 .medal_icon{ color: var(--bronze) }
 .amedal{ width:32px; height:32px }
 .amedal_icon{ width:32px; height:32px; display:block }
-.amedal_circle{ fill: #6aa0ff }
-.amedal_ribbon{ fill: none; stroke: #ff6aa0; stroke-width: 2; stroke-linejoin: round }
-.amedal_1 .amedal_circle{ fill: #ffd95e }
-.amedal_2 .amedal_circle{ fill: #c0c7d1 }
-.amedal_3 .amedal_circle{ fill: #c9915e }
+.amedal_1 .amedal_icon{ color: #ffd95e }
+.amedal_2 .amedal_icon{ color: #c0c7d1 }
+.amedal_3 .amedal_icon{ color: #c9915e }
 .amedal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px) }
 .skill_block{ margin-top:10px }
 .skill_block{ margin-bottom:16px }
