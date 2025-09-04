@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" class="overlay" @click.self="$emit('close')" role="dialog" aria-modal="true" :aria-label="club?.name || 'Club details'">
+  <div v-if="open" class="overlay" @click.self="$emit('close')" @wheel="onOverlayWheel" @touchmove="onOverlayTouchMove" role="dialog" aria-modal="true" :aria-label="club?.name || 'Club details'">
     <div class="modal">
       <div class="modal_header">
         <h2 class="modal_title">{{ club.name }}</h2>
@@ -7,6 +7,7 @@
         <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
       </div>
 
+      <div class="content">
       <div class="stats_row">
         <div class="stat_card">
           <div class="stat_icon crown_icon_bubble" aria-hidden="true">
@@ -210,6 +211,7 @@
             <svg class="toggle_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
         </div>
+      </div>
       </div>
 
       <div class="actions_bottom">
@@ -494,6 +496,8 @@ export default {
     },
   },
   methods:{
+    onOverlayWheel(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
+    onOverlayTouchMove(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
     resolveImage(path){
       const base = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/'
       const p = String(path || '').trim()
@@ -695,13 +699,22 @@ export default {
     }
   },
   watch:{
-    open(val){ if(val) this.loadData() }
-  }
+    open(val){
+      try{
+        const body = document && document.body
+        if(body){ body.style.overflow = val ? 'hidden' : '' }
+      }catch{}
+      if(val) this.loadData()
+    }
+  },
 }
 </script>
 <style scoped>
-.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:auto; -webkit-overflow-scrolling:touch; overflow-x:hidden}
-.modal{width:min(860px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); overflow:auto; max-height:calc(100vh - 32px); overflow-x:hidden}
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:hidden; overflow-x:hidden}
+.modal{width:min(860px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px); overflow-x:hidden}
+.content{padding:0 0 0 0; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
+.content{ scrollbar-width: none; -ms-overflow-style: none }
+.content::-webkit-scrollbar{ width:0; height:0 }
 .modal_header{display:flex; align-items:center; justify-content:flex-start; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border)}
 .modal_title{margin:0}
 .spacer{flex:1}

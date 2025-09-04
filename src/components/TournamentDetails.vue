@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" class="overlay" @click.self="$emit('close')" role="dialog" aria-modal="true" :aria-label="tournament?.name || 'Tournament details'">
+  <div v-if="open" class="overlay" @click.self="$emit('close')" @wheel="onOverlayWheel" @touchmove="onOverlayTouchMove" role="dialog" aria-modal="true" :aria-label="tournament?.name || 'Tournament details'">
     <div class="modal" ref="modal_ref">
       <div class="modal_header">
         <h2 class="modal_title">{{ tournament.name }}</h2>
@@ -9,6 +9,7 @@
         <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
       </div>
 
+      <div class="content">
       <div class="hero">
         <div class="hero_img" :style="{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)), url('${tournament.image_url}')` }"></div>
         <div class="hero_meta">
@@ -80,6 +81,7 @@
           </ul>
         </section>
       </div>
+      </div>
 
       <div class="actions">
         <a v-if="tournament.link" class="primary_btn" :href="tournament.link" target="_blank" rel="noopener">View Event Website</a>
@@ -99,6 +101,15 @@ export default {
     open: { type: Boolean, default: false },
     tournament: { type: Object, required: true },
   },
+  methods:{
+    onOverlayWheel(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
+    onOverlayTouchMove(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
+  },
+  watch:{
+    open(val){
+      try{ const body = document && document.body; if(body){ body.style.overflow = val ? 'hidden' : '' } }catch{}
+    }
+  },
   computed:{
     hasClasses(){
       const t = this.tournament
@@ -109,8 +120,11 @@ export default {
 </script>
 
 <style scoped>
-.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:auto; -webkit-overflow-scrolling:touch}
-.modal{width:min(860px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); overflow:auto; max-height:calc(100vh - 32px)}
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:hidden}
+.modal{width:min(860px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px)}
+.content{padding:0 16px 0 16px; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
+.content{ scrollbar-width: none; -ms-overflow-style: none }
+.content::-webkit-scrollbar{ width:0; height:0 }
 .modal_header{display:flex; align-items:center; justify-content:flex-start; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border)}
 .modal_title{margin:0}
 .spacer{flex:1}
@@ -126,7 +140,7 @@ export default {
 .est{color:var(--muted); font-weight:700}
 .row{display:flex; gap:10px; align-items:center}
 .row .label{color:var(--muted); min-width:70px; font-weight:700}
-.grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; padding:0 16px 16px}
+.grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; padding:0 0 16px}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
 .block h3{margin:0 0 8px 0}
 .classes{display:grid; gap:10px}
