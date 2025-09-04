@@ -1,0 +1,2 @@
+trueskill>=0.4.5
+sqlite-utils>=3.36.0 
