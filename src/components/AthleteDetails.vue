@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" class="overlay" @click.self="$emit('close')" role="dialog" aria-modal="true" :aria-label="athlete || 'Athlete details'">
+  <div v-if="open" class="overlay" @click.self="$emit('close')" @wheel.prevent @touchmove.prevent role="dialog" aria-modal="true" :aria-label="athlete || 'Athlete details'">
     <div class="modal">
       <div class="modal_header">
         <h2 class="modal_title">{{ athlete }}</h2>
@@ -209,6 +209,16 @@ export default {
   },
   data(){
     return { open_tip_key: '', chart_w: 560, chart_h: 180, pad: 24, dev: false }
+  },
+  watch:{
+    open(val){
+      try{
+        const body = document && document.body
+        if(!body) return
+        if(val){ body.style.overflow = 'hidden' }
+        else{ body.style.overflow = '' }
+      }catch{}
+    }
   },
   computed: {
     isTopThree(){
