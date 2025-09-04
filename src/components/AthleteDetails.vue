@@ -90,8 +90,7 @@
             <div class="row" v-if="club">
               <div class="label">Club</div>
               <div class="value badge_line">
-                <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
-                <span>{{ club }}</span>
+                <span class="club_name_text">{{ club }}</span>
                 <button class="club_arrow" @click.stop="goToClub" aria-label="View club details">
                   <svg class="chev_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
@@ -105,8 +104,7 @@
         </div>
 
         <section class="badge_rail">
-          <div class="rail">
-            <div class="rail_inner">
+          <div class="rail_inner">
               <!-- Tournament medals (hard-coded for 2025 Joe Woody) -->
               <span v-for="(m, idx) in medals()" :key="'medal-'+idx" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
                 <Award class="medal_icon" aria-hidden="true" />
@@ -172,9 +170,6 @@
                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                 <span class="tip tip_right">Admin</span>
               </span>
-            </div>
-            <div class="rail_edge left"></div>
-            <div class="rail_edge right"></div>
           </div>
         </section>
       </div>
@@ -435,7 +430,9 @@ export default {
 .stat{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px}
 .label{color:var(--muted); font-weight:700}
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
-.value.badge_line{ display:flex; align-items:center; gap:8px }
+.value.badge_line{ display:flex; align-items:center; gap:6px; justify-content:flex-end }
+.club_name_text{ color: var(--accent); font-weight:800; margin-right:2px }
+.club_arrow{ color: var(--accent); margin-left:2px }
 .accent{color:var(--accent)}
 .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
@@ -455,12 +452,7 @@ export default {
 /* Video-game-like horizontal badge rail */
 .badge_rail{ position:relative; background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015)); border:1px solid var(--border); border-radius:12px; padding:12px; margin-top:10px; overflow:visible }
 .rail_title{ margin:0 0 8px 0 }
-.rail{ position:relative; background:linear-gradient(90deg, rgba(215,180,58,.08), rgba(12,100,120,.08)); border:1px dashed rgba(255,255,255,.12); border-radius:10px; padding:10px 12px; overflow:visible }
-.rail_inner{ display:flex; align-items:center; gap:12px; min-width:max-content }
-.rail_inner{ flex-wrap: wrap; min-width: 0 }
-.rail_edge{ position:absolute; top:40px; bottom:12px; width:20px; pointer-events:none; background:linear-gradient(90deg, rgba(11,22,48,0), rgba(11,22,48,.8)) }
-.rail_edge.left{ left:12px; transform:rotate(180deg) }
-.rail_edge.right{ right:12px }
+.rail_inner{ display:flex; align-items:center; gap:12px; flex-wrap:wrap }
 .badge_item{ position:relative; display:inline-flex; align-items:center; justify-content:center }
 .badge_item.trophy{ width:34px; height:34px }
 .badge_item .tip{ position:absolute; bottom:calc(100% + 6px); left:0; background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 8px; font-weight:800; font-size:12px; opacity:0; pointer-events:none; transition:opacity .16s ease; white-space:normal; width:max-content; min-width:0; max-width:min(78vw, 320px); overflow-wrap:anywhere; word-break:normal; text-align:left }
