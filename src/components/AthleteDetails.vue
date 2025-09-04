@@ -89,7 +89,7 @@
             </div>
             <div class="row" v-if="club">
               <div class="label">Club</div>
-              <div class="value badge_line">
+              <div class="value badge_line" style="padding-right:16px">
                 <button class="club_name_text" @click.stop="goToClub" aria-label="Open club details">{{ club }}</button>
                 <button class="club_arrow" @click.stop="goToClub" aria-label="View club details">
                   <svg class="chev_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -430,10 +430,11 @@ export default {
 .stat{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px}
 .label{color:var(--muted); font-weight:700}
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
-.value.badge_line{ display:flex; align-items:center; gap:2px; justify-content:flex-end; padding-right:14px }
+.value.badge_line{ display:flex; align-items:center; gap:2px; justify-content:flex-end; padding-right:0 }
 .club_name_text{ color:#12d1e6; font-weight:800; margin-right:0; background:none; border:0; padding:0; cursor:pointer; font-size:inherit }
-.club_arrow{ color:#69c8d3; margin-left:2px; opacity:.85 }
+.club_arrow{ color:#69c8d3; margin-left:4px; opacity:.9 }
 .club_arrow .chev_right{ width:18px; height:18px }
+.club_arrow .chev_right path{ stroke:#69c8d3 }
 .accent{color:var(--accent)}
 .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
