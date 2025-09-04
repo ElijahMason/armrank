@@ -299,6 +299,17 @@ export default {
     }catch{}
     this.fetchClientIp()
     this.loadKnownNames()
+    // If navigated from club with an athlete param, open athlete modal immediately (blank then hydrate)
+    try{
+      const ath = String(this.$route?.query?.ath || '').trim()
+      if(ath){
+        this.$nextTick(()=>{
+          const lbs = this.classes
+          this.selected_athlete = ath
+          this.athlete_modal_open = true
+        })
+      }
+    }catch{}
   },
   unmounted(){
     try{

@@ -871,6 +871,13 @@ export default {
     this.load()
     this.loadClubs()
     this.loadClubMembers && this.loadClubMembers()
+    try{
+      const ath = String(this.$route?.query?.ath || '').trim()
+      if(ath){
+        this.selected_athlete = ath
+        this.athlete_modal_open = true
+      }
+    }catch{}
   },
   watch: {
     selected_class() {

@@ -244,7 +244,7 @@ export default {
         const name = String(this.club || '').trim()
         if(!name) return
         this.$emit('close')
-        this.$router.push({ name: 'clubs', query: { club: name, from:'athlete' } })
+        this.$router.push({ name: 'clubs', query: { club: name, from:'athlete', ath: String(this.athlete||'').trim(), div: this.division } })
       }catch{}
     },
     onChallengeClick(){
@@ -430,8 +430,8 @@ export default {
 .stat{background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px}
 .label{color:var(--muted); font-weight:700}
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
-.value.badge_line{ display:flex; align-items:center; gap:4px; justify-content:flex-end; padding-right:4px }
-.club_name_text{ color: var(--accent); font-weight:800; margin-right:0; background:none; border:0; padding:0; cursor:pointer }
+.value.badge_line{ display:flex; align-items:center; gap:2px; justify-content:flex-end; padding-right:6px }
+.club_name_text{ color: var(--accent); font-weight:800; margin-right:0; background:none; border:0; padding:0; cursor:pointer; font-size:inherit }
 .club_arrow{ color: var(--accent); margin-left:2px; opacity:.8 }
 .club_arrow .chev_right{ width:18px; height:18px }
 .accent{color:var(--accent)}

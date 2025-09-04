@@ -215,7 +215,7 @@
       </div>
 
       <div class="actions_bottom">
-        <button v-if="$route?.query?.from==='athlete'" class="back_from_club" @click="$emit('close'); $router.push({ name:'leaderboards', query:{ goto:'athlete' } })" aria-label="Back to athlete details">
+        <button v-if="$route?.query?.from==='athlete'" class="back_from_club" @click="goBackToAthlete" aria-label="Back to athlete details">
           <svg class="back_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Back
         </button>
@@ -500,6 +500,14 @@ export default {
     },
   },
   methods:{
+    goBackToAthlete(){
+      try{
+        const ath = String(this.$route?.query?.ath || '').trim()
+        const div = String(this.$route?.query?.div || '').trim()
+        this.$emit('close')
+        this.$router.push({ name:'leaderboards', query:{ goto:'athlete', ath, div } })
+      }catch{}
+    },
     onOverlayWheel(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
     onOverlayTouchMove(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
     resolveImage(path){
