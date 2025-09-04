@@ -535,7 +535,7 @@ export default {
 .general_block .row .label{ font-weight:400 }
 .general_block .row .value{ font-weight:400 }
 /* Club arrow button next to club name */
-.club_arrow{ display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); color:var(--text); cursor:pointer }
-.club_arrow .chev_right{ width:16px; height:16px; display:block }
+.club_arrow{ display:inline-flex; align-items:center; justify-content:center; border:0; background:none; padding:0; color:var(--text); cursor:pointer }
+.club_arrow .chev_right{ width:24px; height:24px; display:block }
 </style>
 
