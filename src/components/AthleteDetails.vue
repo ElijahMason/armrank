@@ -89,7 +89,7 @@
             </div>
             <div class="row" v-if="club">
               <div class="label">Club</div>
-              <div class="value badge_line">
+              <div class="value badge_line" style="margin-right:-10px">
                 <button class="club_name_text" @click.stop="goToClub" aria-label="Open club details">{{ club }}</button>
                 <button class="club_arrow" @click.stop="goToClub" aria-label="View club details">
                   <svg class="chev_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
