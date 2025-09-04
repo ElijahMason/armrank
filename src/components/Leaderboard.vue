@@ -67,6 +67,14 @@
                                   <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                                   <span class="tip">{{ medalTip(m) }}</span>
                                 </span>
+                                <span v-for="(m, mi) in amateurMedals(row.left_name)" :key="'fL-amedal-'+i+'-'+mi" class="badge_item amedal" :class="'amedal_' + m.place" :aria-label="amateurMedalAria(m)">
+                                  <svg class="amedal_icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="12" cy="8.5" r="6" class="amedal_circle" />
+                                    <path d="M8 13.5l-2 6 4-2 2 2 2-2 4 2-2-6" class="amedal_ribbon" />
+                                  </svg>
+                                  <span class="amedal_num" aria-hidden="true">{{ m.place }}</span>
+                                  <span class="tip">{{ amateurMedalTip(m) }}</span>
+                                </span>
                                 <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-left-'+i }" @click.stop="toggleTip('flip-f-left-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-left-'+i)" :aria-label="`${leaderClubOf(row.left_name)} Club Leader`">
                                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                                   <span class="tip">{{ leaderClubOf(row.left_name) }} Club Leader</span>
@@ -132,6 +140,14 @@
                                   <Award class="medal_icon" aria-hidden="true" />
                                   <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                                   <span class="tip">{{ medalTip(m) }}</span>
+                                </span>
+                                <span v-for="(m, mi) in amateurMedals(row.right_name)" :key="'fR-amedal-'+i+'-'+mi" class="badge_item amedal" :class="'amedal_' + m.place" :aria-label="amateurMedalAria(m)">
+                                  <svg class="amedal_icon" viewBox="0 0 24 24" aria-hidden="true">
+                                    <circle cx="12" cy="8.5" r="6" class="amedal_circle" />
+                                    <path d="M8 13.5l-2 6 4-2 2 2 2-2 4 2-2-6" class="amedal_ribbon" />
+                                  </svg>
+                                  <span class="amedal_num" aria-hidden="true">{{ m.place }}</span>
+                                  <span class="tip">{{ amateurMedalTip(m) }}</span>
                                 </span>
                                 <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-f-right-'+i }" @click.stop="toggleTip('flip-f-right-'+i)" tabindex="0" @keyup.enter.stop="toggleTip('flip-f-right-'+i)" :aria-label="`${leaderClubOf(row.right_name)} Club Leader`">
                                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -214,6 +230,14 @@
                                 <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                                 <span class="tip">{{ medalTip(m) }}</span>
                               </span>
+                              <span v-for="(m, mi) in amateurMedals(row.left_name)" :key="'xL-amedal-'+j+'-'+mi" class="badge_item amedal" :class="'amedal_' + m.place" :aria-label="amateurMedalAria(m)">
+                                <svg class="amedal_icon" viewBox="0 0 24 24" aria-hidden="true">
+                                  <circle cx="12" cy="8.5" r="6" class="amedal_circle" />
+                                  <path d="M8 13.5l-2 6 4-2 2 2 2-2 4 2-2-6" class="amedal_ribbon" />
+                                </svg>
+                                <span class="amedal_num" aria-hidden="true">{{ m.place }}</span>
+                                <span class="tip">{{ amateurMedalTip(m) }}</span>
+                              </span>
                               <span v-if="isClubLeader(row.left_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-left-'+j }" @click.stop="toggleTip('flip-x-left-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-left-'+j)" :aria-label="`${leaderClubOf(row.left_name)} Club Leader`">
                                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                                 <span class="tip">{{ leaderClubOf(row.left_name) }} Club Leader</span>
@@ -276,6 +300,14 @@
                                 <Award class="medal_icon" aria-hidden="true" />
                                 <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                                 <span class="tip">{{ medalTip(m) }}</span>
+                              </span>
+                              <span v-for="(m, mi) in amateurMedals(row.right_name)" :key="'xR-amedal-'+j+'-'+mi" class="badge_item amedal" :class="'amedal_' + m.place" :aria-label="amateurMedalAria(m)">
+                                <svg class="amedal_icon" viewBox="0 0 24 24" aria-hidden="true">
+                                  <circle cx="12" cy="8.5" r="6" class="amedal_circle" />
+                                  <path d="M8 13.5l-2 6 4-2 2 2 2-2 4 2-2-6" class="amedal_ribbon" />
+                                </svg>
+                                <span class="amedal_num" aria-hidden="true">{{ m.place }}</span>
+                                <span class="tip">{{ amateurMedalTip(m) }}</span>
                               </span>
                               <span v-if="isClubLeader(row.right_name)" class="badge_btn crown" :class="{ show: open_tip_key === 'flip-x-right-'+j }" @click.stop="toggleTip('flip-x-right-'+j)" tabindex="0" @keyup.enter.stop="toggleTip('flip-x-right-'+j)" :aria-label="`${leaderClubOf(row.right_name)} Club Leader`">
                                 <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
@@ -537,11 +569,40 @@ export default {
       }
       return out
     },
+    amateurMedals(name){
+      const nm = String(name || '').trim().toLowerCase()
+      const out = []
+      const pushMedal = (place, weight, hand)=>{
+        const handUpper = hand === 'LH' ? 'LH' : 'RH'
+        out.push({ place: Number(place), weight: String(weight), hand: handUpper, tournament: 'LLD 2025 Tournament', amateur: true })
+      }
+      if(nm === 'heath skinner'){
+        // Gold 243+ RH (Amateur)
+        pushMedal(1, '243+', 'RH')
+      }else if(nm === 'ocean taylor'){
+        // 198: RH gold, LH silver (Amateur)
+        pushMedal(1, 198, 'RH')
+        pushMedal(2, 198, 'LH')
+      }
+      return out
+    },
     medalAria(m){
       return `${m.tournament} — #${m.place} ${m.weight} lbs ${m.hand}`
     },
     medalTip(m){
       const base = `Joe Woody 2025 Tournament — #${m.place} ${m.weight} lbs ${m.hand}`
+      return base.replace(/[A-Za-z][A-Za-z']*/g, (w)=>{
+        const up = w.toUpperCase()
+        if(up === 'RH' || up === 'LH') return up
+        const low = w.toLowerCase()
+        return low.charAt(0).toUpperCase() + low.slice(1)
+      })
+    },
+    amateurMedalAria(m){
+      return `${m.tournament} — Amateur #${m.place} ${m.weight} ${m.hand}`
+    },
+    amateurMedalTip(m){
+      const base = `LLD 2025 Tournament — Amateur #${m.place} ${m.weight} ${m.hand}`
       return base.replace(/[A-Za-z][A-Za-z']*/g, (w)=>{
         const up = w.toUpperCase()
         if(up === 'RH' || up === 'LH') return up
@@ -1025,6 +1086,16 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .medal_2 .medal_icon{ color: var(--silver) }
 .medal_3 .medal_icon{ color: var(--bronze) }
 .medal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; color:#ffffff; text-shadow:0 1px 0 rgba(0,0,0,.35); transform: translateY(-5px) }
+
+/* Amateur medal (distinct ribbon/shape) */
+.amedal{ width:26px; height:26px }
+.amedal_icon{ width:26px; height:26px; display:block }
+.amedal_circle{ fill: #6aa0ff }
+.amedal_ribbon{ fill: none; stroke: #ff6aa0; stroke-width: 2; stroke-linejoin: round }
+.amedal_1 .amedal_circle{ fill: #ffd95e }
+.amedal_2 .amedal_circle{ fill: #c0c7d1 }
+.amedal_3 .amedal_circle{ fill: #c9915e }
+.amedal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:12px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px) }
 
 /* Gray details button with right arrow */
 .details_btn{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--border); background:rgba(255,255,255,.06); color:var(--muted); cursor:pointer }

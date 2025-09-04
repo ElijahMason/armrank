@@ -110,6 +110,15 @@
                 <span class="medal_num" aria-hidden="true">{{ m.place }}</span>
                 <span class="tip">{{ medalTip(m) }}</span>
               </span>
+              <!-- Amateur medals -->
+              <span v-for="(m, idx) in amateurMedals()" :key="'amedal-'+idx" class="badge_item amedal" :class="'amedal_' + m.place" :aria-label="amateurMedalAria(m)">
+                <svg class="amedal_icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="12" cy="9" r="6" class="amedal_circle" />
+                  <path d="M8 14l-2 6 4-2 2 2 2-2 4 2-2-6" class="amedal_ribbon" />
+                </svg>
+                <span class="amedal_num" aria-hidden="true">{{ m.place }}</span>
+                <span class="tip">{{ amateurMedalTip(m) }}</span>
+              </span>
               <!-- RH overall badge -->
               <span v-if="trophyType(rh_rank)" class="badge_item trophy trophy_in_popup" :class="'trophy_' + rh_rank" :aria-label="trophyTip('RH', rh_rank)">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3h-3V2H8v1H5a1 1 0 0 0-1 1v2a4 4 0 0 0 3 3.87A5 5 0 0 0 11 14v2H7v2h10v-2h-4v-2a5 5 0 0 0 4-4.13A4 4 0 0 0 20 6V4a1 1 0 0 0-1-1zm-1 3a2 2 0 0 1-2 2V5h2zm-12 0V5h2v3a2 2 0 0 1-2-2z"/></svg>
@@ -255,11 +264,33 @@ export default {
       }
       return out
     },
+    amateurMedals(){
+      const name = String(this.athlete || '').trim().toLowerCase()
+      const out = []
+      const pushMedal = (place, weight, hand)=>{
+        const handUpper = hand === 'LH' ? 'LH' : 'RH'
+        out.push({ place: Number(place), weight: String(weight), hand: handUpper, tournament: 'LLD 2025 Tournament', amateur: true })
+      }
+      if(name === 'heath skinner'){
+        pushMedal(1, '243+', 'RH')
+      }else if(name === 'ocean taylor'){
+        pushMedal(1, 198, 'RH')
+        pushMedal(2, 198, 'LH')
+      }
+      return out
+    },
     medalAria(m){
       return `${m.tournament} — #${m.place} ${m.weight} lbs ${m.hand}`
     },
     medalTip(m){
       const base = `Joe Woody 2025 Tournament — #${m.place} ${m.weight} lbs ${m.hand}`
+      return this.titleCaseTooltip(base)
+    },
+    amateurMedalAria(m){
+      return `${m.tournament} — Amateur #${m.place} ${m.weight} ${m.hand}`
+    },
+    amateurMedalTip(m){
+      const base = `LLD 2025 Tournament — Amateur #${m.place} ${m.weight} ${m.hand}`
       return this.titleCaseTooltip(base)
     },
     // Build fake time series anchored around the current fake skill
@@ -443,6 +474,14 @@ export default {
 .medal_1 .medal_icon{ color: var(--accent) }
 .medal_2 .medal_icon{ color: var(--silver) }
 .medal_3 .medal_icon{ color: var(--bronze) }
+.amedal{ width:32px; height:32px }
+.amedal_icon{ width:32px; height:32px; display:block }
+.amedal_circle{ fill: #6aa0ff }
+.amedal_ribbon{ fill: none; stroke: #ff6aa0; stroke-width: 2; stroke-linejoin: round }
+.amedal_1 .amedal_circle{ fill: #ffd95e }
+.amedal_2 .amedal_circle{ fill: #c0c7d1 }
+.amedal_3 .amedal_circle{ fill: #c9915e }
+.amedal_num{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; color:#0b1630; text-shadow:0 1px 0 rgba(255,255,255,.45); transform: translateY(-6px) }
 .skill_block{ margin-top:10px }
 .skill_block{ margin-bottom:16px }
 .chart_wrap{ position:relative }
