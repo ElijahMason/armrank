@@ -1,5 +1,5 @@
 <template>
-  <div v-if="open" class="overlay" @click.self="$emit('close')" @wheel.prevent @touchmove.prevent role="dialog" aria-modal="true" :aria-label="athlete || 'Athlete details'">
+  <div v-if="open" class="overlay" @click.self="$emit('close')" @wheel="onOverlayWheel" @touchmove="onOverlayTouchMove" role="dialog" aria-modal="true" :aria-label="athlete || 'Athlete details'">
     <div class="modal">
       <div class="modal_header">
         <h2 class="modal_title">{{ athlete }}</h2>
@@ -234,6 +234,16 @@ export default {
   },
   methods:{
     onRootClick(){ this.open_tip_key = '' },
+    onOverlayWheel(evt){
+      try{
+        if(evt && evt.target && evt.currentTarget && evt.target === evt.currentTarget){ evt.preventDefault() }
+      }catch{}
+    },
+    onOverlayTouchMove(evt){
+      try{
+        if(evt && evt.target && evt.currentTarget && evt.target === evt.currentTarget){ evt.preventDefault() }
+      }catch{}
+    },
     goToClub(){
       try{
         const name = String(this.club || '').trim()
