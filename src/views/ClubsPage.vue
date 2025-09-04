@@ -88,6 +88,18 @@ export default {
 			}
 		}
 	},
+	watch:{
+		'$route.query.club':{
+			immediate:true,
+			handler(val){
+				try{
+					const name = String(val || '').trim()
+					if(!name) return
+					this.openClubByName(name)
+				}catch{}
+			}
+		}
+	},
 	data(){
 		// Google Sheet for club membership (first row = club names, columns list members in order)
 		const sheet_id_raw = 'https://docs.google.com/spreadsheets/d/1aD3ZFkMHCrg4lZe80lONyQz-MsEVStelCiCEyHb6-2Y/edit?usp=sharing'
@@ -126,6 +138,18 @@ export default {
 			],
 		}
 	},
+	watch:{
+		'$route.query.club':{
+			immediate:true,
+			handler(val){
+				try{
+					const name = String(val || '').trim()
+					if(!name) return
+					this.openClubByName(name)
+				}catch{}
+			}
+		}
+	},
 	computed:{
 		clubs_filtered(){
 			return this.clubs.filter(c => this.only_oregon ? !this.isOutOfState(c) : true)
@@ -140,6 +164,12 @@ export default {
 		},
 	},
 	methods:{
+		openClubByName(name){
+			const target = String(name || '').trim().toLowerCase()
+			if(!target) return
+			const match = this.clubs.find(c => String(c?.name || '').trim().toLowerCase() === target)
+			if(match) this.openClub(match)
+		},
 		clearFilters(){ this.only_oregon = false },
 		resolveImage(path){
 			const p = String(path || '').trim()
@@ -361,7 +391,10 @@ export default {
 				if(Array.isArray(json) && json.length){ this.clubs = json }
 				this.computeTalentMetrics(); this.computeMedalsFooters()
 			}catch(e){ /* fall back to inline */ this.computeTalentMetrics(); this.computeMedalsFooters() }
-			finally{ this.is_loading = false }
+			finally{
+				this.is_loading = false
+				try{ const q = String(this.$route?.query?.club || '').trim(); if(q) this.openClubByName(q) }catch{}
+			}
 		},
 	},
 	mounted(){ this.loadClubs(); this.loadMembership(); this.loadRanks() }

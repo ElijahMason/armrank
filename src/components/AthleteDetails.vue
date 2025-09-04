@@ -92,6 +92,9 @@
               <div class="value badge_line">
                 <span v-if="club_logo" class="club_logo" :style="{ backgroundImage: `url(${club_logo})` }" aria-hidden="true"></span>
                 <span>{{ club }}</span>
+                <button class="club_arrow" @click.stop="goToClub" aria-label="View club details">
+                  <svg class="chev_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
                 <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
                   <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
                   <span class="tip tip_right">{{ club }} Club Leader</span>
@@ -221,6 +224,14 @@ export default {
   },
   methods:{
     onRootClick(){ this.open_tip_key = '' },
+    goToClub(){
+      try{
+        const name = String(this.club || '').trim()
+        if(!name) return
+        this.$emit('close')
+        this.$router.push({ name: 'clubs', query: { club: name } })
+      }catch{}
+    },
     onChallengeClick(){
       try{
         const name = String(this.athlete || '').trim()
@@ -494,5 +505,14 @@ export default {
 .chart_text.ylbl{ opacity:.8 }
 .chart_text.xtick{ opacity:.9 }
 .rank_badges{ display:inline-flex; align-items:center; gap:8px }
+/* Typographic tweaks per design: unbold inner rows for arms and general info */
+.arm_card .row .label{ font-weight:400 }
+.arm_card .row .value{ font-weight:400 }
+.general_block .rows{ gap:12px }
+.general_block .row .label{ font-weight:400 }
+.general_block .row .value{ font-weight:400 }
+/* Club arrow button next to club name */
+.club_arrow{ display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:6px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); color:var(--text); cursor:pointer }
+.club_arrow .chev_right{ width:16px; height:16px; display:block }
 </style>
 
