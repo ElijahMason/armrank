@@ -871,13 +871,7 @@ export default {
     this.load()
     this.loadClubs()
     this.loadClubMembers && this.loadClubMembers()
-    try{
-      const ath = String(this.$route?.query?.ath || '').trim()
-      if(ath){
-        this.selected_athlete = ath
-        this.athlete_modal_open = true
-      }
-    }catch{}
+    // Removed auto-opening blank modal from query to avoid overlaying the correctly opened modal
   },
   watch: {
     selected_class() {
