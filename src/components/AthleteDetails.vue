@@ -89,7 +89,7 @@
             </div>
             <div class="row" v-if="club">
               <div class="label">Club</div>
-              <div class="value badge_line" style="margin-right:-10px">
+              <div class="value badge_line" style="margin-right:-16px">
                 <button class="club_name_text" @click.stop="goToClub" aria-label="Open club details">{{ club }}</button>
                 <button class="club_arrow" @click.stop="goToClub" aria-label="View club details">
                   <svg class="chev_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -432,7 +432,7 @@ export default {
 .value{font-weight:900; display:flex; align-items:center; gap:8px}
 .value.badge_line{ display:flex; align-items:center; gap:6px; justify-content:flex-end; width:100% }
 .value.badge_line .club_name_text{ margin-left:auto }
-.club_name_text{ color:#008080; font-weight:800; margin-right:0; background:none; border:0; padding:0; cursor:pointer; font-size:inherit }
+.club_name_text{ color:#008080; font-weight:600; margin-right:0; background:none; border:0; padding:0; cursor:pointer; font-size:inherit }
 .club_arrow{ color:#007070; margin-left:2px; opacity:.95 }
 .club_arrow .chev_right{ width:18px; height:18px }
 .club_arrow .chev_right path{ stroke:#007070 }
