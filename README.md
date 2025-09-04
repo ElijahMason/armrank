@@ -35,3 +35,26 @@
 - Notes:
   - The app first tries `docs/clubs.json` and falls back to `clubs.json` (same folder) if needed.
   - Builds won’t clear `docs/` (configured), so `docs/clubs.json` persists across deploys.
+
+
+### Commands
+Download Dependencies
+- pip install -r backend/requirements.txt
+
+Import a fresh new db from the spreadsheet
+- python .backend\ratings.py import-xlsx --file ".\backend\data\Oregon Arm Wrestling Rankings.xlsx" --mode adhoc
+
+Simulate a Supermatch
+- python backend/ratings.py supermatch --name "Test SM" --hand LH --player_a "Elijah Mason" --player_b "Ernest Stranz" --a_wins 2 --b_wins 3
+
+Simulate a Tournament Pin
+- python backend/ratings.py tournament --name "LLD 2025" --hand LH --winner "Ben Lopez" --loser "Bryan Fry" 
+
+See Leaderboard by Hand
+- python backend/ratings.py ratings --hand RH
+
+View recent Matches
+- python backend/ratings.py events --limit 10
+
+View player Details
+  - python backend/ratings.py player --name "Player Name"
