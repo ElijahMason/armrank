@@ -392,15 +392,15 @@ export default {
 </script>
 
 <style scoped>
-.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:auto; -webkit-overflow-scrolling:touch}
-.modal{width:min(720px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); overflow:auto; max-height:calc(100vh - 32px)}
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:hidden}
+.modal{width:min(720px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px)}
 .modal_header{display:flex; align-items:center; justify-content:flex-start; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border)}
 .modal_title{margin:0}
 .spacer{flex:1}
 /* Header close button matches ClubDetails */
 .close_btn{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 12px; cursor:pointer; font-size:20px; line-height:1; transition:.18s ease}
 .close_btn:hover{filter:brightness(1.08)}
-.content{padding:12px 16px}
+.content{padding:12px 16px; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
 .hero{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:10px; margin-bottom:10px}
 .arm_hero{ grid-template-columns:repeat(2, minmax(140px,1fr)) }
 .arm_card{ background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px }
