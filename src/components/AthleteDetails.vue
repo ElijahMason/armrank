@@ -421,6 +421,9 @@ export default {
 .close_btn{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 12px; cursor:pointer; font-size:20px; line-height:1; transition:.18s ease}
 .close_btn:hover{filter:brightness(1.08)}
 .content{padding:12px 16px; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
+/* Hide scrollbars while preserving scroll */
+.content{ scrollbar-width: none; -ms-overflow-style: none }
+.content::-webkit-scrollbar{ width:0; height:0 }
 .hero{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:10px; margin-bottom:10px}
 .arm_hero{ grid-template-columns:repeat(2, minmax(140px,1fr)) }
 .arm_card{ background:rgba(255,255,255,.04); border:1px solid var(--border); border-radius:10px; padding:10px }
