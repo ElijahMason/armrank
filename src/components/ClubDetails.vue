@@ -918,9 +918,10 @@ export default {
 .edit_field.checkbox{flex-direction:row; align-items:center}
 .edit_field.span2{grid-column:span 2}
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
-.ef_input{background:linear-gradient(180deg, rgba(215,180,58,.18), rgba(185,147,34,.16)); color:var(--text); border:1px solid rgba(215,180,58,.35); border-radius:10px; padding:10px 12px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
-.ef_textarea{background:linear-gradient(180deg, rgba(215,180,58,.18), rgba(185,147,34,.16)); color:var(--text); border:1px solid rgba(215,180,58,.35); border-radius:10px; padding:10px 12px; min-height:80px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
-.ef_input.is_good, .ef_textarea.is_good{ border:1px solid rgba(23,162,184,.55); background:linear-gradient(180deg,#20c997,#17a2b8); color:#061626 }
+.ef_input{background:transparent; color:var(--text); border:2px solid var(--accent); border-radius:10px; padding:10px 12px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word; transition:border-color .15s ease}
+.ef_textarea{background:transparent; color:var(--text); border:2px solid var(--accent); border-radius:10px; padding:10px 12px; min-height:80px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word; transition:border-color .15s ease}
+.ef_input:focus, .ef_textarea:focus{ outline:none; border-color:rgba(215,180,58,.65) }
+.ef_input.is_good, .ef_textarea.is_good{ border-color:rgba(23,162,184,.75) }
 .auto_grow{resize:vertical; width:100%; overflow:auto}
 .list_head{display:flex; align-items:center; justify-content:space-between; padding:10px 0}
 .member_list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr; gap:8px}
