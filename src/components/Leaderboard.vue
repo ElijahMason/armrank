@@ -1135,7 +1135,7 @@ tbody tr.top3 td{ background:linear-gradient(180deg, rgba(205,127,50,.16), rgba(
 .flip_back{ gap:8px }
 .flip_content{ flex:1 1 calc(100% - 56px) }
 .scroll_wrap{ position:relative; overflow:visible; flex:1 1 auto; min-width:0 }
-.flip_content::after{ content:""; position:absolute; top:0; right:0; bottom:0; width:48px; background:linear-gradient(90deg, rgba(11,22,48,0), rgba(11,22,48,.98)); pointer-events:none; z-index:1 }
+.flip_content::after{ content:""; position:absolute; top:0; right:0; bottom:0; width:28px; background:linear-gradient(90deg, rgba(11,22,48,0), rgba(11,22,48,.98)); pointer-events:none; z-index:1 }
 .scroll_lane{ display:inline-flex; align-items:center; gap:8px; white-space:nowrap; will-change:transform }
 .flip_container.is_flipped .scroll_lane.do_scroll{ animation: marquee 6s linear infinite }
 .flip_content .badges.left_badges{ margin-left:auto }

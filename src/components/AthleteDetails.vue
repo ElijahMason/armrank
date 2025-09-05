@@ -94,10 +94,6 @@
                 <button class="club_arrow" @click.stop="goToClub" aria-label="View club details">
                   <svg class="chev_right" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <span v-if="club_leader" class="badge_btn crown" :class="{ show: open_tip_key === 'popup-crown' }" @click.stop="toggleTip('popup-crown')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown')" :aria-label="club">
-                  <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
-                  <span class="tip tip_right">{{ club }} Club Leader</span>
-                </span>
               </div>
             </div>
           </div>
@@ -105,6 +101,14 @@
 
         <section class="badge_rail">
           <div class="rail_inner">
+              <!-- Club badges: leader crown OR membership logo (mutually exclusive) -->
+              <span v-if="club_leader" class="badge_item badge_btn crown" :class="{ show: open_tip_key === 'popup-crown-rail' }" @click.stop="toggleTip('popup-crown-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-crown-rail')" :aria-label="club">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="icon crown_icon"><path d="M5 7l4 3 3-5 3 5 4-3 1 10H4L5 7z"/></svg>
+                <span class="tip tip_right">{{ club }} Club Leader</span>
+              </span>
+              <span v-else-if="club_logo" class="badge_item badge_btn member_logo" :class="{ show: open_tip_key === 'popup-member-rail' }" :style="{ backgroundImage: `url(${club_logo})` }" @click.stop="toggleTip('popup-member-rail')" tabindex="0" @keyup.enter.stop="toggleTip('popup-member-rail')" :aria-label="club">
+                <span class="tip tip_right">Member of {{ club }}</span>
+              </span>
               <!-- Tournament medals (hard-coded for 2025 Joe Woody) -->
               <span v-for="(m, idx) in medals()" :key="'medal-'+idx" class="badge_item medal" :class="'medal_' + m.place" :aria-label="medalAria(m)">
                 <Award class="medal_icon" aria-hidden="true" />
@@ -472,6 +476,7 @@ export default {
 .crown_icon{fill:currentColor}
 .dev_crown{ background:linear-gradient(180deg, rgba(150,60,215,.22), rgba(120,40,185,.18)); color:#b68cff; border:1px solid rgba(182,140,255,.45) }
 .admin_crown{ background:linear-gradient(180deg, rgba(215,60,60,.22), rgba(185,40,40,.18)); color:#ff8c8c; border:1px solid rgba(255,140,140,.45) }
+.member_logo{ width:28px; height:28px; border-radius:50%; background-size:cover; background-position:center; border:1px solid var(--border) }
 .badge_btn .tip{ position:absolute; bottom:calc(100% + 8px); left:0; right:auto; transform:translateX(0) translateY(6px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:8px 10px; display:inline-block; min-width:0; width:max-content; max-width:min(78vw, 320px); white-space:normal; overflow-wrap:anywhere; word-break:normal; text-align:left; font-weight:800; font-size:12px; box-shadow:var(--glow); opacity:0; pointer-events:none; transition:opacity .16s ease, transform .16s ease; z-index:2 }
 .badge_btn .tip::after{ content:""; position:absolute; top:100%; left:14px; transform:translateX(0); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:6px solid var(--border) }
 .badge_btn .tip.tip_right{ left:auto; right:0; text-align:right }
