@@ -10,6 +10,7 @@
         <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
       </div>
 
+      <div class="scroll_area">
       <div class="content">
       <div class="stats_row">
         <div class="stat_card">
@@ -275,6 +276,7 @@
             <span>Out of State</span>
           </label>
         </div>
+      </div>
       </div>
 
       <div class="actions_bottom">
@@ -845,9 +847,10 @@ export default {
 }
 </script>
 <style scoped>
-.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:hidden; overflow-x:hidden}
-.modal{width:min(860px,100%); max-width:calc(100vw - 24px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px); overflow-x:hidden}
-.content{padding:0 0 0 0; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
+.overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; --ovPad:12px; padding:var(--ovPad); z-index:100; overflow:hidden; overflow-x:hidden}
+.modal{width:100%; max-width:min(860px, calc(100vw - (var(--ovPad) * 2))); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - (var(--ovPad) * 2)); overflow-x:hidden}
+.scroll_area{flex:1; overflow:auto; -webkit-overflow-scrolling:touch; overflow-x:hidden}
+.content{padding:0 0 0 0}
 .content{ scrollbar-width: none; -ms-overflow-style: none }
 .content::-webkit-scrollbar{ width:0; height:0 }
 .modal_header{display:flex; align-items:center; justify-content:flex-start; gap:10px; padding:14px 16px; border-bottom:1px solid var(--border)}
@@ -953,6 +956,8 @@ export default {
 @media(max-width:900px){
   .join_box{grid-template-columns:1fr}
 }
+.edit_grid{ grid-template-columns:1fr }
+@media(max-width:520px){ .overlay{ --ovPad:8px } }
 .edit_grid{ grid-template-columns:1fr }
 .label .muted_count{ color: var(--muted); font-weight:700 }
 
