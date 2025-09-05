@@ -4,6 +4,9 @@
       <div class="modal_header">
         <h2 class="modal_title">{{ club.name }}</h2>
         <div class="spacer"></div>
+        <button v-if="dev && !edit_mode" class="icon_btn" @click="startEdit" aria-label="Edit">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm2.92 2.33H5v-.92l9.06-9.06.92.92L5.92 19.58zM20.71 7.04a1.003 1.003 0 0 0 0-1.42l-2.34-2.34a1.003 1.003 0 0 0-1.42 0l-1.83 1.83 3.75 3.75 1.84-1.82z"/></svg>
+        </button>
         <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
       </div>
 
@@ -214,7 +217,72 @@
       </div>
       </div>
 
+      <div v-if="edit_mode" class="edit_panel">
+        <div class="edit_grid">
+          <label class="edit_field">
+            <span class="ef_label">Name</span>
+            <input v-model="draft.name" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">City</span>
+            <input v-model="draft.city" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Region/State</span>
+            <input v-model="draft.region" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Leaders (comma-separated)</span>
+            <input v-model="leadersCsv" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Members count</span>
+            <input v-model.number="draft.members_count" type="number" min="0" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Avg practice size</span>
+            <input v-model.number="draft.avg_practice_size" type="number" min="0" class="ef_input" />
+          </label>
+          <label class="edit_field span2">
+            <span class="ef_label">Practice/training text</span>
+            <input v-model="trainingText" class="ef_input" placeholder="e.g., Wed 6pm - 9pm" />
+          </label>
+          <label class="edit_field span2">
+            <span class="ef_label">Description</span>
+            <textarea v-model="draft.desc" class="ef_textarea"></textarea>
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Facebook URL</span>
+            <input v-model="draft.facebook" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Instagram URL</span>
+            <input v-model="draft.instagram" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Medals this year</span>
+            <input v-model.number="draft.medals_this_year" type="number" min="0" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Supermatches hosted</span>
+            <input v-model.number="draft.supermatches_hosted" type="number" min="0" class="ef_input" />
+          </label>
+          <label class="edit_field">
+            <span class="ef_label">Supermatches upcoming</span>
+            <input v-model.number="draft.supermatches_upcoming" type="number" min="0" class="ef_input" />
+          </label>
+          <label class="edit_field checkbox">
+            <input type="checkbox" v-model="draft.out_of_state" />
+            <span>Out of State</span>
+          </label>
+        </div>
+      </div>
+
       <div class="actions_bottom">
+        <div v-if="edit_mode" class="edit_actions">
+          <button class="ghost_btn" @click="discardEdit">Discard</button>
+          <button class="primary_btn" @click="saveEdit">Save</button>
+        </div>
         <button v-if="$route?.query?.from==='athlete'" class="back_from_club" @click="goBackToAthlete" aria-label="Back to athlete details">
           <svg class="back_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Back
@@ -225,6 +293,7 @@
   </div>
 </template>
 <script>
+import { isDevMode } from '../utils/devMode'
 export default {
   name: 'ClubDetails',
   props: {
@@ -243,6 +312,9 @@ export default {
     const sheet_id_match = String(sheet_id_raw).match(/\/d\/([a-zA-Z0-9-_]+)/)
     const sheet_id = sheet_id_match ? sheet_id_match[1] : String(sheet_id_raw).trim()
     return {
+      dev:false,
+      edit_mode:false,
+      draft:null,
       show_all:false,
       open_tip_key:'',
       tip_timer:null,
@@ -268,6 +340,14 @@ export default {
     }
   },
   computed:{
+    leadersCsv:{
+      get(){ return (Array.isArray(this.draft?.leaders) ? this.draft.leaders : []).join(', ') },
+      set(v){ const arr = String(v||'').split(',').map(s=>s.trim()).filter(Boolean); this.draft.leaders = arr }
+    },
+    trainingText:{
+      get(){ return (Array.isArray(this.draft?.training) ? this.draft.training : []).join(' • ') },
+      set(v){ const arr = String(v||'').split(/•|\,|\n/).map(s=>s.trim()).filter(Boolean); this.draft.training = arr }
+    },
     members(){
       return Array.isArray(this.club?.members) ? this.club.members : []
     },
@@ -500,6 +580,50 @@ export default {
     },
   },
   methods:{
+    startEdit(){ this.edit_mode = true; this.draft = this.makeDraftFromClub() },
+    discardEdit(){ this.edit_mode = false; this.draft = this.makeDraftFromClub() },
+    saveEdit(){
+      const d = this.draft || {}
+      // basic fields
+      this.club.name = d.name
+      this.club.city = d.city
+      this.club.region = d.region
+      this.club.members_count = d.members_count
+      this.club.avg_practice_size = d.avg_practice_size
+      this.club.training = Array.isArray(d.training) ? d.training.slice() : []
+      this.club.leaders = Array.isArray(d.leaders) ? d.leaders.slice() : []
+      this.club.members = Array.isArray(this.club.members) ? this.club.members.slice() : []
+      this.club.out_of_state = !!d.out_of_state
+      this.club.facebook = d.facebook
+      this.club.instagram = d.instagram
+      this.club.desc = d.desc
+      // metrics
+      this.club.medals_this_year = d.medals_this_year
+      this.club.supermatches_hosted = d.supermatches_hosted
+      this.club.supermatches_upcoming = d.supermatches_upcoming
+      if(d.talent_metric){ this.club.talent_metric = { ...(this.club.talent_metric||{}), ...d.talent_metric } }
+      this.edit_mode = false
+    },
+    makeDraftFromClub(){
+      const c = this.club || {}
+      return {
+        name: c.name || '',
+        city: c.city || '',
+        region: c.region || '',
+        members_count: c.members_count ?? (Array.isArray(c.members) ? c.members.length : 0),
+        avg_practice_size: c.avg_practice_size ?? this.avg_practice_size,
+        training: Array.isArray(c.training) ? c.training.slice() : [],
+        leaders: Array.isArray(c.leaders) ? c.leaders.slice() : [],
+        out_of_state: !!c.out_of_state,
+        facebook: c.facebook || '',
+        instagram: c.instagram || '',
+        desc: c.desc || '',
+        medals_this_year: c.medals_this_year ?? this.medals_this_year,
+        supermatches_hosted: c.supermatches_hosted ?? this.supermatches_hosted,
+        supermatches_upcoming: c.supermatches_upcoming ?? 0,
+        talent_metric: c.talent_metric ? { ...c.talent_metric } : null,
+      }
+    },
     goBackToAthlete(){
       try{
         const ath = String(this.$route?.query?.ath || '').trim()
@@ -716,7 +840,7 @@ export default {
         const body = document && document.body
         if(body){ body.style.overflow = val ? 'hidden' : '' }
       }catch{}
-      if(val) this.loadData()
+      if(val){ this.loadData(); try{ this.dev = isDevMode() }catch{}; this.draft = this.makeDraftFromClub() }
     }
   },
 }
@@ -733,6 +857,11 @@ export default {
 /* Header close button */
 .close_btn{background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.04)); color:var(--text); border:1px solid var(--border); border-radius:10px; padding:6px 12px; cursor:pointer; font-size:20px; line-height:1; transition:.18s ease}
 .close_btn:hover{filter:brightness(1.08)}
+
+/* Edit icon button */
+.icon_btn{background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:8px; padding:6px; cursor:pointer}
+.icon_btn .icon{width:18px; height:18px; display:block; fill:currentColor}
+.icon_btn:hover{color:var(--text)}
 
 /* Stats cards */
 .stats_row{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:14px; padding:16px}
@@ -770,6 +899,14 @@ export default {
 .ig_btn:hover{filter:brightness(1.06)}
 
 .list_wrap{padding:0 16px 16px}
+.edit_panel{padding:0 16px 16px}
+.edit_grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px}
+.edit_field{display:flex; flex-direction:column; gap:6px}
+.edit_field.checkbox{flex-direction:row; align-items:center}
+.edit_field.span2{grid-column:span 2}
+.ef_label{color:var(--muted); font-weight:800; font-size:12px}
+.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800}
+.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700}
 .list_head{display:flex; align-items:center; justify-content:space-between; padding:10px 0}
 .member_list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr; gap:8px}
 .member_item{display:flex; align-items:center; gap:10px; padding:8px 10px; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.02)}
@@ -832,6 +969,7 @@ export default {
 @keyframes fadeSlide{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
 
 .actions_bottom{ display:flex; justify-content:flex-end; padding:12px 16px; border-top:1px solid var(--border) }
+.edit_actions{margin-right:auto; display:flex; gap:8px}
 .back_from_club{ margin-right:auto; display:inline-flex; align-items:center; gap:6px; padding:8px 12px; border-radius:999px; border:1px solid rgba(46,163,255,.35); background:linear-gradient(180deg, rgba(46,163,255,.20), rgba(46,163,255,.14)); color:#c9ebff; font-weight:900; cursor:pointer }
 .back_from_club .back_icon{ width:16px; height:16px; display:block }
 
