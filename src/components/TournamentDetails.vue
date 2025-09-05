@@ -9,7 +9,7 @@
         </button>
         <span v-if="tournament.pending_details" class="badge_outline">Pending</span>
         <span v-else class="badge_confirmed">Confirmed</span>
-        <button class="close_btn" @click="$emit('close')" aria-label="Close">×</button>
+        <button class="close_btn" @click="onCloseClick" aria-label="Close">×</button>
       </div>
 
       <div class="scroll_area">
@@ -89,6 +89,13 @@
 
       <div v-if="edit_mode" class="edit_panel">
         <div class="edit_grid">
+          <label class="edit_field">
+            <span class="ef_label">Status</span>
+            <select v-model="draft.pending_details" class="ef_input">
+              <option :value="false">Confirmed</option>
+              <option :value="true">Pending</option>
+            </select>
+          </label>
           <label class="edit_field span2">
             <span class="ef_label">Name</span>
             <input v-model="draft.name" class="ef_input" />
@@ -205,11 +212,13 @@ export default {
   methods:{
     onOverlayWheel(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
     onOverlayTouchMove(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
+    onCloseClick(){ this.edit_mode = false; this.$emit('close') },
     startEdit(){ this.edit_mode = true; this.draft = this.makeDraftFromTournament() },
     discardEdit(){ this.edit_mode = false; this.draft = this.makeDraftFromTournament() },
     saveEdit(){
       const d = this.draft || {}
       const t = this.tournament
+      t.pending_details = !!d.pending_details
       t.name = d.name
       t.date = d.date
       t.estimated = !!d.estimated
@@ -235,6 +244,7 @@ export default {
     makeDraftFromTournament(){
       const t = this.tournament || {}
       return {
+        pending_details: !!t.pending_details,
         name: t.name || '',
         date: t.date || '',
         estimated: !!t.estimated,
