@@ -384,7 +384,6 @@ export default {
 			try{
 				this.is_loading = true
 				let res = await fetch('/clubs.json', { cache:'no-cache' })
-				if(!res.ok) res = await fetch('/docs/clubs.json', { cache:'no-cache' })
 				if(!res.ok) res = await fetch('clubs.json', { cache:'no-cache' })
 				if(!res.ok) throw new Error('Failed')
 				const json = await res.json()
