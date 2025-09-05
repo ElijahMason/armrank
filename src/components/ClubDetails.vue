@@ -585,7 +585,7 @@ export default {
       try{
         const v = (value==null?'' : String(value)).trim()
         if(kind==='number') return String(value).trim() !== '' && Number(value) >= 0
-        if(kind==='url') return !v || /^https?:\/\//i.test(v)
+        if(kind==='url') return /^https?:\/\//i.test(v)
         if(kind==='leaders') return v.length>0
         if(kind==='name' || kind==='city' || kind==='region' || kind==='desc' || kind==='training') return v.length>0
         return !!v

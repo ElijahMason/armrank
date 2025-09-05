@@ -91,7 +91,7 @@
         <div class="edit_grid">
           <label class="edit_field">
             <span class="ef_label">Status</span>
-            <select v-model="draft.pending_details" class="ef_input">
+            <select v-model="draft.pending_details" :class="['ef_input','status_select', draft.pending_details ? 'is_pending' : 'is_confirmed']">
               <option :value="false">Confirmed</option>
               <option :value="true">Pending</option>
             </select>
@@ -216,9 +216,9 @@ export default {
     isFieldGood(kind, value){
       try{
         const v = (value==null?'' : String(value)).trim()
-        if(kind==='url') return !v || /^https?:\/\//i.test(v)
-        if(kind==='date') return /\d{4}-\d{2}-\d{2}/.test(v)
-        if(kind==='time') return !v || /\d{1,2}(:\d{2})?\s?(am|pm)/i.test(v)
+        if(kind==='url') return /^https?:\/\//i.test(v)
+        if(kind==='date') return v.length>0 && /\d{4}-\d{2}-\d{2}/.test(v)
+        if(kind==='time') return v.length>0 && /\d{1,2}(:\d{2})?\s?(am|pm)/i.test(v)
         if(kind==='number') return String(value).trim() !== '' && Number(value) >= 0
         if(kind==='name' || kind==='text') return v.length>0
         return !!v
@@ -341,6 +341,8 @@ export default {
 .ef_textarea{background:transparent; color:var(--text); border:2px solid var(--accent); border-radius:10px; padding:10px 12px; min-height:80px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word; transition:border-color .15s ease}
 .ef_input:focus, .ef_textarea:focus{ outline:none; border-color:rgba(215,180,58,.65) }
 .ef_input.is_good, .ef_textarea.is_good{ border-color:rgba(23,162,184,.75) }
+.status_select.is_pending{ border-color: var(--accent); }
+.status_select.is_confirmed{ border-color: #2ecc71; }
 .auto_grow{resize:vertical; width:100%; overflow:auto}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
 .block h3{margin:0 0 8px 0}
