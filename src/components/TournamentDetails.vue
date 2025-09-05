@@ -278,7 +278,7 @@ export default {
 
 <style scoped>
 .overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:hidden}
-.modal{width:min(860px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px)}
+.modal{width:min(860px,100%); max-width:calc(100vw - 24px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px)}
 .content{padding:0 16px 0 16px; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
 .content{ scrollbar-width: none; -ms-overflow-style: none }
 .content::-webkit-scrollbar{ width:0; height:0 }
@@ -301,6 +301,7 @@ export default {
 .row{display:flex; gap:10px; align-items:center}
 .row .label{color:var(--muted); min-width:70px; font-weight:700}
 .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; padding:0 0 16px}
+.edit_grid{ grid-template-columns:1fr }
 .edit_panel{padding:0 16px 16px}
 .edit_grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px}
 .edit_field{display:flex; flex-direction:column; gap:6px}

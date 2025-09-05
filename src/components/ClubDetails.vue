@@ -216,7 +216,6 @@
         </div>
       </div>
       </div>
-
       <div v-if="edit_mode" class="edit_panel">
         <div class="edit_grid">
           <label class="edit_field">
@@ -847,7 +846,7 @@ export default {
 </script>
 <style scoped>
 .overlay{position:fixed; inset:0; background:rgba(0,0,0,.6); display:flex; align-items:flex-start; justify-content:center; padding:16px; z-index:100; overflow:hidden; overflow-x:hidden}
-.modal{width:min(860px,100%); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px); overflow-x:hidden}
+.modal{width:min(860px,100%); max-width:calc(100vw - 24px); background:linear-gradient(180deg, rgba(11,22,48,.98), rgba(8,18,40,.96)); border:1px solid var(--border); border-radius:16px; box-shadow:var(--glow); display:flex; flex-direction:column; overflow:hidden; max-height:calc(100dvh - 32px); overflow-x:hidden}
 .content{padding:0 0 0 0; flex:1; overflow:auto; -webkit-overflow-scrolling:touch}
 .content{ scrollbar-width: none; -ms-overflow-style: none }
 .content::-webkit-scrollbar{ width:0; height:0 }
@@ -954,6 +953,7 @@ export default {
 @media(max-width:900px){
   .join_box{grid-template-columns:1fr}
 }
+.edit_grid{ grid-template-columns:1fr }
 .label .muted_count{ color: var(--muted); font-weight:700 }
 
 /* Toggle arrow like leaderboard */
