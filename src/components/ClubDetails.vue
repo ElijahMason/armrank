@@ -903,13 +903,13 @@ export default {
 
 .list_wrap{padding:0 16px 16px}
 .edit_panel{padding:0 16px 16px}
-.edit_grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px}
+.edit_grid{display:grid; grid-template-columns:1fr; gap:10px}
 .edit_field{display:flex; flex-direction:column; gap:6px}
 .edit_field.checkbox{flex-direction:row; align-items:center}
 .edit_field.span2{grid-column:span 2}
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
-.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800}
-.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700}
+.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
 .auto_grow{resize:vertical; width:100%; overflow:auto}
 .list_head{display:flex; align-items:center; justify-content:space-between; padding:10px 0}
 .member_list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr; gap:8px}
@@ -958,7 +958,7 @@ export default {
 @media(max-width:900px){
   .join_box{grid-template-columns:1fr}
 }
-.edit_grid{ grid-template-columns:1fr }
+@media(min-width:760px){ .edit_grid{ grid-template-columns:repeat(2, 1fr) } }
 @media(max-width:520px){ .overlay{ --ovPad:8px } }
 .edit_grid{ grid-template-columns:1fr }
 .label .muted_count{ color: var(--muted); font-weight:700 }

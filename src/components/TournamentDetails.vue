@@ -318,15 +318,16 @@ export default {
 .row .label{color:var(--muted); min-width:70px; font-weight:700}
 .grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:14px; padding:0 0 16px}
 .edit_grid{ grid-template-columns:1fr }
+@media(min-width:760px){ .edit_grid{ grid-template-columns:repeat(2, 1fr) } }
 @media(max-width:520px){ .overlay{ --ovPad:8px } }
 .edit_panel{padding:0 16px 16px}
-.edit_grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:10px}
+.edit_grid{display:grid; grid-template-columns:1fr; gap:10px}
 .edit_field{display:flex; flex-direction:column; gap:6px}
 .edit_field.checkbox{flex-direction:row; align-items:center}
 .edit_field.span2{grid-column:span 2}
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
-.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800}
-.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700}
+.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
 .auto_grow{resize:vertical; width:100%; overflow:auto}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
 .block h3{margin:0 0 8px 0}
