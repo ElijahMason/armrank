@@ -221,55 +221,55 @@
         <div class="edit_grid">
           <label class="edit_field">
             <span class="ef_label">Name</span>
-            <input v-model="draft.name" class="ef_input" />
+            <input v-model="draft.name" :class="['ef_input', { is_good: isFieldGood('name', draft.name) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">City</span>
-            <input v-model="draft.city" class="ef_input" />
+            <input v-model="draft.city" :class="['ef_input', { is_good: isFieldGood('city', draft.city) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Region/State</span>
-            <input v-model="draft.region" class="ef_input" />
+            <input v-model="draft.region" :class="['ef_input', { is_good: isFieldGood('region', draft.region) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Leaders (comma-separated)</span>
-            <textarea v-model="leadersCsv" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="leadersCsv" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('leaders', leadersCsv) }]" rows="1"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Members count</span>
-            <input v-model.number="draft.members_count" type="number" min="0" class="ef_input" />
+            <input v-model.number="draft.members_count" type="number" min="0" :class="['ef_input', { is_good: isFieldGood('members_count', draft.members_count) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Avg practice size</span>
-            <input v-model.number="draft.avg_practice_size" type="number" min="0" class="ef_input" />
+            <input v-model.number="draft.avg_practice_size" type="number" min="0" :class="['ef_input', { is_good: isFieldGood('avg_practice_size', draft.avg_practice_size) }]" />
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Practice/training text</span>
-            <textarea v-model="trainingText" class="ef_textarea auto_grow" rows="1" placeholder="e.g., Wed 6pm - 9pm"></textarea>
+            <textarea v-model="trainingText" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('training', trainingText) }]" rows="1" placeholder="e.g., Wed 6pm - 9pm"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Description</span>
-            <textarea v-model="draft.desc" class="ef_textarea auto_grow" rows="2"></textarea>
+            <textarea v-model="draft.desc" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('desc', draft.desc) }]" rows="2"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Facebook URL</span>
-            <input v-model="draft.facebook" class="ef_input" />
+            <input v-model="draft.facebook" :class="['ef_input', { is_good: isFieldGood('url', draft.facebook) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Instagram URL</span>
-            <input v-model="draft.instagram" class="ef_input" />
+            <input v-model="draft.instagram" :class="['ef_input', { is_good: isFieldGood('url', draft.instagram) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Medals this year</span>
-            <input v-model.number="draft.medals_this_year" type="number" min="0" class="ef_input" />
+            <input v-model.number="draft.medals_this_year" type="number" min="0" :class="['ef_input', { is_good: isFieldGood('number', draft.medals_this_year) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Supermatches hosted</span>
-            <input v-model.number="draft.supermatches_hosted" type="number" min="0" class="ef_input" />
+            <input v-model.number="draft.supermatches_hosted" type="number" min="0" :class="['ef_input', { is_good: isFieldGood('number', draft.supermatches_hosted) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Supermatches upcoming</span>
-            <input v-model.number="draft.supermatches_upcoming" type="number" min="0" class="ef_input" />
+            <input v-model.number="draft.supermatches_upcoming" type="number" min="0" :class="['ef_input', { is_good: isFieldGood('number', draft.supermatches_upcoming) }]" />
           </label>
           <label class="edit_field checkbox">
             <input type="checkbox" v-model="draft.out_of_state" />
@@ -581,6 +581,16 @@ export default {
     },
   },
   methods:{
+    isFieldGood(kind, value){
+      try{
+        const v = (value==null?'' : String(value)).trim()
+        if(kind==='number') return String(value).trim() !== '' && Number(value) >= 0
+        if(kind==='url') return !v || /^https?:\/\//i.test(v)
+        if(kind==='leaders') return v.length>0
+        if(kind==='name' || kind==='city' || kind==='region' || kind==='desc' || kind==='training') return v.length>0
+        return !!v
+      }catch{ return false }
+    },
     onCloseClick(){ this.edit_mode = false; this.$emit('close') },
     startEdit(){ this.edit_mode = true; this.draft = this.makeDraftFromClub() },
     discardEdit(){ this.edit_mode = false; this.draft = this.makeDraftFromClub() },
@@ -908,8 +918,9 @@ export default {
 .edit_field.checkbox{flex-direction:row; align-items:center}
 .edit_field.span2{grid-column:span 2}
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
-.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
-.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_input{background:linear-gradient(180deg, rgba(215,180,58,.18), rgba(185,147,34,.16)); color:var(--text); border:1px solid rgba(215,180,58,.35); border-radius:10px; padding:10px 12px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_textarea{background:linear-gradient(180deg, rgba(215,180,58,.18), rgba(185,147,34,.16)); color:var(--text); border:1px solid rgba(215,180,58,.35); border-radius:10px; padding:10px 12px; min-height:80px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_input.is_good, .ef_textarea.is_good{ border:1px solid rgba(23,162,184,.55); background:linear-gradient(180deg,#20c997,#17a2b8); color:#061626 }
 .auto_grow{resize:vertical; width:100%; overflow:auto}
 .list_head{display:flex; align-items:center; justify-content:space-between; padding:10px 0}
 .member_list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr; gap:8px}

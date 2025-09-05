@@ -98,11 +98,11 @@
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Name</span>
-            <input v-model="draft.name" class="ef_input" />
+            <input v-model="draft.name" :class="['ef_input', { is_good: isFieldGood('name', draft.name) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Date</span>
-            <input v-model="draft.date" class="ef_input" placeholder="YYYY-MM-DD" />
+            <input v-model="draft.date" :class="['ef_input', { is_good: isFieldGood('date', draft.date) }]" placeholder="YYYY-MM-DD" />
           </label>
           <label class="edit_field checkbox">
             <input type="checkbox" v-model="draft.estimated" />
@@ -110,71 +110,71 @@
           </label>
           <label class="edit_field">
             <span class="ef_label">Start time</span>
-            <input v-model="draft.schedule_start" class="ef_input" placeholder="e.g., 10:00am" />
+            <input v-model="draft.schedule_start" :class="['ef_input', { is_good: isFieldGood('time', draft.schedule_start) }]" placeholder="e.g., 10:00am" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Location</span>
-            <input v-model="draft.location" class="ef_input" />
+            <input v-model="draft.location" :class="['ef_input', { is_good: isFieldGood('text', draft.location) }]" />
           </label>
           <label class="edit_field">
             <span class="ef_label">Venue</span>
-            <input v-model="draft.venue" class="ef_input" />
+            <input v-model="draft.venue" :class="['ef_input', { is_good: isFieldGood('text', draft.venue) }]" />
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Weigh-ins (one per line)</span>
-            <textarea v-model="weighInsText" class="ef_textarea auto_grow" rows="2"></textarea>
+            <textarea v-model="weighInsText" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', weighInsText) }]" rows="2"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Men classes</span>
-            <textarea v-model="draft.men_classes" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.men_classes" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.men_classes) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Women classes</span>
-            <textarea v-model="draft.women_classes" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.women_classes" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.women_classes) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Masters classes</span>
-            <textarea v-model="draft.masters_classes" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.masters_classes" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.masters_classes) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Kids classes</span>
-            <textarea v-model="draft.kids_classes" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.kids_classes" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.kids_classes) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Notes</span>
-            <textarea v-model="draft.notes" class="ef_textarea auto_grow" rows="2"></textarea>
+            <textarea v-model="draft.notes" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.notes) }]" rows="2"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Entry fees</span>
-            <textarea v-model="draft.entry_fees" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.entry_fees" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.entry_fees) }]" rows="1"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Spectator</span>
-            <textarea v-model="draft.spectator" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.spectator" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.spectator) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Cash & prizes</span>
-            <textarea v-model="draft.cash_prizes" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.cash_prizes" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.cash_prizes) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Awards</span>
-            <textarea v-model="draft.awards" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.awards" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.awards) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Benefiting</span>
-            <textarea v-model="draft.benefiting" class="ef_textarea auto_grow" rows="1"></textarea>
+            <textarea v-model="draft.benefiting" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', draft.benefiting) }]" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Contacts (one per line)</span>
-            <textarea v-model="contactsText" class="ef_textarea auto_grow" rows="2"></textarea>
+            <textarea v-model="contactsText" :class="['ef_textarea','auto_grow', { is_good: isFieldGood('text', contactsText) }]" rows="2"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Event website</span>
-            <input v-model="draft.link" class="ef_input" />
+            <input v-model="draft.link" :class="['ef_input', { is_good: isFieldGood('url', draft.link) }]" />
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Image URL</span>
-            <input v-model="draft.image_url" class="ef_input" />
+            <input v-model="draft.image_url" :class="['ef_input', { is_good: isFieldGood('url', draft.image_url) }]" />
           </label>
         </div>
       </div>
@@ -213,6 +213,17 @@ export default {
     onOverlayWheel(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
     onOverlayTouchMove(evt){ try{ if(evt && evt.target === evt.currentTarget) evt.preventDefault() }catch{} },
     onCloseClick(){ this.edit_mode = false; this.$emit('close') },
+    isFieldGood(kind, value){
+      try{
+        const v = (value==null?'' : String(value)).trim()
+        if(kind==='url') return !v || /^https?:\/\//i.test(v)
+        if(kind==='date') return /\d{4}-\d{2}-\d{2}/.test(v)
+        if(kind==='time') return !v || /\d{1,2}(:\d{2})?\s?(am|pm)/i.test(v)
+        if(kind==='number') return String(value).trim() !== '' && Number(value) >= 0
+        if(kind==='name' || kind==='text') return v.length>0
+        return !!v
+      }catch{ return false }
+    },
     startEdit(){ this.edit_mode = true; this.draft = this.makeDraftFromTournament() },
     discardEdit(){ this.edit_mode = false; this.draft = this.makeDraftFromTournament() },
     saveEdit(){
@@ -326,8 +337,9 @@ export default {
 .edit_field.checkbox{flex-direction:row; align-items:center}
 .edit_field.span2{grid-column:span 2}
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
-.ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
-.ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_input{background:linear-gradient(180deg, rgba(215,180,58,.18), rgba(185,147,34,.16)); color:var(--text); border:1px solid rgba(215,180,58,.35); border-radius:10px; padding:10px 12px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_textarea{background:linear-gradient(180deg, rgba(215,180,58,.18), rgba(185,147,34,.16)); color:var(--text); border:1px solid rgba(215,180,58,.35); border-radius:10px; padding:10px 12px; min-height:80px; font-weight:900; width:100%; max-width:100%; box-sizing:border-box; overflow-wrap:anywhere; word-break:break-word}
+.ef_input.is_good, .ef_textarea.is_good{ border:1px solid rgba(23,162,184,.55); background:linear-gradient(180deg,#20c997,#17a2b8); color:#061626 }
 .auto_grow{resize:vertical; width:100%; overflow:auto}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
 .block h3{margin:0 0 8px 0}
