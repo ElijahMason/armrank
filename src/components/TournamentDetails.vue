@@ -13,7 +13,7 @@
       </div>
 
       <div class="scroll_area">
-      <div class="content">
+      <div class="content" v-if="!edit_mode">
       <div class="hero">
         <div class="hero_img" :style="{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55)), url('${tournament.image_url}')` }"></div>
         <div class="hero_meta">
@@ -115,51 +115,51 @@
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Weigh-ins (one per line)</span>
-            <textarea v-model="weighInsText" class="ef_textarea"></textarea>
+            <textarea v-model="weighInsText" class="ef_textarea auto_grow" rows="2"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Men classes</span>
-            <input v-model="draft.men_classes" class="ef_input" />
+            <textarea v-model="draft.men_classes" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Women classes</span>
-            <input v-model="draft.women_classes" class="ef_input" />
+            <textarea v-model="draft.women_classes" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Masters classes</span>
-            <input v-model="draft.masters_classes" class="ef_input" />
+            <textarea v-model="draft.masters_classes" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Kids classes</span>
-            <input v-model="draft.kids_classes" class="ef_input" />
+            <textarea v-model="draft.kids_classes" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Notes</span>
-            <textarea v-model="draft.notes" class="ef_textarea"></textarea>
+            <textarea v-model="draft.notes" class="ef_textarea auto_grow" rows="2"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Entry fees</span>
-            <input v-model="draft.entry_fees" class="ef_input" />
+            <textarea v-model="draft.entry_fees" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Spectator</span>
-            <input v-model="draft.spectator" class="ef_input" />
+            <textarea v-model="draft.spectator" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Cash & prizes</span>
-            <input v-model="draft.cash_prizes" class="ef_input" />
+            <textarea v-model="draft.cash_prizes" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Awards</span>
-            <input v-model="draft.awards" class="ef_input" />
+            <textarea v-model="draft.awards" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Benefiting</span>
-            <input v-model="draft.benefiting" class="ef_input" />
+            <textarea v-model="draft.benefiting" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Contacts (one per line)</span>
-            <textarea v-model="contactsText" class="ef_textarea"></textarea>
+            <textarea v-model="contactsText" class="ef_textarea auto_grow" rows="2"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Event website</span>
@@ -179,9 +179,11 @@
           <button class="ghost_btn" @click="discardEdit">Discard</button>
           <button class="primary_btn" @click="saveEdit">Save</button>
         </div>
-        <a v-if="tournament.link" class="primary_btn" :href="tournament.link" target="_blank" rel="noopener">View Event Website</a>
-        <span v-else class="primary_btn disabled" aria-disabled="true">Event website pending</span>
-        <button class="ghost_btn" @click="$emit('close')">Close</button>
+        <template v-else>
+          <a v-if="tournament.link" class="primary_btn" :href="tournament.link" target="_blank" rel="noopener">View Event Website</a>
+          <span v-else class="primary_btn disabled" aria-disabled="true">Event website pending</span>
+          <button class="ghost_btn" @click="$emit('close')">Close</button>
+        </template>
       </div>
 
       <div v-if="tournament.pending_details" class="disclaimer">Tournament pending. Details are tentative and subject to change. Check back later for confirmation.</div>
@@ -315,6 +317,7 @@ export default {
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
 .ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800}
 .ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700}
+.auto_grow{resize:vertical; width:100%; overflow:auto}
 .block{background:rgba(255,255,255,.02); border:1px solid var(--border); border-radius:12px; padding:12px}
 .block h3{margin:0 0 8px 0}
 .classes{display:grid; gap:10px}

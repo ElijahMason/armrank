@@ -11,7 +11,7 @@
       </div>
 
       <div class="scroll_area">
-      <div class="content">
+      <div class="content" v-if="!edit_mode">
       <div class="stats_row">
         <div class="stat_card">
           <div class="stat_icon crown_icon_bubble" aria-hidden="true">
@@ -233,7 +233,7 @@
           </label>
           <label class="edit_field">
             <span class="ef_label">Leaders (comma-separated)</span>
-            <input v-model="leadersCsv" class="ef_input" />
+            <textarea v-model="leadersCsv" class="ef_textarea auto_grow" rows="1"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Members count</span>
@@ -245,11 +245,11 @@
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Practice/training text</span>
-            <input v-model="trainingText" class="ef_input" placeholder="e.g., Wed 6pm - 9pm" />
+            <textarea v-model="trainingText" class="ef_textarea auto_grow" rows="1" placeholder="e.g., Wed 6pm - 9pm"></textarea>
           </label>
           <label class="edit_field span2">
             <span class="ef_label">Description</span>
-            <textarea v-model="draft.desc" class="ef_textarea"></textarea>
+            <textarea v-model="draft.desc" class="ef_textarea auto_grow" rows="2"></textarea>
           </label>
           <label class="edit_field">
             <span class="ef_label">Facebook URL</span>
@@ -284,11 +284,11 @@
           <button class="ghost_btn" @click="discardEdit">Discard</button>
           <button class="primary_btn" @click="saveEdit">Save</button>
         </div>
-        <button v-if="$route?.query?.from==='athlete'" class="back_from_club" @click="goBackToAthlete" aria-label="Back to athlete details">
+        <button v-if="!edit_mode && $route?.query?.from==='athlete'" class="back_from_club" @click="goBackToAthlete" aria-label="Back to athlete details">
           <svg class="back_icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Back
         </button>
-        <button class="close_action_btn" @click="$emit('close')">Close</button>
+        <button v-if="!edit_mode" class="close_action_btn" @click="$emit('close')">Close</button>
       </div>
     </div>
   </div>
@@ -909,6 +909,7 @@ export default {
 .ef_label{color:var(--muted); font-weight:800; font-size:12px}
 .ef_input{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; font-weight:800}
 .ef_textarea{background:#0e1a34; color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px; min-height:80px; font-weight:700}
+.auto_grow{resize:vertical; width:100%; overflow:auto}
 .list_head{display:flex; align-items:center; justify-content:space-between; padding:10px 0}
 .member_list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr; gap:8px}
 .member_item{display:flex; align-items:center; gap:10px; padding:8px 10px; border:1px solid var(--border); border-radius:10px; background:rgba(255,255,255,.02)}
